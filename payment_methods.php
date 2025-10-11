@@ -398,8 +398,8 @@ try {
     <!-- Payment Modal -->
     <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col border border-gray-200">
-            <div class="bg-gray-100 rounded-t-lg text-gray-800 px-4 py-3 border-b border-gray-300">
-                <h3 class="text-lg font-bold">Record Payment</h3>
+            <div class="bg-emerald-600 rounded-t-lg text-gray-800 px-4 py-3 border-b border-gray-300">
+                <h3 class="text-lg text-white font-bold">Record Payment</h3>
             </div>
             <form method="POST" class="p-4 overflow-y-auto">
                 <div class="mb-3">

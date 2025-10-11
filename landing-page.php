@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<?php session_start(); ?>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="image/MainIcon.png" type="image/x-icon" />
-    <title>PetTrack</title>
+    <title>PetTrack - Professional Pet Healthcare</title>
     <script src="Assets/chart.js"></script>
     <link rel="stylesheet" href="Assets/FontAwsome/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,6 +14,11 @@
     <style>
         html {
             scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #f8fafc;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .hero-section {
@@ -88,7 +94,7 @@
 
         /* Updated About Section Styles */
         #about {
-            background: linear-gradient(to bottom, #f9fafb, #ffffff);
+            background: linear-gradient(to bottom, #f1f5f9, #f8fafc);
         }
 
         #about .container {
@@ -96,7 +102,7 @@
         }
 
         #about h2 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             line-height: 1.2;
             background: linear-gradient(to right, #169976, #1dcd9f);
             -webkit-background-clip: text;
@@ -113,7 +119,8 @@
 
         #about .mission-vision-card {
             transition: all 0.3s ease;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #e2e8f0;
+            background: white;
         }
 
         #about .mission-vision-card:hover {
@@ -127,6 +134,7 @@
             padding: 1.5rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
         }
 
         #about .why-choose-card:hover {
@@ -151,6 +159,7 @@
             padding: 1.5rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
         }
 
         #about .team-card:hover {
@@ -160,7 +169,7 @@
 
         @media (max-width: 768px) {
             #about h2 {
-                font-size: 2rem;
+                font-size: 1.75rem;
             }
 
             #about .story-image {
@@ -241,42 +250,179 @@
             padding: 0.75rem 0;
             text-align: center;
         }
+
+        /* Professional styling additions */
+        .professional-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .professional-card:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(to right, #169976, #1dcd9f);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #169976 0%, #1dcd9f 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        /* Improved mobile responsiveness */
+        @media (max-width: 640px) {
+            .hero-section {
+                min-height: 70vh;
+                padding: 1rem;
+            }
+
+            .hero-section h1 {
+                font-size: 1.75rem;
+                line-height: 1.2;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .professional-card {
+                padding: 1rem;
+            }
+
+            .mission-vision-card {
+                padding: 1.5rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+
+            .team-card {
+                padding: 1rem;
+            }
+
+            .footer-map {
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section h1 {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.25rem;
+            }
+
+            .professional-card h3 {
+                font-size: 1.125rem;
+            }
+
+            .mission-vision-card h3 {
+                font-size: 1.125rem;
+            }
+        }
+
+        /* Mobile fixes for appointment modal */
+        @media (max-width: 640px) {
+            #appointmentModal>div {
+                max-width: calc(100% - 2rem);
+                height: 80vh;
+                margin: 10vh auto;
+                border-radius: 1rem;
+            }
+
+            #appointmentForm {
+                padding: 1rem;
+            }
+
+            #calendarContainer {
+                padding: 1rem;
+            }
+
+            #appointmentModal>div>.bg-[#169976] {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            #appointmentForm>.flex {
+                position: sticky;
+                bottom: 0;
+                background: white;
+                z-index: 10;
+                padding-top: 1rem;
+                margin-top: 1rem;
+            }
+        }
     </style>
 </head>
 
-<body class="bg-[#1DCD9F] min-h-screen">
+<body class="min-h-screen">
     <!-- Header -->
-    <header class="fixed top-0 left-0 w-full bg-[#169976] shadow-md h-16 z-50">
-        <div class="flex items-center justify-between h-full px-6">
-            <div class="flex items-center gap-4">
-                <img class="w-[40px]" src="./image/MainIconWhite.png" alt="Logo">
-                <p class="text-white font-bold text-xl">PetTrack</p>
+    <header class="fixed top-0 left-0 w-full bg-white shadow-md h-16 z-50">
+        <div class="flex items-center justify-between h-full px-4 md:px-6">
+            <div class="flex items-center gap-3">
+                <img class="w-8 h-8 md:w-10 md:h-10" src="./image/MainIcon.png" alt="">
+                <p class="text-[#169976] font-bold text-lg md:text-xl">PetTrack</p>
             </div>
 
-            <div class="flex items-center gap-4">
-                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
-                    <i class="fas fa-bars text-xl"></i>
+            <div class="flex items-center gap-3 md:gap-4">
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-lg"></i>
                 </button>
-                <nav class="nav-links hidden md:flex items-center gap-6">
-                    <a class="text-white font-semibold relative group" href="#">
-                        <span class="group-hover:opacity-80 transition-opacity duration-200">Home</span>
-                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
+                <nav class="nav-links hidden md:flex items-center gap-4 md:gap-6">
+                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors duration-200" href="#">
+                        Home
                     </a>
-                    <a class="text-white font-semibold relative group" href="#about">
-                        <span class="group-hover:opacity-80 transition-opacity duration-200">About</span>
-                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
+                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors duration-200" href="#about">
+                        About
                     </a>
-                    <a class="text-white font-semibold relative group" href="#services">
-                        <span class="group-hover:opacity-80 transition-opacity duration-200">Services</span>
-                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
+                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors duration-200" href="#services">
+                        Services
                     </a>
-                    <a class="text-white font-semibold relative group" href="#">
-                        <span class="group-hover:opacity-80 transition-opacity duration-200">Contact Us</span>
-                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
+                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors duration-200" href="#contacts">
+                        Contact
                     </a>
                 </nav>
 
-                <button onclick="openModal()" class="bg-[#1DCD9F] text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-300 transform hover:bg-[#17b38a] hover:scale-105 hover:shadow-lg">
+                <button onclick="openModal()" class="bg-[#169976] text-white font-semibold py-2 px-3 md:px-4 rounded-lg shadow transition duration-300 transform hover:bg-[#18b98e] hover:scale-105 hover:shadow-lg text-sm md:text-base">
                     Appointment
                 </button>
             </div>
@@ -284,37 +430,115 @@
     </header>
 
     <!-- Hero Section -->
-    <main class="relative min-h-screen w-full px-6 md:px-20 py-16 hero-section flex items-center justify-between bg-cover bg-center" style="background-image: url('./image/HeroBanner.png');">
-        <div class="absolute inset-0 bg-black bg-opacity-60 z-0"></div>
-        <div class="max-w-2xl space-y-6 z-10">
-            <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight">Welcome to PetTrack</h1>
-            <p class="text-xl md:text-2xl text-white leading-relaxed opacity-90">
-                Your trusted partner in managing your pet's health and wellness all in one place.
+    <main class="relative min-h-screen w-full px-4 md:px-20 py-16 hero-section flex items-center justify-between bg-cover bg-center" style="background-image: url('./image/HeroBanner.png');">
+        <div class="hero-overlay"></div>
+        <div class="max-w-2xl space-y-4 md:space-y-6 hero-content">
+            <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">Premium Veterinary Care for Your Beloved Pets</h1>
+            <p class="text-base md:text-xl text-white leading-relaxed opacity-90">
+                Comprehensive healthcare solutions with cutting-edge technology and compassionate expertise.
             </p>
-            <button onclick="openModal()" class="inline-block bg-white text-[#169976] font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-[#18b99e] hover:text-white border hover:border-white transition-colors duration-300 ease-in-out text-lg">
-                Appoint Now!
-            </button>
+            <div class="flex flex-col sm:flex-row gap-3 md:gap-4 mt-6 md:mt-8">
+                <button onclick="openModal()" class="bg-white text-[#169976] font-semibold py-2 md:py-3 px-6 md:px-8 rounded-lg shadow-lg hover:bg-gray-100 transition-colors duration-300 text-base md:text-lg">
+                    Schedule Appointment
+                </button>
+                <a href="#services" class="bg-transparent border-2 border-white text-white font-semibold py-2 md:py-3 px-6 md:px-8 rounded-lg hover:bg-white hover:text-[#169976] transition-colors duration-300 text-base md:text-lg text-center">
+                    Our Services
+                </a>
+            </div>
         </div>
-        <div class="hero-image md:block z-10">
-            <img src="./image/dog-cat.png" alt="Cat and Dog" class="w-full md:max-w-2xl brightness-75" />
+        <div class="hero-image hidden md:block hero-content">
+            <img src="./image/dog-cat.png" alt="Cat and Dog" class="w-full md:max-w-2xl" />
         </div>
     </main>
 
+    <!-- Stats Section -->
+    <section class="py-8 md:py-12 gradient-bg text-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div class="text-center">
+                    <p class="text-xl md:text-3xl font-bold mb-1 md:mb-2">5,000+</p>
+                    <p class="text-xs md:text-sm">Happy Pets</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xl md:text-3xl font-bold mb-1 md:mb-2">98%</p>
+                    <p class="text-xs md:text-sm">Satisfaction Rate</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xl md:text-3xl font-bold mb-1 md:mb-2">24/7</p>
+                    <p class="text-xs md:text-sm">Emergency Care</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xl md:text-3xl font-bold mb-1 md:mb-2">50+</p>
+                    <p class="text-xs md:text-sm">Veterinary Experts</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-12 md:py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="section-title text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800">Our Premium Services</h2>
+                <p class="text-base md:text-xl text-gray-600 max-w-3xl mx-auto mt-4 md:mt-6">Comprehensive veterinary care designed to keep your pets healthy and happy throughout their lives</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div class="professional-card p-4 md:p-6 text-center">
+                    <div class="w-12 h-12 md:w-16 md:h-16 bg-[#169976] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <i class="fas fa-stethoscope text-white text-lg md:text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Comprehensive Check-ups</h3>
+                    <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
+                        Thorough health examinations to detect issues early and ensure your pet's ongoing wellness.
+                    </p>
+                </div>
+                <div class="professional-card p-4 md:p-6 text-center">
+                    <div class="w-12 h-12 md:w-16 md:h-16 bg-[#169976] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <i class="fas fa-syringe text-white text-lg md:text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Vaccination Programs</h3>
+                    <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
+                        Customized vaccination schedules to protect your pets from preventable diseases.
+                    </p>
+                </div>
+                <div class="professional-card p-4 md:p-6 text-center">
+                    <div class="w-12 h-12 md:w-16 md:h-16 bg-[#169976] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <i class="fas fa-user-md text-white text-lg md:text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Advanced Surgery</h3>
+                    <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
+                        State-of-the-art surgical procedures performed by our experienced veterinary surgeons.
+                    </p>
+                </div>
+                <div class="professional-card p-4 md:p-6 text-center">
+                    <div class="w-12 h-12 md:w-16 md:h-16 bg-[#169976] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <i class="fas fa-tooth text-white text-lg md:text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Dental Care</h3>
+                    <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
+                        Complete oral health services including cleaning, extractions, and preventative care.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- About Section -->
-    <section id="about" class="py-20">
+    <section id="about" class="py-12 md:py-20">
         <div class="container mx-auto px-4">
             <!-- Header -->
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold mb-4">About PetTrack</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Your trusted partner in comprehensive pet health management</p>
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="section-title text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800">About PetTrack</h2>
+                <p class="text-base md:text-xl text-gray-600 max-w-3xl mx-auto mt-4 md:mt-6">Your trusted partner in comprehensive pet health management</p>
             </div>
 
             <!-- Our Story -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
-                <div class="space-y-4">
-                    <h3 class="text-2xl font-bold text-gray-800">Our Story</h3>
-                    <p class="text-gray-600 leading-relaxed">Founded in 2018, PetTrack began with a simple mission: to make pet care management as seamless and stress-free as possible for pet owners. What started as a small team of pet lovers and tech enthusiasts has grown into a comprehensive platform trusted by thousands of pet owners nationwide.</p>
-                    <p class="text-gray-600 leading-relaxed">We understand that pets are family, and their health and happiness are paramount. That's why we've dedicated ourselves to creating a system that organizes all aspects of pet care in one convenient place.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mb-12 md:mb-16">
+                <div class="space-y-3 md:space-y-4">
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-800">Our Story</h3>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">Founded in 2018, PetTrack began with a simple mission: to make pet care management as seamless and stress-free as possible for pet owners. What started as a small team of pet lovers and tech enthusiasts has grown into a comprehensive platform trusted by thousands of pet owners nationwide.</p>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">We understand that pets are family, and their health and happiness are paramount. That's why we've dedicated ourselves to creating a system that organizes all aspects of pet care in one convenient place.</p>
                 </div>
                 <div class="story-image">
                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect fill='%23ffffff' width='300' height='200' rx='15'/%3E%3Cpath fill='%23169976' d='M150,50 Q200,30 250,50 T300,70 L300,180 L0,180 L0,70 Q50,30 100,50 T150,50 Z'/%3E%3Ccircle fill='%23169976' cx='80' cy='40' r='15'/%3E%3Ccircle fill='%23169976' cx='220' cy='40' r='15'/%3E%3C/svg%3E" alt="Happy pets" class="w-full rounded-xl" />
@@ -322,159 +546,150 @@
             </div>
 
             <!-- Mission & Vision -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                <div class="mission-vision-card bg-white p-8 rounded-xl text-center">
-                    <div class="w-12 h-12 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-bullseye text-white text-xl"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
+                <div class="mission-vision-card p-6 md:p-8 rounded-xl text-center">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <i class="fas fa-bullseye text-white text-lg md:text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Our Mission</h3>
-                    <p class="text-gray-600 leading-relaxed">To provide pet owners with an intuitive, comprehensive platform that simplifies pet care management, enhances the well-being of pets, and strengthens the bond between pets and their families.</p>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Our Mission</h3>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">To provide pet owners with an intuitive, comprehensive platform that simplifies pet care management, enhances the well-being of pets, and strengthens the bond between pets and their families.</p>
                 </div>
-                <div class="mission-vision-card bg-white p-8 rounded-xl text-center">
-                    <div class="w-12 h-12 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-eye text-white text-xl"></i>
+                <div class="mission-vision-card p-6 md:p-8 rounded-xl text-center">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                        <i class="fas fa-eye text-white text-lg md:text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Our Vision</h3>
-                    <p class="text-gray-600 leading-relaxed">To become the world's most trusted pet care management platform, recognized for innovation, reliability, and dedication to improving the lives of pets and their owners.</p>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Our Vision</h3>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">To become the world's most trusted pet care management platform, recognized for innovation, reliability, and dedication to improving the lives of pets and their owners.</p>
                 </div>
             </div>
 
             <!-- Why Choose Us -->
-            <div class="mb-16">
-                <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">Why Choose PetTrack?</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="mb-12 md:mb-16">
+                <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 md:mb-8 text-center">Why Choose PetTrack?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                     <div class="why-choose-card text-center">
-                        <div class="w-14 h-14 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-shield-alt text-white text-xl"></i>
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                            <i class="fas fa-shield-alt text-white text-lg md:text-xl"></i>
                         </div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-2">All-in-One Platform</h4>
-                        <p class="text-gray-600 text-sm leading-relaxed">Manage appointments, medical records, and pet information in one secure place.</p>
+                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">All-in-One Platform</h4>
+                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Manage appointments, medical records, and pet information in one secure place.</p>
                     </div>
                     <div class="why-choose-card text-center">
-                        <div class="w-14 h-14 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-clock text-white text-xl"></i>
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                            <i class="fas fa-clock text-white text-lg md:text-xl"></i>
                         </div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Time-Saving</h4>
-                        <p class="text-gray-600 text-sm leading-relaxed">Automate reminders and streamline your pet care routine with our intuitive system.</p>
+                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Time-Saving</h4>
+                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Automate reminders and streamline your pet care routine with our intuitive system.</p>
                     </div>
                     <div class="why-choose-card text-center">
-                        <div class="w-14 h-14 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-heart text-white text-xl"></i>
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                            <i class="fas fa-heart text-white text-lg md:text-xl"></i>
                         </div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Pet-Loved</h4>
-                        <p class="text-gray-600 text-sm leading-relaxed">Designed by pet owners for pet owners, with your furry family members' needs in mind.</p>
+                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Pet-Loved</h4>
+                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Designed by pet owners for pet owners, with your furry family members' needs in mind.</p>
                     </div>
-                </div>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-                <div class="stat-card text-white text-center">
-                    <p class="text-3xl font-bold mb-2">5,000+</p>
-                    <p class="text-sm">Happy Pets</p>
-                </div>
-                <div class="stat-card text-white text-center">
-                    <p class="text-3xl font-bold mb-2">98%</p>
-                    <p class="text-sm">Satisfaction Rate</p>
-                </div>
-                <div class="stat-card text-white text-center">
-                    <p class="text-3xl font-bold mb-2">24/7</p>
-                    <p class="text-sm">Support</p>
-                </div>
-                <div class="stat-card text-white text-center">
-                    <p class="text-3xl font-bold mb-2">50+</p>
-                    <p class="text-sm">Vet Partners</p>
                 </div>
             </div>
 
             <!-- Team -->
             <div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">Our Team</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 md:mb-8 text-center">Our Team</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                     <div class="team-card text-center">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle fill='%23169976' cx='60' cy='60' r='60'/%3E%3Ccircle fill='%23ffffff' cx='60' cy='45' r='20'/%3E%3Cpath fill='%23ffffff' d='M40,95 Q60,75 80,95 Z'/%3E%3C/svg%3E" alt="Team member" class="w-20 h-20 rounded-full mx-auto mb-4">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Sarah Johnson</h4>
-                        <p class="text-[#169976] font-medium mb-2 text-sm">Founder & CEO</p>
-                        <p class="text-gray-600 text-sm leading-relaxed">Pet lover with 15+ years of veterinary experience</p>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle fill='%23169976' cx='60' cy='60' r='60'/%3E%3Ccircle fill='%23ffffff' cx='60' cy='45' r='20'/%3E%3Cpath fill='%23ffffff' d='M40,95 Q60,75 80,95 Z'/%3E%3C/svg%3E" alt="Team member" class="w-16 h-16 md:w-20 md:h-20 rounded-full mx-auto mb-3 md:mb-4" />
+                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Sarah Johnson</h4>
+                        <p class="text-[#169976] font-medium mb-1 md:mb-2 text-xs md:text-sm">Founder & CEO</p>
+                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Pet lover with 15+ years of veterinary experience</p>
                     </div>
                     <div class="team-card text-center">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle fill='%23169976' cx='60' cy='60' r='60'/%3E%3Ccircle fill='%23ffffff' cx='60' cy='45' r='20'/%3E%3Cpath fill='%23ffffff' d='M40,95 Q60,75 80,95 Z'/%3E%3C/svg%3E" alt="Team member" class="w-20 h-20 rounded-full mx-auto mb-4">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Michael Chen</h4>
-                        <p class="text-[#169976] font-medium mb-2 text-sm">Lead Developer</p>
-                        <p class="text-gray-600 text-sm leading-relaxed">Tech enthusiast with a passion for pet wellness</p>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle fill='%23169976' cx='60' cy='60' r='60'/%3E%3Ccircle fill='%23ffffff' cx='60' cy='45' r='20'/%3E%3Cpath fill='%23ffffff' d='M40,95 Q60,75 80,95 Z'/%3E%3C/svg%3E" alt="Team member" class="w-16 h-16 md:w-20 md:h-20 rounded-full mx-auto mb-3 md:mb-4" />
+                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Michael Chen</h4>
+                        <p class="text-[#169976] font-medium mb-1 md:mb-2 text-xs md:text-sm">Lead Developer</p>
+                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Tech enthusiast with a passion for pet wellness</p>
                     </div>
                     <div class="team-card text-center">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle fill='%23169976' cx='60' cy='60' r='60'/%3E%3Ccircle fill='%23ffffff' cx='60' cy='45' r='20'/%3E%3Cpath fill='%23ffffff' d='M40,95 Q60,75 80,95 Z'/%3E%3C/svg%3E" alt="Team member" class="w-20 h-20 rounded-full mx-auto mb-4">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Emily Rodriguez</h4>
-                        <p class="text-[#169976] font-medium mb-2 text-sm">Veterinary Advisor</p>
-                        <p class="text-gray-600 text-sm leading-relaxed">Licensed veterinarian with specializations in pet nutrition</p>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle fill='%23169976' cx='60' cy='60' r='60'/%3E%3Ccircle fill='%23ffffff' cx='60' cy='45' r='20'/%3E%3Cpath fill='%23ffffff' d='M40,95 Q60,75 80,95 Z'/%3E%3C/svg%3E" alt="Team member" class="w-16 h-16 md:w-20 md:h-20 rounded-full mx-auto mb-3 md:mb-4" />
+                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Emily Rodriguez</h4>
+                        <p class="text-[#169976] font-medium mb-1 md:mb-2 text-xs md:text-sm">Veterinary Advisor</p>
+                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Licensed veterinarian with specializations in pet nutrition</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="bg-[#1DCD9F] w-full py-16">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-white mb-4">Our Services</h2>
-                <p class="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-                    At PetTrack, we understand how much you love your pet and how important it is to keep them healthy and happy. That's why we offer a comprehensive range of services designed to meet all your pet's needs and give you peace of mind.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="service-card bg-white rounded-xl p-6 text-center shadow-lg">
-                    <div class="w-16 h-16 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-paw text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Pet Management</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        Keep track of your pet's basic information, breed, age, weight, and other important details in one organized place.
-                    </p>
-                </div>
-                <div class="service-card bg-white rounded-xl p-6 text-center shadow-lg">
-                    <div class="w-16 h-16 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-stethoscope text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Medical Records</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        Store and access your pet's complete medical history, vaccinations, and treatments in one secure location.
-                    </p>
-                </div>
-                <div class="service-card bg-white rounded-xl p-6 text-center shadow-lg">
-                    <div class="w-16 h-16 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-calendar-alt text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Appointment Scheduling</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        Easily schedule and manage vet appointments, grooming sessions, and other important pet care activities.
-                    </p>
-                </div>
-                <div class="service-card bg-white rounded-xl p-6 text-center shadow-lg">
-                    <div class="w-16 h-16 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-user-friends text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">Client Information Management</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        Manage your profile and contact information to stay connected with your pet care team.
-                    </p>
-                </div>
-            </div>
+    <!-- CTA Section -->
+    <section class="py-12 md:py-16 gradient-bg text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6">Ready to Give Your Pet the Best Care?</h2>
+            <p class="text-base md:text-xl max-w-2xl mx-auto mb-6 md:mb-8">Join thousands of pet owners who trust PetTrack with their furry family members' health and wellbeing.</p>
+            <button onclick="openModal()" class="bg-white text-[#169976] font-semibold py-2 md:py-3 px-6 md:px-8 rounded-lg shadow-lg hover:bg-gray-100 transition-colors duration-300 text-base md:text-lg">
+                Book Your Appointment Today
+            </button>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer id="contacts" class="bg-gray-800 py-8 md:py-12 text-white">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                <div>
+                    <div class="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
+                        <div class="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center">
+                            <span class="text-[#169976] font-bold text-sm md:text-lg">🐾</span>
+                        </div>
+                        <p class="text-white font-bold text-lg md:text-xl">PetTrack</p>
+                    </div>
+                    <p class="mb-3 md:mb-4 text-gray-300 text-sm md:text-base">Your trusted partner in pet health management</p>
+                    <div class="flex flex-col gap-1 md:gap-2">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-phone-alt text-xs md:text-sm"></i>
+                            <span class="text-sm md:text-base">(123) 456-7890</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-envelope text-xs md:text-sm"></i>
+                            <span class="text-sm md:text-base">info@pettrack.com</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Our Location</h3>
+                    <div class="flex items-start gap-2 mb-3 md:mb-4">
+                        <i class="fas fa-map-marker-alt mt-1 text-xs md:text-sm"></i>
+                        <p class="text-gray-300 text-sm md:text-base">PQXJ+Q9J, Butuan - Cagayan de Oro - Iligan Rd, Balingasag, Misamis Oriental</p>
+                    </div>
+                    <div class="flex gap-3 md:gap-4">
+                        <a href="#" class="text-white hover:text-gray-300 transition-colors">
+                            <i class="fab fa-facebook-f text-base md:text-lg"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-gray-300 transition-colors">
+                            <i class="fab fa-instagram text-base md:text-lg"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-gray-300 transition-colors">
+                            <i class="fab fa-twitter text-base md:text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Find Us</h3>
+                    <div class="footer-map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1262.921952432691!2d124.78045648758747!3d8.74964320210998!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32ffe1fbecdd99ad%3A0x73cf6beb3b523f24!2sBalingasag%20Dog%20And%20Cat%20Clinic!5e1!3m2!1sen!2sph!4v1755610325757!5m2!1sen!2sph" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 md:mt-8 pt-4 md:pt-6 text-center text-xs md:text-sm text-gray-400">
+                <p>© 2023 PetTrack. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- Appointment Modal -->
     <div id="appointmentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
-        <div class="bg-white w-full max-w-5xl mx-4 h-[88vh] rounded-xl shadow-xl flex flex-col" tabindex="-1">
+        <div class="bg-white w-full max-w-5xl mx-4 h-[88vh] rounded-xl shadow-xl flex flex-col overflow-y-auto" tabindex="-1">
 
             <!-- Header -->
             <div class="bg-[#169976] px-6 py-4 rounded-t-xl flex justify-between items-center">
                 <h2 id="modalTitle" class="text-2xl font-semibold text-white text-center w-full">Book an Appointment</h2>
-                <button type="button" onclick="closeModal()" class="absolute right-6 text-white hover:text-gray-200 focus:outline-none" aria-label="Close modal">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
             </div>
 
             <!-- Form -->
@@ -504,7 +719,7 @@
                         <!-- Owner -->
                         <div>
                             <label for="owner" class="block text-sm font-medium text-gray-700">Owner Name</label>
-                            <input type="text" id="owner" name="owner_name" required
+                            <input type="text" id="owner" name="owner_name" placeholder="Enter Full Name" required
                                 class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
                         </div>
 
@@ -512,6 +727,10 @@
                         <div>
                             <label for="contact" class="block text-sm font-medium text-gray-700">Contact Number</label>
                             <input type="text" id="contact" name="contact_number" required
+                                pattern="^09\d{9}$"
+                                maxlength="11"
+                                placeholder="e.g. 09171234567"
+                                title="Enter a valid Philippine number starting with 09 and 11 digits long"
                                 class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
                         </div>
 
@@ -559,59 +778,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-[#169976] py-8 text-white">
-        <div class="container mx-auto px-6">
-            <div class="footer-content flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
-                <div class="flex-1 max-w-md">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                            <span class="text-[#169976] font-bold text-lg">🐾</span>
-                        </div>
-                        <p class="text-white font-bold text-xl">PetTrack</p>
-                    </div>
-                    <p class="mb-4">Your trusted partner in pet health management</p>
-                    <div class="flex flex-col gap-2">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-phone-alt text-sm"></i>
-                            <span>(123) 456-7890</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-envelope text-sm"></i>
-                            <span>info@pettrack.com</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 max-w-md">
-                    <h3 class="text-lg font-semibold mb-4">Our Location</h3>
-                    <div class="flex items-start gap-2 mb-4">
-                        <i class="fas fa-map-marker-alt mt-1"></i>
-                        <p>PQXJ+Q9J, Butuan - Cagayan de Oro - Iligan Rd, Balingasag, Misamis Oriental</p>
-                    </div>
-                    <div class="flex gap-4">
-                        <a href="#" class="text-white hover:text-gray-200 transition-colors">
-                            <i class="fab fa-facebook-f text-lg"></i>
-                        </a>
-                        <a href="#" class="text-white hover:text-gray-200 transition-colors">
-                            <i class="fab fa-instagram text-lg"></i>
-                        </a>
-                        <a href="#" class="text-white hover:text-gray-200 transition-colors">
-                            <i class="fab fa-twitter text-lg"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="flex-1 max-w-md w-full">
-                    <div class="footer-map">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1262.921952432691!2d124.78045648758747!3d8.74964320210998!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32ffe1fbecdd99ad%3A0x73cf6beb3b523f24!2sBalingasag%20Dog%20And%20Cat%20Clinic!5e1!3m2!1sen!2sph!4v1755610325757!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-white/20 mt-8 pt-6 text-center text-sm">
-                <p>© 2023 PetTrack. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         <?php if (isset($_SESSION['success'])): ?>
             Swal.fire({
@@ -858,7 +1025,6 @@
     </script>
 
     <script src="./js/landing-page.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
-</html>w
+</html>

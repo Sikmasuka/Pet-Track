@@ -352,7 +352,7 @@ ob_end_flush();
                 <!-- Appointments Today -->
                 <div
                     class="bg-white p-3 rounded-md relative shadow-md border border-slate-200 hover:border-indigo-400 transition-colors">
-                    <a href="appointments.php"
+                    <a href="../admin/admin-appointments.php"
                         class="absolute top-1 right-2 text-gray-500 hover:text-indigo-400 transition-colors text-sm">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     </a>

@@ -163,7 +163,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
                 <i class="fas fa-calendar-days mr-2"></i> Appointments
             </a>
 
-            <a href="../includes/sitemap/admin-help.php"
+            <a href="../../includes/sitemap/admin-help.php"
                 class="block text-sm text-gray-200 hover:bg-emerald-600 px-4 py-2 rounded-md hover:text-white transition-colors">
                 <i class="fas fa-question-circle mr-2"></i> Help/Support
             </a>

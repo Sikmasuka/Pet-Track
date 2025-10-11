@@ -13895,3 +13895,645 @@ Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
 Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
 Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
 Events found: 5
+Time: 2025-10-09 10:22:40 - Start: 2025-10-18, End: 2025-10-18, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-18&end=2025-10-18
+Events found: 0
+Script executed at 2025-10-09 10:22:44
+Database connection successful.
+Form data: Array
+(
+    [owner_name] => Princess Joy Macra
+    [contact_number] => 09392516664
+    [appointment_date] => 2025-10-18
+    [appointment_time] => 14:30:00
+    [reason] => Vaccination
+)
+
+Appointment logged: Guest Princess Joy Macra booked an appointment on October 18, 2025 at 2:30 PM
+Time: 2025-10-09 10:34:09 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:34:09 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:35:29 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:35:29 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:46:03 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:46:03 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:46:05 - Start: 2025-11-01, End: 2025-12-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-12-01
+Events found: 0
+Time: 2025-10-09 10:46:05 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:46:25 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:46:25 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:54:10 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:54:10 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:54:56 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:54:56 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:54:59 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:54:59 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 6
+Time: 2025-10-09 10:55:33 - Start: 2025-10-10, End: 2025-10-10, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-10&end=2025-10-10
+Count for 2025-10-10: 2
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Events found: 2
+Time: 2025-10-09 10:55:35 - Start: 2025-10-16, End: 2025-10-16, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-16&end=2025-10-16
+Events found: 0
+Script executed at 2025-10-09 10:55:36
+Database connection successful.
+Form data: Array
+(
+    [owner_name] => wawang
+    [contact_number] => 091556778289
+    [appointment_date] => 2025-10-16
+    [appointment_time] => 10:00:00
+    [reason] => Checkup
+)
+
+Appointment logged: Guest wawang booked an appointment on October 16, 2025 at 10:00 AM
+Time: 2025-10-09 10:55:42 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 7
+Time: 2025-10-09 10:55:42 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 7
+Script executed at 2025-10-11 12:27:26
+Database connection successful.
+Form data: Array
+(
+    [owner_name] => Jameskhyl Dela Cera
+    [contact_number] => 09392516664
+    [appointment_date] => 2025-10-17
+    [appointment_time] => 16:30:00
+    [reason] => Surgery
+)
+
+Appointment logged: Guest Jameskhyl Dela Cera booked an appointment on October 17, 2025 at 4:30 PM
+Time: 2025-10-11 12:27:48 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 8
+Time: 2025-10-11 12:27:49 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 8
+Time: 2025-10-11 12:28:17 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 8
+Time: 2025-10-11 12:28:17 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 8
+Time: 2025-10-11 12:28:19 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 8
+Time: 2025-10-11 12:28:19 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 8
+Time: 2025-10-11 21:39:33 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 8
+Time: 2025-10-11 21:39:33 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 8
+Time: 2025-10-11 21:56:52 - Start: 2025-10-15, End: 2025-10-15, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-15&end=2025-10-15
+Events found: 0
+Time: 2025-10-11 21:57:03 - Start: 2025-10-15, End: 2025-10-15, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-15&end=2025-10-15
+Events found: 0
+Time: 2025-10-11 21:57:03 - Start: 2025-10-15, End: 2025-10-15, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-15&end=2025-10-15
+Events found: 0
+Script executed at 2025-10-11 21:57:05
+Database connection successful.
+Form data: Array
+(
+    [owner_name] => Biano Dela Cera
+    [contact_number] => 09392516664
+    [appointment_date] => 2025-10-15
+    [appointment_time] => 14:30:00
+    [reason] => Grooming
+)
+
+Appointment logged: Guest Biano Dela Cera booked an appointment on October 15, 2025 at 2:30 PM
+Time: 2025-10-11 21:57:16 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 9
+Time: 2025-10-11 21:57:16 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 9
+Time: 2025-10-11 21:57:34 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 9
+Time: 2025-10-11 21:57:34 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 1
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 1, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 9
+Time: 2025-10-11 22:55:07 - Start: 2025-10-15, End: 2025-10-15, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-15&end=2025-10-15
+Count for 2025-10-15: 1
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-10-11 22:55:14 - Start: 2025-10-15, End: 2025-10-15, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-15&end=2025-10-15
+Count for 2025-10-15: 1
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 1, duration: 90)
+Events found: 1
+Script executed at 2025-10-11 22:55:23
+Database connection successful.
+Form data: Array
+(
+    [owner_name] => Shalol
+    [contact_number] => 09392516664
+    [appointment_date] => 2025-10-15
+    [appointment_time] => 09:30:00
+    [reason] => Vaccination
+)
+
+Appointment logged: Guest Shalol booked an appointment on October 15, 2025 at 9:30 AM
+Time: 2025-10-11 22:55:40 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 2
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Shalol on 2025-10-15 at 09:30:00 (count: 2, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 2, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 10
+Time: 2025-10-11 22:55:40 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 2
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Shalol on 2025-10-15 at 09:30:00 (count: 2, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 2, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 10
+Time: 2025-10-11 23:00:37 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 2
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Shalol on 2025-10-15 at 09:30:00 (count: 2, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 2, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 10
+Time: 2025-10-11 23:00:37 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 2
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Shalol on 2025-10-15 at 09:30:00 (count: 2, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 2, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 10
+Time: 2025-10-11 23:16:05 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 2
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Shalol on 2025-10-15 at 09:30:00 (count: 2, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 2, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 10
+Time: 2025-10-11 23:16:05 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-15: 2
+Count for 2025-10-16: 1
+Count for 2025-10-17: 1
+Count for 2025-10-18: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: Shalol on 2025-10-15 at 09:30:00 (count: 2, duration: 90)
+Event: Biano Dela Cera on 2025-10-15 at 14:30:00 (count: 2, duration: 90)
+Event: wawang on 2025-10-16 at 10:00:00 (count: 1, duration: 90)
+Event: Jameskhyl Dela Cera on 2025-10-17 at 16:30:00 (count: 1, duration: 90)
+Event: Princess Joy Macra on 2025-10-18 at 14:30:00 (count: 1, duration: 90)
+Events found: 10
