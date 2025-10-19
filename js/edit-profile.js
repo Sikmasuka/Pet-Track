@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const formData = new FormData(form);
       console.log("Debug: Form data", Object.fromEntries(formData));
 
-      fetch("functions/profile-handler.php", {
+      fetch("/Pet-Track/functions/profile-handler.php", {
         method: "POST",
         body: formData,
       })
