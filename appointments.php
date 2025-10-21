@@ -113,7 +113,15 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
         #calendar {
             width: 100%;
             margin: 0 auto;
-            height: 400px;
+            height: 300px;
+            /* Default for mobile */
+        }
+
+        @media (min-width: 768px) {
+            #calendar {
+                height: 400px;
+                /* Larger for desktop */
+            }
         }
 
         /* Custom styles for calendar day indicators */
@@ -212,6 +220,61 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
 
         .legend-full {
             background-color: #dc3545;
+        }
+
+        @media (max-width: 767px) {
+            .fc .fc-daygrid-day-number {
+                font-size: 0.75rem;
+                /* Smaller font for day numbers on mobile */
+            }
+
+            .appointment-indicator {
+                top: 3px;
+                right: 3px;
+                width: 8px;
+                height: 8px;
+            }
+
+            .appointment-indicator.full-day {
+                top: 1px;
+                right: 1px;
+                width: 6px;
+                height: 6px;
+            }
+
+            .legend-item {
+                font-size: 12px;
+                /* Smaller legend text on mobile */
+            }
+
+            .legend-circle {
+                width: 10px;
+                height: 10px;
+            }
+
+            .calendar-legend {
+                gap: 10px;
+                /* Smaller gap for legend on mobile */
+                justify-content: center;
+            }
+
+            .fc .fc-toolbar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .fc .fc-toolbar-chunk {
+                margin: 2px 0;
+            }
+
+            .fc .fc-toolbar-title {
+                font-size: 1rem;
+            }
+
+            .fc .fc-button {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -469,6 +532,11 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: "dayGridMonth",
                 initialDate: "<?= $start_date ?>", // Use PHP-generated start date
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: ''
+                },
                 events: function(fetchInfo, successCallback, failureCallback) {
                     const start = fetchInfo.startStr.split('T')[0]; // Extract date part
                     const end = fetchInfo.endStr.split('T')[0]; // Extract date part

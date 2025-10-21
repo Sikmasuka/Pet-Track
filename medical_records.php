@@ -331,33 +331,10 @@ ob_end_flush();
                 </div>
             <?php endif; ?>
 
-            <!-- Filter Dropdowns in Same Row -->
-            <div class="flex flex-row gap-6 mb-4">
-                <form method="GET">
-                    <label for="species1" class="text-sm font-medium text-gray-700 mr-2">Cat Symptoms:</label>
-                    <select name="species" id="species1"
-                        class="border border-gray-300 rounded-lg px-4 cursor-pointer py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none w-48"
-                        onchange="this.form.submit()">
-                        <option value="Cat" <?= (isset($_GET['species']) && $_GET['species'] === 'Cat') ? 'selected' : '' ?>>Sneezing</option>
-                        <option value="Cat" <?= (isset($_GET['species']) && $_GET['species'] === 'Cat') ? 'selected' : '' ?>>Hairballs</option>
-                        <option value="Cat" <?= (isset($_GET['species']) && $_GET['species'] === 'Cat') ? 'selected' : '' ?>>Vomiting</option>
-                        <option value="Cat" <?= (isset($_GET['species']) && $_GET['species'] === 'Cat') ? 'selected' : '' ?>>Loss of Appetite</option>
-                        <option value="Cat" <?= (isset($_GET['species']) && $_GET['species'] === 'Cat') ? 'selected' : '' ?>>Itching</option>
-                    </select>
-                </form>
-
-                <form method="GET">
-                    <label for="species2" class="text-sm font-medium text-gray-700 mr-2">Filter Dog Symptoms:</label>
-                    <select name="species" id="species2"
-                        class="border border-gray-300 rounded-lg px-4 cursor-pointer py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none w-48"
-                        onchange="this.form.submit()">
-                        <option value="All" <?= (!isset($_GET['species']) || $_GET['species'] === 'All') ? 'selected' : '' ?>>All</option>
-                        <option value="Dog" <?= (isset($_GET['species']) && $_GET['species'] === 'Dog') ? 'selected' : '' ?>>Cough</option>
-                        <option value="Dog" <?= (isset($_GET['species']) && $_GET['species'] === 'Dog') ? 'selected' : '' ?>>Vomiting</option>
-                        <option value="Dog" <?= (isset($_GET['species']) && $_GET['species'] === 'Dog') ? 'selected' : '' ?>>Diarrhea</option>
-                        <option value="Dog" <?= (isset($_GET['species']) && $_GET['species'] === 'Dog') ? 'selected' : '' ?>>Itching</option>
-                    </select>
-                </form>
+            <!-- Search Bar -->
+            <div class="mb-4">
+                <label for="search" class="text-sm font-medium text-gray-700 mr-2">Search Medical Records:</label>
+                <input type="text" id="search" class="border border-gray-300 rounded-lg px-4 py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="Search by pet name, condition, diagnosis, symptoms, or treatment...">
             </div>
 
             <?php if (count($records) > 0): ?>
@@ -486,6 +463,50 @@ ob_end_flush();
                 console.error("Modal not found:", modalId);
             }
         }
+
+        // Client-side filtering for search input
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase().trim();
+                    const rows = document.querySelectorAll('tbody tr');
+                    let visibleCount = 0;
+
+                    rows.forEach(row => {
+                        const petName = row.cells[0].textContent.toLowerCase();
+                        const date = row.cells[1].textContent.toLowerCase();
+                        const condition = row.cells[2].textContent.toLowerCase();
+                        const diagnosis = row.cells[3].textContent.toLowerCase();
+                        const symptoms = row.cells[4].textContent.toLowerCase();
+                        const treatment = row.cells[5].textContent.toLowerCase();
+
+                        if (petName.includes(searchTerm) || date.includes(searchTerm) || condition.includes(searchTerm) || diagnosis.includes(searchTerm) || symptoms.includes(searchTerm) || treatment.includes(searchTerm)) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    // Optional: Show "No results" message if no rows visible
+                    let noResults = document.getElementById('noResults');
+                    if (!noResults) {
+                        noResults = document.createElement('p');
+                        noResults.id = 'noResults';
+                        noResults.className = 'text-center text-gray-500 text-sm';
+                        noResults.textContent = 'No medical records found matching your search.';
+                        noResults.style.display = 'none';
+                        // Insert after the table
+                        const tableContainer = document.querySelector('.table-container');
+                        if (tableContainer) {
+                            tableContainer.appendChild(noResults);
+                        }
+                    }
+                    noResults.style.display = (visibleCount === 0 && searchTerm) ? 'block' : 'none';
+                });
+            }
+        });
     </script>
 
     <script src="./js/dashboard.js"></script>

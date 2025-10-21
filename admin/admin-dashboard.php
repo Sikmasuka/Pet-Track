@@ -284,7 +284,7 @@ ob_end_flush();
             </div>
 
             <!-- Metrics Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-4">
                 <div
                     class="bg-white p-3 rounded-md h-full relative shadow-md border border-slate-200 hover:border-indigo-400 transition-colors">
                     <a href="./records/client-records.php"

@@ -1,7 +1,4 @@
 <?php
-// Start the session
-session_start();
-
 // Check if the user is already logged in
 if (isset($_SESSION['admin_id'])) {
     header('Location: admin/admin-dashboard.php');
