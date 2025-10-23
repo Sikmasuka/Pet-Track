@@ -1,0 +1,2 @@
+- Replace all FontAwesome icons in landing-page.php with <img> tags using MainIcon.png, matching original sizes
+- Replace emoji icons (🏆, 🐾) with <img> tags using MainIcon.png

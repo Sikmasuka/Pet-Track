@@ -1,47 +1,376 @@
 <!DOCTYPE html>
-<?php session_start(); ?>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="image/MainIcon.png" type="image/x-icon" />
-    <title>PetTrack - Professional Pet Healthcare</title>
+    <title>PetTrack - Balingasag Dog and Cat Clinic</title>
     <script src="Assets/chart.js"></script>
     <link rel="stylesheet" href="Assets/FontAwsome/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
         html {
             scroll-behavior: smooth;
         }
 
         body {
-            background-color: #f8fafc;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #fafbfc;
         }
 
-        .hero-section {
-            min-height: calc(100vh - 64px);
-            position: relative;
-        }
-
-        .hero-image {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            max-width: 45%;
-        }
-
-        .service-card {
+        /* Header Styles */
+        header {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
             transition: all 0.3s ease;
         }
 
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        header.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a4d3c 0%, #169976 50%, #1dcd9f 100%);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(29, 205, 159, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(22, 153, 118, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-image-container {
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Glass Card Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Service Cards */
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #169976, #1dcd9f);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 36px rgba(22, 153, 118, 0.15);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #169976, #1dcd9f);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 24px rgba(22, 153, 118, 0.3);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, #0a4d3c 0%, #169976 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .stat-card {
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #e0f9f3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* About Section */
+        .about-section {
+            background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(22, 153, 118, 0.12);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #e8f8f3, #d1f2e8);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Team Cards */
+        .team-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.4s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(22, 153, 118, 0.15);
+        }
+
+        .team-image {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #169976, #1dcd9f);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.9), transparent);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #0a4d3c 0%, #169976 50%, #1dcd9f 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -250px;
+            right: -250px;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #169976, #1dcd9f);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 16px rgba(22, 153, 118, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(22, 153, 118, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #169976;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: transparent;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0a3d31 0%, #0f5240 100%);
+            position: relative;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #1dcd9f;
+            transform: translateX(4px);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 2.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #169976, #1dcd9f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 1rem auto 0;
+            line-height: 1.6;
+        }
+
+        /* Appointment Modal - Keep Original Styles */
         .appointment-indicator.full-day {
             position: absolute;
             top: 2px;
@@ -57,128 +386,6 @@
             padding: 4px;
         }
 
-        @media (max-width: 768px) {
-            .hero-image {
-                position: static;
-                max-width: 100%;
-                margin-top: 2rem;
-            }
-
-            .hero-section {
-                flex-direction: column;
-                text-align: center;
-                padding: 2rem 1rem;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .footer-map {
-                height: 250px;
-                margin-top: 1rem;
-            }
-        }
-
-        .footer-map {
-            border-radius: 8px;
-            overflow: hidden;
-            height: 200px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Updated About Section Styles */
-        #about {
-            background: linear-gradient(to bottom, #f1f5f9, #f8fafc);
-        }
-
-        #about .container {
-            max-width: 1200px;
-        }
-
-        #about h2 {
-            font-size: 2rem;
-            line-height: 1.2;
-            background: linear-gradient(to right, #169976, #1dcd9f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        #about .story-image {
-            transition: transform 0.3s ease;
-        }
-
-        #about .story-image:hover {
-            transform: scale(1.05);
-        }
-
-        #about .mission-vision-card {
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-            background: white;
-        }
-
-        #about .mission-vision-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        #about .why-choose-card {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-        }
-
-        #about .why-choose-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        #about .stat-card {
-            background: linear-gradient(135deg, #169976, #1dcd9f);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: transform 0.3s ease;
-        }
-
-        #about .stat-card:hover {
-            transform: scale(1.05);
-        }
-
-        #about .team-card {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-        }
-
-        #about .team-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            #about h2 {
-                font-size: 1.75rem;
-            }
-
-            #about .story-image {
-                max-width: 80%;
-                margin: 0 auto;
-            }
-        }
-
-        /* Time slot availability styles */
         #timeAvailability {
             display: flex;
             align-items: center;
@@ -208,7 +415,6 @@
             background-color: #dc3545;
         }
 
-        /* Taken time slots list styles */
         #takenTimeSlots {
             margin-top: 8px;
             padding: 8px;
@@ -233,134 +439,45 @@
             display: none;
         }
 
-        /* Additional responsive styles */
-        .nav-links.mobile-open {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 64px;
-            left: 0;
-            width: 100%;
-            background-color: #169976;
-            padding: 1rem;
-            z-index: 40;
-        }
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
 
-        .nav-links.mobile-open a {
-            padding: 0.75rem 0;
-            text-align: center;
-        }
+            .stat-number {
+                font-size: 2rem;
+            }
 
-        /* Professional styling additions */
-        .professional-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
+            .service-icon {
+                width: 56px;
+                height: 56px;
+            }
 
-        .professional-card:hover {
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .section-title {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 2rem;
-        }
-
-        .section-title:after {
-            content: '';
-            position: absolute;
-            width: 50%;
-            height: 4px;
-            background: linear-gradient(to right, #169976, #1dcd9f);
-            bottom: -10px;
-            left: 25%;
-            border-radius: 2px;
-        }
-
-        .gradient-bg {
-            background: linear-gradient(135deg, #169976 0%, #1dcd9f 100%);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 10;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1;
-        }
-
-        /* Improved mobile responsiveness */
-        @media (max-width: 640px) {
             .hero-section {
                 min-height: 70vh;
+            }
+
+            .nav-links.mobile-open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(20px);
                 padding: 1rem;
+                z-index: 40;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             }
 
-            .hero-section h1 {
-                font-size: 1.75rem;
-                line-height: 1.2;
+            .nav-links.mobile-open a {
+                padding: 0.75rem 0;
+                text-align: center;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             }
 
-            .hero-section p {
-                font-size: 1rem;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
-
-            .professional-card {
-                padding: 1rem;
-            }
-
-            .mission-vision-card {
-                padding: 1.5rem;
-            }
-
-            .stat-card {
-                padding: 1.5rem;
-            }
-
-            .team-card {
-                padding: 1rem;
-            }
-
-            .footer-map {
-                height: 180px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-section h1 {
-                font-size: 1.5rem;
-            }
-
-            .section-title {
-                font-size: 1.25rem;
-            }
-
-            .professional-card h3 {
-                font-size: 1.125rem;
-            }
-
-            .mission-vision-card h3 {
-                font-size: 1.125rem;
-            }
-        }
-
-        /* Mobile fixes for appointment modal */
-        @media (max-width: 640px) {
             #appointmentModal>div {
                 max-width: calc(100% - 2rem);
                 height: 80vh;
@@ -371,153 +488,169 @@
             #appointmentForm {
                 padding: 1rem;
             }
+        }
 
-            #calendarContainer {
-                padding: 1rem;
-            }
+        /* Updated Design Elements: Softer borders, increased padding, subtle animations */
+        section {
+            transition: opacity 0.5s ease-in-out;
+        }
 
-            #appointmentModal>div>.bg-[#169976] {
-                position: sticky;
-                top: 0;
-                z-index: 10;
-            }
+        .glass-card {
+            border-radius: 32px;
+            padding: 3rem;
+        }
 
-            #appointmentForm>.flex {
-                position: sticky;
-                bottom: 0;
-                background: white;
-                z-index: 10;
-                padding-top: 1rem;
-                margin-top: 1rem;
-            }
+        .service-card {
+            border-radius: 28px;
+            padding: 3rem;
+        }
+
+        .feature-card {
+            border-radius: 24px;
+            padding: 2.5rem;
+        }
+
+        .team-card {
+            border-radius: 28px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            border-radius: 12px;
+            padding: 0.5rem 1.5rem;
         }
     </style>
 </head>
 
-<body class="min-h-screen">
+<body>
     <!-- Header -->
-    <header class="fixed top-0 left-0 w-full bg-white shadow-md h-16 z-50">
-        <div class="flex items-center justify-between h-full px-4 md:px-6">
+    <header class="fixed top-0 left-0 w-full h-16 z-50">
+        <div class="flex items-center justify-between h-full px-4 md:px-8 max-w-7xl mx-auto">
             <div class="flex items-center gap-3">
-                <img class="w-8 h-8 md:w-10 md:h-10" src="./image/MainIcon.png" alt="">
-                <p class="text-[#169976] font-bold text-lg md:text-xl">PetTrack</p>
+                <img src="./image/MainIcon.png" alt="PetTrack Logo" class="w-8 h-8">
+                <p class="text-[#169976] font-bold text-xl">PetTrack</p>
             </div>
 
-            <div class="flex items-center gap-3 md:gap-4">
+            <div class="flex items-center gap-4">
                 <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
-                    <i class="fas fa-bars text-lg"></i>
+                    <i class="fas fa-bars text-xl"></i>
                 </button>
-                <nav class="nav-links hidden md:flex items-center gap-4 md:gap-6">
-                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors duration-200" href="#">
-                        Home
-                    </a>
-                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors duration-200" href="#about">
-                        About
-                    </a>
-                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors duration-200" href="#services">
-                        Services
-                    </a>
-                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors duration-200" href="#contacts">
-                        Contact
-                    </a>
+                <nav class="nav-links hidden md:flex items-center gap-8">
+                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors" href="#">Home</a>
+                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors" href="#about">About</a>
+                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors" href="#services">Services</a>
+                    <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors" href="#contacts">Contact</a>
                 </nav>
 
-                <button onclick="openModal()" class="bg-[#169976] text-white font-semibold py-2 px-3 md:px-4 rounded-lg shadow transition duration-300 transform hover:bg-[#18b98e] hover:scale-105 hover:shadow-lg text-sm md:text-base">
-                    Appointment
+                <button onclick="openModal()" class="btn-primary text-sm md:text-base px-3 py-1 md:px-4 md:py-2">
+                    Book Now
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <main class="relative min-h-screen w-full px-4 md:px-20 py-16 hero-section flex items-center justify-between bg-cover bg-center" style="background-image: url('./image/HeroBanner.png');">
-        <div class="hero-overlay"></div>
-        <div class="max-w-2xl space-y-4 md:space-y-6 hero-content">
-            <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">Premium Veterinary Care for Your Beloved Pets</h1>
-            <p class="text-base md:text-xl text-white leading-relaxed opacity-90">
-                Comprehensive healthcare solutions with cutting-edge technology and compassionate expertise.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-3 md:gap-4 mt-6 md:mt-8">
-                <button onclick="openModal()" class="bg-white text-[#169976] font-semibold py-2 md:py-3 px-6 md:px-8 rounded-lg shadow-lg hover:bg-gray-100 transition-colors duration-300 text-base md:text-lg">
-                    Schedule Appointment
-                </button>
-                <a href="#services" class="bg-transparent border-2 border-white text-white font-semibold py-2 md:py-3 px-6 md:px-8 rounded-lg hover:bg-white hover:text-[#169976] transition-colors duration-300 text-base md:text-lg text-center">
-                    Our Services
-                </a>
+    <section class="hero-section flex items-center pt-24 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="hero-content text-white">
+                    <div class="inline-block bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+                        <p class="text-sm font-medium"><img src="./image/MainIcon.png" alt="Award" class="w-4 h-4 inline mr-1"> Efficient Pet Record Management</p>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+                        Streamline Pet Care at Balingasag Dog and Cat Clinic
+                    </h1>
+                    <p class="text-lg md:text-xl opacity-90 mb-8 leading-relaxed">
+                        PetTrack addresses challenges in managing pet medical records by centralizing data, reducing errors, and ensuring timely access for better pet care.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="openModal()" class="btn-secondary">
+                            Schedule Appointment
+                        </button>
+                        <a href="#services" class="btn-primary text-center">
+                            Explore Features
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image-container hidden lg:block">
+                    <img src="./image/dog-cat.png" alt="Happy Pets" class="w-full max-w-2xl mx-auto drop-shadow-2xl" />
+                </div>
             </div>
         </div>
-        <div class="hero-image hidden md:block hero-content">
-            <img src="./image/dog-cat.png" alt="Cat and Dog" class="w-full md:max-w-2xl" />
-        </div>
-    </main>
+    </section>
 
     <!-- Stats Section -->
-    <section class="py-8 md:py-12 gradient-bg text-white">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <div class="text-center">
-                    <p class="text-xl md:text-3xl font-bold mb-1 md:mb-2">5,000+</p>
-                    <p class="text-xs md:text-sm">Happy Pets</p>
+    <section class="stats-section py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="stat-card">
+                    <span class="stat-number">Efficient</span>
+                    <p class="text-white/90 font-medium">Record Management</p>
                 </div>
-                <div class="text-center">
-                    <p class="text-xl md:text-3xl font-bold mb-1 md:mb-2">98%</p>
-                    <p class="text-xs md:text-sm">Satisfaction Rate</p>
+                <div class="stat-card">
+                    <span class="stat-number">Secure</span>
+                    <p class="text-white/90 font-medium">Data Storage</p>
                 </div>
-                <div class="text-center">
-                    <p class="text-xl md:text-3xl font-bold mb-1 md:mb-2">24/7</p>
-                    <p class="text-xs md:text-sm">Emergency Care</p>
+                <div class="stat-card">
+                    <span class="stat-number">Easy</span>
+                    <p class="text-white/90 font-medium">Access & Updates</p>
                 </div>
-                <div class="text-center">
-                    <p class="text-xl md:text-3xl font-bold mb-1 md:mb-2">50+</p>
-                    <p class="text-xs md:text-sm">Veterinary Experts</p>
+                <div class="stat-card">
+                    <span class="stat-number">Local</span>
+                    <p class="text-white/90 font-medium">Clinic Focus</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="py-12 md:py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12 md:mb-16">
-                <h2 class="section-title text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800">Our Premium Services</h2>
-                <p class="text-base md:text-xl text-gray-600 max-w-3xl mx-auto mt-4 md:mt-6">Comprehensive veterinary care designed to keep your pets healthy and happy throughout their lives</p>
+    <section id="services" class="py-20 md:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="section-title">System Features</h2>
+                <p class="section-subtitle">
+                    Key capabilities designed to improve veterinary clinic operations and pet care
+                </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                <div class="professional-card p-4 md:p-6 text-center">
-                    <div class="w-12 h-12 md:w-16 md:h-16 bg-[#169976] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                        <i class="fas fa-stethoscope text-white text-lg md:text-2xl"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-file-medical text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Comprehensive Check-ups</h3>
-                    <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
-                        Thorough health examinations to detect issues early and ensure your pet's ongoing wellness.
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 text-center">Medical Records</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">
+                        Centralized storage and management of pet medical histories and treatments.
                     </p>
                 </div>
-                <div class="professional-card p-4 md:p-6 text-center">
-                    <div class="w-12 h-12 md:w-16 md:h-16 bg-[#169976] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                        <i class="fas fa-syringe text-white text-lg md:text-2xl"></i>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-calendar-check text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Vaccination Programs</h3>
-                    <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
-                        Customized vaccination schedules to protect your pets from preventable diseases.
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 text-center">Appointments</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">
+                        Easy booking and management of client appointments.
                     </p>
                 </div>
-                <div class="professional-card p-4 md:p-6 text-center">
-                    <div class="w-12 h-12 md:w-16 md:h-16 bg-[#169976] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                        <i class="fas fa-user-md text-white text-lg md:text-2xl"></i>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-users-cog text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Advanced Surgery</h3>
-                    <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
-                        State-of-the-art surgical procedures performed by our experienced veterinary surgeons.
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 text-center">User Management</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">
+                        Admin control over user accounts for vets and staff.
                     </p>
                 </div>
-                <div class="professional-card p-4 md:p-6 text-center">
-                    <div class="w-12 h-12 md:w-16 md:h-16 bg-[#169976] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                        <i class="fas fa-tooth text-white text-lg md:text-2xl"></i>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-bar text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Dental Care</h3>
-                    <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
-                        Complete oral health services including cleaning, extractions, and preventative care.
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 text-center">Basic Reporting</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">
+                        Generate reports on records and transactions.
                     </p>
                 </div>
             </div>
@@ -525,93 +658,92 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-12 md:py-20">
-        <div class="container mx-auto px-4">
-            <!-- Header -->
-            <div class="text-center mb-12 md:mb-16">
-                <h2 class="section-title text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800">About PetTrack</h2>
-                <p class="text-base md:text-xl text-gray-600 max-w-3xl mx-auto mt-4 md:mt-6">Your trusted partner in comprehensive pet health management</p>
-            </div>
-
-            <!-- Our Story -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mb-12 md:mb-16">
-                <div class="space-y-3 md:space-y-4">
-                    <h3 class="text-xl md:text-2xl font-bold text-gray-800">Our Story</h3>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">Founded in 2018, PetTrack began with a simple mission: to make pet care management as seamless and stress-free as possible for pet owners. What started as a small team of pet lovers and tech enthusiasts has grown into a comprehensive platform trusted by thousands of pet owners nationwide.</p>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">We understand that pets are family, and their health and happiness are paramount. That's why we've dedicated ourselves to creating a system that organizes all aspects of pet care in one convenient place.</p>
-                </div>
-                <div class="story-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect fill='%23ffffff' width='300' height='200' rx='15'/%3E%3Cpath fill='%23169976' d='M150,50 Q200,30 250,50 T300,70 L300,180 L0,180 L0,70 Q50,30 100,50 T150,50 Z'/%3E%3Ccircle fill='%23169976' cx='80' cy='40' r='15'/%3E%3Ccircle fill='%23169976' cx='220' cy='40' r='15'/%3E%3C/svg%3E" alt="Happy pets" class="w-full rounded-xl" />
-                </div>
-            </div>
-
-            <!-- Mission & Vision -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
-                <div class="mission-vision-card p-6 md:p-8 rounded-xl text-center">
-                    <div class="w-10 h-10 md:w-12 md:h-12 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                        <i class="fas fa-bullseye text-white text-lg md:text-xl"></i>
-                    </div>
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Our Mission</h3>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">To provide pet owners with an intuitive, comprehensive platform that simplifies pet care management, enhances the well-being of pets, and strengthens the bond between pets and their families.</p>
-                </div>
-                <div class="mission-vision-card p-6 md:p-8 rounded-xl text-center">
-                    <div class="w-10 h-10 md:w-12 md:h-12 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                        <i class="fas fa-eye text-white text-lg md:text-xl"></i>
-                    </div>
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 md:mb-3">Our Vision</h3>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">To become the world's most trusted pet care management platform, recognized for innovation, reliability, and dedication to improving the lives of pets and their owners.</p>
-                </div>
+    <section id="about" class="about-section py-20 md:py-32">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="section-title">About PetTrack</h2>
+                <p class="section-subtitle">
+                    Web-based management system for Balingasag Dog and Cat Clinic, addressing record-keeping challenges.
+                </p>
             </div>
 
             <!-- Why Choose Us -->
-            <div class="mb-12 md:mb-16">
-                <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 md:mb-8 text-center">Why Choose PetTrack?</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                    <div class="why-choose-card text-center">
-                        <div class="w-12 h-12 md:w-14 md:h-14 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                            <i class="fas fa-shield-alt text-white text-lg md:text-xl"></i>
+            <div class="mb-16">
+                <h3 class="text-3xl font-bold text-gray-800 mb-12 text-center">Significance of PetTrack</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt text-[#169976] text-2xl"></i>
                         </div>
-                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">All-in-One Platform</h4>
-                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Manage appointments, medical records, and pet information in one secure place.</p>
+                        <h4 class="text-xl font-semibold text-gray-800 mb-3">For Clinic Staff</h4>
+                        <p class="text-gray-600 leading-relaxed">
+                            Easier updates to pet records, less paperwork, more time for care.
+                        </p>
                     </div>
-                    <div class="why-choose-card text-center">
-                        <div class="w-12 h-12 md:w-14 md:h-14 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                            <i class="fas fa-clock text-white text-lg md:text-xl"></i>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock text-[#169976] text-2xl"></i>
                         </div>
-                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Time-Saving</h4>
-                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Automate reminders and streamline your pet care routine with our intuitive system.</p>
+                        <h4 class="text-xl font-semibold text-gray-800 mb-3">For Pet Owners</h4>
+                        <p class="text-gray-600 leading-relaxed">
+                            Convenient online booking and improved communication for better pet health.
+                        </p>
                     </div>
-                    <div class="why-choose-card text-center">
-                        <div class="w-12 h-12 md:w-14 md:h-14 bg-[#1DCD9F] rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                            <i class="fas fa-heart text-white text-lg md:text-xl"></i>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-heart text-[#169976] text-2xl"></i>
                         </div>
-                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Pet-Loved</h4>
-                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Designed by pet owners for pet owners, with your furry family members' needs in mind.</p>
+                        <h4 class="text-xl font-semibold text-gray-800 mb-3">For Communities</h4>
+                        <p class="text-gray-600 leading-relaxed">
+                            Enhances overall pet health, supporting public health in local areas.
+                        </p>
                     </div>
                 </div>
             </div>
 
             <!-- Team -->
             <div>
-                <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 md:mb-8 text-center">Our Team</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                    <div class="team-card text-center">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle fill='%23169976' cx='60' cy='60' r='60'/%3E%3Ccircle fill='%23ffffff' cx='60' cy='45' r='20'/%3E%3Cpath fill='%23ffffff' d='M40,95 Q60,75 80,95 Z'/%3E%3C/svg%3E" alt="Team member" class="w-16 h-16 md:w-20 md:h-20 rounded-full mx-auto mb-3 md:mb-4" />
-                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Sarah Johnson</h4>
-                        <p class="text-[#169976] font-medium mb-1 md:mb-2 text-xs md:text-sm">Founder & CEO</p>
-                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Pet lover with 15+ years of veterinary experience</p>
+                <h3 class="text-3xl font-bold text-gray-800 mb-12 text-center">Project Team</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="team-card">
+                        <div class="team-image flex items-center justify-center">
+                            <i class="fas fa-user-circle text-white text-8xl opacity-50"></i>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h4 class="text-xl font-bold text-gray-800 mb-2">Michaela G. Abecia</h4>
+                            <p class="text-[#169976] font-semibold mb-3">Project Manager</p>
+                            <p class="text-gray-600 text-sm">
+                                Information Technology Student at St. Rita’s College
+                            </p>
+                        </div>
                     </div>
-                    <div class="team-card text-center">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle fill='%23169976' cx='60' cy='60' r='60'/%3E%3Ccircle fill='%23ffffff' cx='60' cy='45' r='20'/%3E%3Cpath fill='%23ffffff' d='M40,95 Q60,75 80,95 Z'/%3E%3C/svg%3E" alt="Team member" class="w-16 h-16 md:w-20 md:h-20 rounded-full mx-auto mb-3 md:mb-4" />
-                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Michael Chen</h4>
-                        <p class="text-[#169976] font-medium mb-1 md:mb-2 text-xs md:text-sm">Lead Developer</p>
-                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Tech enthusiast with a passion for pet wellness</p>
+
+                    <div class="team-card">
+                        <div class="team-image flex items-center justify-center">
+                            <i class="fas fa-user-circle text-white text-8xl opacity-50"></i>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h4 class="text-xl font-bold text-gray-800 mb-2">Jan Paul Michael Dela Cera</h4>
+                            <p class="text-[#169976] font-semibold mb-3">Project Developer</p>
+                            <p class="text-gray-600 text-sm">
+                                Information Technology Student at St. Rita’s College
+                            </p>
+                        </div>
                     </div>
-                    <div class="team-card text-center">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle fill='%23169976' cx='60' cy='60' r='60'/%3E%3Ccircle fill='%23ffffff' cx='60' cy='45' r='20'/%3E%3Cpath fill='%23ffffff' d='M40,95 Q60,75 80,95 Z'/%3E%3C/svg%3E" alt="Team member" class="w-16 h-16 md:w-20 md:h-20 rounded-full mx-auto mb-3 md:mb-4" />
-                        <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">Emily Rodriguez</h4>
-                        <p class="text-[#169976] font-medium mb-1 md:mb-2 text-xs md:text-sm">Veterinary Advisor</p>
-                        <p class="text-gray-600 text-xs md:text-sm leading-relaxed">Licensed veterinarian with specializations in pet nutrition</p>
+
+                    <div class="team-card">
+                        <div class="team-image flex items-center justify-center">
+                            <i class="fas fa-user-circle text-white text-8xl opacity-50"></i>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h4 class="text-xl font-bold text-gray-800 mb-2">Sheryl Mae Lozano</h4>
+                            <p class="text-[#169976] font-semibold mb-3">Project Designer</p>
+                            <p class="text-gray-600 text-sm">
+                                Information Technology Student at St. Rita’s College
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -619,71 +751,80 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-12 md:py-16 gradient-bg text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6">Ready to Give Your Pet the Best Care?</h2>
-            <p class="text-base md:text-xl max-w-2xl mx-auto mb-6 md:mb-8">Join thousands of pet owners who trust PetTrack with their furry family members' health and wellbeing.</p>
-            <button onclick="openModal()" class="bg-white text-[#169976] font-semibold py-2 md:py-3 px-6 md:px-8 rounded-lg shadow-lg hover:bg-gray-100 transition-colors duration-300 text-base md:text-lg">
+    <section class="cta-section py-20 md:py-32 text-white relative">
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-6">
+                Ready to Streamline Your Pet Care?
+            </h2>
+            <p class="text-xl mb-10 opacity-90 leading-relaxed">
+                Join Balingasag Dog and Cat Clinic in using PetTrack for efficient management and superior pet health services.
+            </p>
+            <button onclick="openModal()" class="btn-secondary text-lg px-8 py-4">
                 Book Your Appointment Today
             </button>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer id="contacts" class="bg-gray-800 py-8 md:py-12 text-white">
-        <div class="container mx-auto px-4 md:px-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+    <footer id="contacts" class="py-16 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
                 <div>
-                    <div class="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
-                        <div class="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center">
-                            <span class="text-[#169976] font-bold text-sm md:text-lg">🐾</span>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+                            <img src="./image/MainIcon.png" alt="Paw" class="w-6 h-6 inline">
                         </div>
-                        <p class="text-white font-bold text-lg md:text-xl">PetTrack</p>
+                        <p class="text-white font-bold text-2xl">PetTrack</p>
                     </div>
-                    <p class="mb-3 md:mb-4 text-gray-300 text-sm md:text-base">Your trusted partner in pet health management</p>
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-phone-alt text-xs md:text-sm"></i>
-                            <span class="text-sm md:text-base">(123) 456-7890</span>
+                    <p class="mb-6 text-white/80 leading-relaxed">Management system for Balingasag Dog and Cat Clinic</p>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 footer-link">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>(123) 456-7890</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-envelope text-xs md:text-sm"></i>
-                            <span class="text-sm md:text-base">info@pettrack.com</span>
+                        <div class="flex items-center gap-3 footer-link">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@pettrack.com</span>
                         </div>
                     </div>
                 </div>
+
                 <div>
-                    <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Our Location</h3>
-                    <div class="flex items-start gap-2 mb-3 md:mb-4">
-                        <i class="fas fa-map-marker-alt mt-1 text-xs md:text-sm"></i>
-                        <p class="text-gray-300 text-sm md:text-base">PQXJ+Q9J, Butuan - Cagayan de Oro - Iligan Rd, Balingasag, Misamis Oriental</p>
+                    <h3 class="text-xl font-bold mb-4">Our Location</h3>
+                    <div class="flex items-start gap-3 mb-6">
+                        <i class="fas fa-map-marker-alt mt-1"></i>
+                        <p class="text-white/80 leading-relaxed">
+                            PQXJ+Q9J, Butuan - Cagayan de Oro - Iligan Rd, Balingasag, Misamis Oriental
+                        </p>
                     </div>
-                    <div class="flex gap-3 md:gap-4">
-                        <a href="#" class="text-white hover:text-gray-300 transition-colors">
-                            <i class="fab fa-facebook-f text-base md:text-lg"></i>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
+                            <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="text-white hover:text-gray-300 transition-colors">
-                            <i class="fab fa-instagram text-base md:text-lg"></i>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
+                            <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="text-white hover:text-gray-300 transition-colors">
-                            <i class="fab fa-twitter text-base md:text-lg"></i>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
+                            <i class="fab fa-twitter"></i>
                         </a>
                     </div>
                 </div>
+
                 <div>
-                    <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Find Us</h3>
-                    <div class="footer-map">
+                    <h3 class="text-xl font-bold mb-4">Find Us</h3>
+                    <div class="rounded-xl overflow-hidden h-48 shadow-lg">
                         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1262.921952432691!2d124.78045648758747!3d8.74964320210998!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32ffe1fbecdd99ad%3A0x73cf6beb3b523f24!2sBalingasag%20Dog%20And%20Cat%20Clinic!5e1!3m2!1sen!2sph!4v1755610325757!5m2!1sen!2sph" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-6 md:mt-8 pt-4 md:pt-6 text-center text-xs md:text-sm text-gray-400">
-                <p>© 2023 PetTrack. All rights reserved.</p>
+
+            <div class="border-t border-white/10 pt-8 text-center">
+                <p class="text-white/60">© 2025 PetTrack. All rights reserved. Developed for St. Rita’s College of Balingasag, Inc.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Appointment Modal -->
+    <!-- Appointment Modal - ORIGINAL FUNCTIONALITY PRESERVED -->
     <div id="appointmentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
         <div class="bg-white w-full max-w-5xl mx-4 h-[88vh] rounded-xl shadow-xl flex flex-col overflow-y-auto" tabindex="-1">
 
@@ -780,24 +921,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        <?php if (isset($_SESSION['success'])): ?>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: '<?php echo $_SESSION['success']; ?>',
-                confirmButtonColor: '#169976'
-            });
-            <?php unset($_SESSION['success']); ?>
-        <?php elseif (isset($_SESSION['error'])): ?>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '<?php echo $_SESSION['error']; ?>',
-                confirmButtonColor: '#169976'
-            });
-            <?php unset($_SESSION['error']); ?>
-        <?php endif; ?>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
 
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const navLinks = document.querySelector('.nav-links');
+        mobileMenuButton.addEventListener('click', () => {
+            navLinks.classList.toggle('mobile-open');
+        });
+
+        // ORIGINAL APPOINTMENT FUNCTIONALITY - DO NOT MODIFY
         function openModal() {
             document.getElementById("appointmentModal").classList.remove("hidden");
             initializeCalendar();
@@ -1015,13 +1156,6 @@
                     submitButton.classList.add("bg-[#169976]", "hover:bg-[#18b98e]");
                 });
         }
-
-        // Mobile menu toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const navLinks = document.querySelector('.nav-links');
-        mobileMenuButton.addEventListener('click', () => {
-            navLinks.classList.toggle('mobile-open');
-        });
     </script>
 
     <script src="./js/landing-page.js"></script>

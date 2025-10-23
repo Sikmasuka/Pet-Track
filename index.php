@@ -49,6 +49,7 @@ require_once 'functions/authentication.php';
 </head>
 
 <body class="bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-700">
+
     <!-- Main Section -->
     <main class="py-5 min-h-screen flex items-center justify-center px-4 sm:px-6">
         <!-- Login Box -->

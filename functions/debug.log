@@ -15306,4 +15306,72 @@ Events found: 1
 Time: 2025-10-23 14:00:27 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
 Count for 2025-10-24: 1
 Event: sheryl boang on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
+=======
+Time: 2025-10-23 00:17:48 - Start: 2025-10-24, End: 2025-10-24, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-24&end=2025-10-24
+Events found: 0
+Script executed at 2025-10-23 00:17:56
+Database connection successful.
+Form data: Array
+(
+    [owner_name] => Jikoy Galindo
+    [contact_number] => 09392516664
+    [appointment_date] => 2025-10-24
+    [appointment_time] => 10:30:00
+    [reason] => Vaccination
+)
+
+Appointment logged: Guest Jikoy Galindo booked an appointment on October 24, 2025 at 10:30 AM
+Time: 2025-10-23 00:18:28 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-21: 1
+Count for 2025-10-24: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: korokoy bonkoy on 2025-10-21 at 14:30:00 (count: 1, duration: 90)
+Event: Jikoy Galindo on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
+Events found: 7
+Time: 2025-10-23 00:18:28 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-08: 1
+Count for 2025-10-09: 1
+Count for 2025-10-10: 2
+Count for 2025-10-11: 1
+Count for 2025-10-21: 1
+Count for 2025-10-24: 1
+Event: Mario Santos on 2025-10-08 at 09:00:00 (count: 1, duration: 90)
+Event: Danreb Salvacionss on 2025-10-09 at 14:30:00 (count: 1, duration: 90)
+Event: Bulilit Dela Cera on 2025-10-10 at 09:30:00 (count: 2, duration: 90)
+Event: Maricar T. Bahala on 2025-10-10 at 14:30:00 (count: 2, duration: 90)
+Event: Maris Awitin on 2025-10-11 at 14:30:00 (count: 1, duration: 90)
+Event: korokoy bonkoy on 2025-10-21 at 14:30:00 (count: 1, duration: 90)
+Event: Jikoy Galindo on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
+Events found: 7
+Time: 2025-10-23 00:23:30 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-24: 1
+Event: Jikoy Galindo on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-10-23 00:23:30 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-24: 1
+Event: Jikoy Galindo on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-10-23 00:29:11 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-24: 1
+Event: Jikoy Galindo on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-10-23 00:29:11 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-24: 1
+Event: Jikoy Galindo on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-10-23 00:29:38 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-24: 1
+Event: Jikoy Galindo on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-10-23 00:29:38 - Start: 2025-10-01, End: 2025-11-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-10-01&end=2025-11-01
+Count for 2025-10-24: 1
+Event: Jikoy Galindo on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
 Events found: 1
