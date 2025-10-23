@@ -410,19 +410,26 @@ ob_end_flush();
                 </div>
             <?php endif; ?>
 
-            <div class="flex justify-between items-center">
-                <h2 class="text-lg sm:text-xl lg:text-xl font-semibold text-gray-800 mb-4">List of Clients</h2>
+            <div class="flex flex-row justify-between items-center mb-4">
+                <h2 class="text-lg sm:text-xl lg:text-xl font-semibold text-gray-800">List of Clients</h2>
 
-                <button onclick="showClientModal('add')" class="mt-6 bg-indigo-500 text-white px-4 py-2 font-semibold rounded-md hover:bg-indigo-600 transition-colors text-sm sm:text-base">
+                <button onclick="showClientModal('add')" class="bg-indigo-500 text-white px-4 py-2 font-semibold rounded-md hover:bg-indigo-600 transition-colors text-sm sm:text-base">
                     <i class="fas fa-plus mr-2"></i>Add New Client
                 </button>
             </div>
 
             <!-- Search Bar -->
             <div class="mb-4">
-                <label for="search" class="text-sm font-medium text-gray-700 mr-2">Search Clients:</label>
-                <input type="text" name="search" id="search" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" class="border border-gray-300 rounded-lg px-4 py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="Search by name, address, or contact...">
+                <label for="search" class="text-sm font-medium text-gray-700 mr-2 block sm:inline">Search Clients:</label>
+                <input
+                    type="text"
+                    name="search"
+                    id="search"
+                    value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
+                    class="w-full sm:w-auto border border-gray-300 rounded-lg px-4 py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                    placeholder="Search by name, address, or contact...">
             </div>
+
 
             <?php if (count($clients) > 0): ?>
                 <div class="table-container">

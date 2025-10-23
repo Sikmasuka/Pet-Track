@@ -17,21 +17,15 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
 -- Database: `pettrackdb`
---
-
 -- --------------------------------------------------------
-
---
 -- Table structure for table `admin`
---
-
 CREATE TABLE `admin` (
-  `admin_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL AUTO_INCREMENT,
   `admin_username` varchar(50) NOT NULL,
   `admin_name` varchar(100) DEFAULT NULL,
-  `admin_password` varchar(100) DEFAULT NULL
+  `admin_password` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

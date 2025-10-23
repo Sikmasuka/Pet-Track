@@ -268,18 +268,18 @@ ob_end_flush();
             <div class="flex flex-col lg:flex-row justify-between lg:items-center mb-4 gap-4 flex-wrap">
                 <h2 class="text-lg lg:text-xl font-semibold text-gray-800">List of Pets</h2>
 
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto flex-wrap">
-                    <!-- Search Bar -->
-                    <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <label for="search" class="text-sm font-medium text-gray-700">Search Pets:</label>
+                <div class="flex flex-col w-full lg:w-auto gap-3">
+                    <!-- Search Bar (Top) -->
+                    <div class="flex items-center gap-2 w-full">
+                        <label for="search" class="text-sm font-medium text-gray-700 whitespace-nowrap">Search Pets:</label>
                         <input type="text" name="search" id="search"
                             value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
-                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none w-full sm:w-64"
+                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none w-full"
                             placeholder="Search by name, breed, or client...">
                     </div>
 
-                    <!-- Filter Form -->
-                    <form method="GET" class="flex flex-col sm:flex-row gap-3 sm:gap-6 w-full sm:w-auto items-center">
+                    <!-- Filter Form (Below, same row) -->
+                    <form method="GET" class="flex flex-wrap items-center gap-3">
                         <div class="flex items-center gap-2">
                             <label for="speciesFilter" class="text-sm font-medium text-gray-700">Species:</label>
                             <select name="species" id="speciesFilter"
@@ -304,6 +304,7 @@ ob_end_flush();
                     </form>
                 </div>
             </div>
+
 
             <!-- Pets Table -->
             <?php if (count($pets) > 0): ?>
