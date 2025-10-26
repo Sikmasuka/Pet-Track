@@ -85,6 +85,18 @@ $months = [
 ];
 
 /**
+ * Handle sort parameter
+ */
+$sort = isset($_GET['sort']) ? strtolower(trim($_GET['sort'])) : 'date_desc';
+
+$orderBy = 'p.date DESC';
+if ($sort === 'amount_asc') {
+    $orderBy = 'p.amount ASC';
+} elseif ($sort === 'amount_desc') {
+    $orderBy = 'p.amount DESC';
+}
+
+/**
  * Fetch payments with applied filters
  */
 $query = "SELECT p.*, m.method_name FROM Payments p JOIN Payment_Methods m ON p.method_id = m.method_id";
@@ -96,13 +108,13 @@ if (isset($_GET['year']) && $_GET['year'] !== 'All' && is_numeric($_GET['year'])
 }
 if (isset($_GET['month']) && $_GET['month'] !== 'All' && is_numeric($_GET['month']) && $_GET['month'] >= 1 && $_GET['month'] <= 12) {
     $conditions[] = "MONTH(p.date) = ?";
-    $params[] = $_GET['month'];   // <-- Missing before
+    $params[] = $_GET['month'];
 }
 
 if (!empty($conditions)) {
     $query .= " WHERE " . implode(" AND ", $conditions);
 }
-$query .= " ORDER BY p.date DESC";
+$query .= " ORDER BY $orderBy";
 try {
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
@@ -319,28 +331,37 @@ try {
                 </button>
             </div>
             <!-- Filter Dropdowns in Same Form (Always Visible) -->
-            <form method="GET" class="flex flex-row gap-6 mb-4">
-                <div>
-                    <label for="yearFilter" class="text-sm font-medium text-gray-700 mr-2">Filter by Year:</label>
-                    <select name="year" id="yearFilter" class="border border-gray-300 rounded-lg px-4 cursor-pointer py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" onchange="this.form.submit()">
-                        <option value="All" <?php echo (!isset($_GET['year']) || $_GET['year'] === 'All') ? 'selected' : ''; ?>>All</option>
-                        <?php foreach ($years as $year): ?>
-                            <option value="<?php echo $year; ?>" <?php echo (isset($_GET['year']) && $_GET['year'] == $year) ? 'selected' : ''; ?>>
-                                <?php echo $year; ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+            <form method="GET" class="flex flex-col lg:flex-row gap-3 mb-4">
+                <div class="flex flex-col lg:flex-row gap-3 w-full lg:w-auto">
+                    <div class="flex items-center gap-2 w-full lg:w-auto">
+                        <label for="yearFilter" class="text-sm font-medium text-gray-700 whitespace-nowrap">Filter by Year:</label>
+                        <select name="year" id="yearFilter" class="border border-gray-300 rounded-lg px-4 cursor-pointer py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" onchange="this.form.submit()">
+                            <option value="All" <?php echo (!isset($_GET['year']) || $_GET['year'] === 'All') ? 'selected' : ''; ?>>All</option>
+                            <?php foreach ($years as $year): ?>
+                                <option value="<?php echo $year; ?>" <?php echo (isset($_GET['year']) && $_GET['year'] == $year) ? 'selected' : ''; ?>>
+                                    <?php echo $year; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2 w-full lg:w-auto">
+                        <label for="monthFilter" class="text-sm font-medium text-gray-700 whitespace-nowrap">Filter by Month:</label>
+                        <select name="month" id="monthFilter" class="border border-gray-300 rounded-lg px-4 cursor-pointer py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" onchange="this.form.submit()">
+                            <option value="All" <?php echo (!isset($_GET['month']) || $_GET['month'] === 'All') ? 'selected' : ''; ?>>All</option>
+                            <?php foreach ($months as $num => $name): ?>
+                                <option value="<?php echo $num; ?>" <?php echo (isset($_GET['month']) && $_GET['month'] == $num) ? 'selected' : ''; ?>>
+                                    <?php echo $name; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label for="monthFilter" class="text-sm font-medium text-gray-700 mr-2">Filter by Month:</label>
-                    <select name="month" id="monthFilter" class="border border-gray-300 rounded-lg px-4 cursor-pointer py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" onchange="this.form.submit()">
-                        <option value="All" <?php echo (!isset($_GET['month']) || $_GET['month'] === 'All') ? 'selected' : ''; ?>>All</option>
-                        <?php foreach ($months as $num => $name): ?>
-                            <option value="<?php echo $num; ?>" <?php echo (isset($_GET['month']) && $_GET['month'] == $num) ? 'selected' : ''; ?>>
-                                <?php echo $name; ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                <div class="flex flex-col lg:flex-row gap-3 w-full lg:w-auto">
+                    <div class="flex items-center gap-2 w-full lg:w-auto">
+                        <label for="search" class="text-sm font-medium text-gray-700 whitespace-nowrap">Search Payments:</label>
+                        <input type="text" id="search" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none w-full lg:w-64" placeholder="Search by client, method, amount, description, or date...">
+                    </div>
+
                 </div>
             </form>
 
@@ -359,7 +380,7 @@ try {
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-200">
                             <?php foreach ($payments as $pay): ?>
-                                <tr class="hover:bg-gray-50 transition-colors">
+                                <tr class="hover:bg-gray-50 transition-colors" data-client="<?= htmlspecialchars(strtolower($pay['client_name'])) ?>" data-method="<?= htmlspecialchars(strtolower($pay['method_name'])) ?>" data-amount="<?= htmlspecialchars(strtolower($pay['amount'])) ?>" data-description="<?= htmlspecialchars(strtolower($pay['description'])) ?>" data-date="<?= htmlspecialchars(strtolower(date('M j, Y', strtotime($pay['date'])))) ?>">
                                     <td class="px-4 py-2 text-gray-700"><?php echo htmlspecialchars($pay['client_name']); ?></td>
                                     <td class="px-4 py-2 text-gray-700"><?php echo htmlspecialchars($pay['method_name']); ?></td>
                                     <td class="px-4 py-2 text-gray-700 font-medium">₱<?php echo number_format($pay['amount'], 2); ?></td>
@@ -392,6 +413,7 @@ try {
                     <p class="text-sm mt-2">Click "Record Payment" to add your first payment.</p>
                 </div>
             <?php endif; ?>
+            <p id="noResults" class="text-center text-gray-500 text-sm sm:text-base" style="display: none;">No payments found matching your search.</p>
         </div>
     </div>
 
@@ -591,6 +613,35 @@ try {
                 },
                 placeholder: "Search or select client..."
             });
+
+            // Search functionality
+            const searchInput = document.getElementById('search');
+            const tableRows = document.querySelectorAll('tbody tr');
+            const noResults = document.getElementById('noResults');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                let visibleRows = 0;
+
+                tableRows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    let match = false;
+
+                    cells.forEach(cell => {
+                        if (cell.textContent.toLowerCase().includes(searchTerm)) {
+                            match = true;
+                        }
+                    });
+
+                    row.style.display = match ? '' : 'none';
+                    if (match) visibleRows++;
+                });
+
+                // Show/hide no results message
+                noResults.style.display = visibleRows === 0 && searchTerm !== '' ? 'block' : 'none';
+            });
+
+
         });
     </script>
 

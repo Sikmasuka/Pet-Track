@@ -784,8 +784,15 @@
                         </div>
                         <div class="flex items-center gap-3 footer-link">
                             <i class="fas fa-envelope"></i>
-                            <span>info@pettrack.com</span>
+                            <span>@pettrack.com</span>
                         </div>
+                        <div class="flex items-center gap-3 footer-link">
+                            <a href="https://vetphilippines.com/misamis-oriental/balingasag/balingasag-dog-and-cat-clinic-2/" target="_blank" class="flex items-center gap-2 text-white-600 hover:text-white-800">
+                                <i class="fas fa-info-circle"></i>
+                                For more info visit vetphilippines.com
+                            </a>
+                        </div>
+
                     </div>
                 </div>
 
@@ -798,10 +805,10 @@
                         </p>
                     </div>
                     <div class="flex gap-4">
-                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
+                        <a href="https://www.facebook.com/JP.delacera.78/" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
+                        <a href="https://www.instagram.com/explore/locations/104208107917496/balingasag-dog-and-cat-clinic/" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
                             <i class="fab fa-instagram"></i>
                         </a>
                         <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
@@ -819,7 +826,7 @@
             </div>
 
             <div class="border-t border-white/10 pt-8 text-center">
-                <p class="text-white/60">© 2025 PetTrack. All rights reserved. Developed for St. Rita’s College of Balingasag, Inc.</p>
+                <p class="text-white/60">© 2025 PetTrack. All rights reserved. Developed by St. Rita’s College of Balingasag, Inc.</p>
             </div>
         </div>
     </footer>

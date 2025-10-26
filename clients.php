@@ -26,6 +26,18 @@ if (empty($uniqueConditions)) {
     $uniqueConditions = ['runny nose', 'sneezing', 'coughing', 'ear infection'];  // Add more as needed
 }
 
+$sort = isset($_GET['sort']) ? strtolower(trim($_GET['sort'])) : 'asc';
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Always fetch ALL active clients (no filtering here - done client-side)
+$table = 'Client'; // correct table name
+$column = 'client_name';   // correct column name
+
+$query = "SELECT * FROM $table WHERE status = 1 ORDER BY $column " . ($sort === 'desc' ? 'DESC' : 'ASC');
+$stmt = $pdo->prepare($query);
+$stmt->execute();
+$clients = $stmt->fetchAll();
+
 ob_end_flush();
 ?>
 
@@ -41,6 +53,14 @@ ob_end_flush();
     <link rel="icon" href="image/MainIcon.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        .az-btn {
+            @apply inline-block border border-gray-300 px-3 py-1 rounded text-sm text-gray-700 bg-gray-100 hover:bg-red-500 hover:text-white transition;
+        }
+
+        .az-btn.active {
+            @apply bg-red-500 text-white;
+        }
+
         .condition-tag {
             display: inline-flex;
             align-items: center;
@@ -418,16 +438,26 @@ ob_end_flush();
                 </button>
             </div>
 
-            <!-- Search Bar -->
-            <div class="mb-4">
-                <label for="search" class="text-sm font-medium text-gray-700 mr-2 block sm:inline">Search Clients:</label>
-                <input
-                    type="text"
-                    name="search"
-                    id="search"
-                    value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
-                    class="w-full sm:w-auto border border-gray-300 rounded-lg px-4 py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-                    placeholder="Search by name, address, or contact...">
+            <div>
+                <!-- Combined Sort and Search Row -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm font-medium text-gray-700 whitespace-nowrap">Sort by Name:</label>
+                        <button id="sortButton" class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none hover:bg-gray-50 transition-colors">
+                            <i id="sortIcon" class="fas <?= ($sort === 'asc') ? 'fa-sort-alpha-up' : 'fa-sort-alpha-down' ?>"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2 flex-1 w-full sm:w-auto">
+                        <label for="search" class="text-sm font-medium text-gray-700 whitespace-nowrap">Search Clients:</label>
+                        <input
+                            type="text"
+                            name="search"
+                            id="search"
+                            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
+                            class="w-full max-w-xs border border-gray-300 rounded-lg px-4 py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                            placeholder="Search by name, address, or contact...">
+                    </div>
+                </div>
             </div>
 
 
@@ -444,7 +474,7 @@ ob_end_flush();
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-200">
                             <?php foreach ($clients as $client): ?>
-                                <tr class="hover:bg-gray-50 transition-colors">
+                                <tr class="hover:bg-gray-50 transition-colors" data-name="<?= htmlspecialchars(strtolower($client['client_name'])) ?>" data-address="<?= htmlspecialchars(strtolower($client['client_address'])) ?>" data-contact="<?= htmlspecialchars(strtolower($client['client_contact_number'])) ?>">
                                     <td class="px-4 py-2 text-sm text-gray-700"><?= htmlspecialchars($client['client_name']) ?></td>
                                     <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($client['client_address']) ?></td>
                                     <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($client['client_contact_number']) ?></td>
@@ -456,7 +486,7 @@ ob_end_flush();
                                             <i class="fas fa-edit"></i>
                                         </a> |
                                         <a href="#" onclick="confirmDelete(<?= (int)$client['client_id'] ?>)" class="text-red-500 hover:text-red-400 hover:underline">
-                                            <i class="fas fa-archive"></i>
+                                            <i class="fa-solid fa-box-archive"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -535,7 +565,7 @@ ob_end_flush();
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Pet Weight (kg)</label>
-                            <input type="number" name="pet_weight" id="petWeight" class="w-full p-2 border border-slate-300 rounded-md text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                            <input type="number" step="0.01" min="0" name="pet_weight" id="petWeight" class="w-full p-2 border border-slate-300 rounded-md text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Birth Date</label>
@@ -1168,41 +1198,6 @@ ob_end_flush();
             }
         });
 
-        // Client-side filtering for search input
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('search');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase().trim();
-                    const rows = document.querySelectorAll('tbody tr');
-                    let visibleCount = 0;
-
-                    rows.forEach(row => {
-                        const name = row.cells[0].textContent.toLowerCase();
-                        const address = row.cells[1].textContent.toLowerCase();
-                        const contact = row.cells[2].textContent.toLowerCase();
-
-                        if (name.includes(searchTerm) || address.includes(searchTerm) || contact.includes(searchTerm)) {
-                            row.style.display = '';
-                            visibleCount++;
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-
-                    const noResults = document.getElementById('noResults');
-                    if (noResults) {
-                        noResults.style.display = (visibleCount === 0) ? 'block' : 'none';
-                    }
-                });
-
-                // Trigger filtering on page load if search value is present (from URL)
-                if (searchInput.value) {
-                    searchInput.dispatchEvent(new Event('input'));
-                }
-            }
-        });
-
         // Handle multiple conditions with tag-like input
         document.addEventListener('DOMContentLoaded', function() {
             const conditionsContainer = document.getElementById('conditionsContainer');
@@ -1305,6 +1300,103 @@ ob_end_flush();
                     .replace(/"/g, "&quot;")
                     .replace(/'/g, "&#039;");
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let currentSort = urlParams.get('sort') ? urlParams.get('sort').toLowerCase() : 'asc';
+            const searchInput = document.getElementById('search');
+            const sortButton = document.getElementById('sortButton');
+            const sortIcon = document.getElementById('sortIcon');
+            const tbody = document.querySelector('tbody');
+            const noResults = document.getElementById('noResults');
+
+            // Set initial icon based on current sort
+            if (sortIcon) {
+                sortIcon.className = currentSort === 'asc' ? 'fas fa-sort-alpha-up' : 'fas fa-sort-alpha-down';
+            }
+
+            // Handle sort button click
+            if (sortButton) {
+                sortButton.addEventListener('click', function() {
+                    currentSort = currentSort === 'asc' ? 'desc' : 'asc';
+                    if (sortIcon) {
+                        sortIcon.className = currentSort === 'asc' ? 'fas fa-sort-alpha-up' : 'fas fa-sort-alpha-down';
+                    }
+                    const url = new URL(window.location.href);
+                    if (currentSort === 'asc') {
+                        url.searchParams.delete('sort');
+                    } else {
+                        url.searchParams.set('sort', currentSort);
+                    }
+                    window.history.replaceState({}, document.title, url);
+                    applySortAndFilter();
+                });
+            }
+
+            // Handle search input (live filtering)
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    // Update URL
+                    const url = new URL(window.location.href);
+                    const searchValue = this.value.trim();
+                    if (searchValue) {
+                        url.searchParams.set('search', searchValue);
+                    } else {
+                        url.searchParams.delete('search');
+                    }
+                    window.history.replaceState({}, document.title, url);
+
+                    applySortAndFilter();
+                });
+            }
+
+            // Function to sort rows
+            function sortRows(direction) {
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                rows.sort((a, b) => {
+                    const nameA = a.dataset.name.toLowerCase();
+                    const nameB = b.dataset.name.toLowerCase();
+                    if (nameA < nameB) return direction === 'asc' ? -1 : 1;
+                    if (nameA > nameB) return direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+                rows.forEach(row => tbody.appendChild(row));
+            }
+
+            // Filter function
+            function filterClients() {
+                const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                let visibleCount = 0;
+
+                const rows = tbody.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const name = row.dataset.name;
+                    const address = row.dataset.address;
+                    const contact = row.dataset.contact;
+
+                    const matchesSearch = !searchTerm ||
+                        name.includes(searchTerm) ||
+                        address.includes(searchTerm) ||
+                        contact.includes(searchTerm);
+
+                    row.style.display = matchesSearch ? '' : 'none';
+                    if (matchesSearch) visibleCount++;
+                });
+
+                if (noResults) {
+                    noResults.style.display = (visibleCount === 0) ? 'block' : 'none';
+                }
+            }
+
+            // Combined sort and filter
+            function applySortAndFilter() {
+                sortRows(currentSort);
+                filterClients();
+            }
+
+            // Apply initial sort and filter on page load
+            applySortAndFilter();
         });
     </script>
 

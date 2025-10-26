@@ -341,10 +341,10 @@ ob_end_flush();
                     class="bg-white p-3 rounded-md relative shadow-md border border-slate-200 hover:border-indigo-400 transition-colors">
                     <a href="./records/admin-payments.php"
                         class="absolute top-1 right-2 text-gray-500 hover:text-indigo-400 transition-colors text-sm">
-                        <i class="fa-solid fa-money-bill-wave mr-1 text-lg text-indigo-500"></i>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     </a>
                     <div class="text-center mt-2">
-                        <h3 class="font-semibold text-lg mb-1">Payments</h3>
+                        <h3 class="font-semibold text-lg mb-1"><i class="fa-solid fa-money-bill-wave mr-1 text-lg text-indigo-500"></i>Payments</h3>
                         <p class="text-base">₱<?= number_format($totalPayment, 2) ?></p>
                     </div>
                 </div>

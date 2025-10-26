@@ -61,35 +61,18 @@ if (isset($_GET['edit_pet_id'])) {
 }
 
 /**
- * Fetch all pets joined with client names, ordered by pet name with filters
+ * Fetch all pets joined with client names, ordered by pet name
  */
-$query = "
-    SELECT Pet.pet_id, Pet.pet_name, Pet.pet_sex, Pet.pet_weight, Pet.pet_breed, Pet.pet_birth_date, Pet.pet_species, Client.client_name 
-    FROM Pet 
-    JOIN Client ON Pet.client_id = Client.client_id 
-    WHERE Client.status = 1
-";
-$conditions = [];
-$params = [];
+$sort = isset($_GET['sort']) ? strtolower(trim($_GET['sort'])) : 'asc';
 
-if (isset($_GET['species']) && $_GET['species'] !== 'All') {
-    $conditions[] = "Pet.pet_species = ?";
-    $params[] = $_GET['species'];
-}
-
-if (isset($_GET['sex']) && $_GET['sex'] !== 'All') {
-    $conditions[] = "Pet.pet_sex = ?";
-    $params[] = $_GET['sex'];
-}
-
-if (!empty($conditions)) {
-    $query .= " AND " . implode(" AND ", $conditions);
-}
-
-$query .= " ORDER BY Pet.pet_name ASC";
+// Always fetch ALL active pets (no filtering here - done client-side)
+$query = "SELECT Pet.pet_id, Pet.pet_name, Pet.pet_sex, Pet.pet_weight, Pet.pet_breed, Pet.pet_birth_date, Pet.pet_species, Client.client_name
+    FROM Pet
+    JOIN Client ON Pet.client_id = Client.client_id
+    WHERE Client.status = 1 ORDER BY Pet.pet_name " . ($sort === 'desc' ? 'DESC' : 'ASC');
 
 $stmt = $pdo->prepare($query);
-$stmt->execute($params);
+$stmt->execute();
 $pets = $stmt->fetchAll();
 ob_end_flush();
 ?>
@@ -191,16 +174,14 @@ ob_end_flush();
     <!-- Main Content -->
     <div class="relative ml-0 lg:ml-52 p-4 pt-16 lg:pt-4 min-h-screen">
 
-        <div id="loadingScreen" class="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 z-50 hidden">
-            <img src="image/MainIcon.png" alt="Loading Icon" class="w-20 h-20 animate-pulse">
-            <p class="mt-4 text-teal-700 font-semibold text-lg">Loading...</p>
-        </div>
-
         <header class="bg-white shadow-lg rounded-lg text-gray-800 py-4 mb-6 lg:mb-8 p-4 lg:p-6 border border-slate-200">
             <!-- Top Section with Dropdown -->
             <div class="flex justify-between items-center">
-                <!-- Dashboard Title -->
-                <h1 class="text-xl lg:text-2xl font-bold">Pets</h1>
+                <!-- Page Title -->
+                <div>
+                    <h1 class="text-xl lg:text-2xl font-bold">Manage Pets</h1>
+                    <p class="text-sm text-gray-600 mt-1">View All of the Pets Records in the Pet Track System</p>
+                </div>
 
                 <!-- Right Side (Notifications + Profile) -->
                 <div class="flex items-center gap-2">
@@ -264,47 +245,52 @@ ob_end_flush();
         </header>
 
         <main class="bg-white p-4 lg:p-6 rounded-lg shadow-lg border border-slate-200">
-            <!-- Pets Section -->
-            <div class="flex flex-col lg:flex-row justify-between lg:items-center mb-4 gap-4 flex-wrap">
+            <!-- Pets Section Title -->
+            <div class="mb-4">
                 <h2 class="text-lg lg:text-xl font-semibold text-gray-800">List of Pets</h2>
-
-                <div class="flex flex-col w-full lg:w-auto gap-3">
-                    <!-- Search Bar (Top) -->
-                    <div class="flex items-center gap-2 w-full">
-                        <label for="search" class="text-sm font-medium text-gray-700 whitespace-nowrap">Search Pets:</label>
-                        <input type="text" name="search" id="search"
-                            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
-                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none w-full"
-                            placeholder="Search by name, breed, or client...">
-                    </div>
-
-                    <!-- Filter Form (Below, same row) -->
-                    <form method="GET" class="flex flex-wrap items-center gap-3">
-                        <div class="flex items-center gap-2">
-                            <label for="speciesFilter" class="text-sm font-medium text-gray-700">Species:</label>
-                            <select name="species" id="speciesFilter"
-                                class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none cursor-pointer"
-                                onchange="this.form.submit()">
-                                <option value="All" <?= (!isset($_GET['species']) || $_GET['species'] === 'All') ? 'selected' : ''; ?>>All</option>
-                                <option value="Dog" <?= (isset($_GET['species']) && $_GET['species'] === 'Dog') ? 'selected' : ''; ?>>Dog</option>
-                                <option value="Cat" <?= (isset($_GET['species']) && $_GET['species'] === 'Cat') ? 'selected' : ''; ?>>Cat</option>
-                            </select>
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <label for="sexFilter" class="text-sm font-medium text-gray-700">Sex:</label>
-                            <select name="sex" id="sexFilter"
-                                class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none cursor-pointer"
-                                onchange="this.form.submit()">
-                                <option value="All" <?= (!isset($_GET['sex']) || $_GET['sex'] === 'All') ? 'selected' : ''; ?>>All</option>
-                                <option value="Male" <?= (isset($_GET['sex']) && $_GET['sex'] === 'Male') ? 'selected' : ''; ?>>Male</option>
-                                <option value="Female" <?= (isset($_GET['sex']) && $_GET['sex'] === 'Female') ? 'selected' : ''; ?>>Female</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
             </div>
 
+            <!-- Filters Section Above Table -->
+            <div class="mb-4 flex flex-col lg:flex-row gap-3">
+                <!-- Search Bar -->
+                <div class="flex items-center gap-2 w-full lg:w-auto">
+                    <label for="search" class="text-sm font-medium text-gray-700 whitespace-nowrap">Search Pets:</label>
+                    <input type="text" name="search" id="search"
+                        value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
+                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none w-full lg:w-64"
+                        placeholder="Search by name, breed, or client...">
+                </div>
+
+                <!-- Filters -->
+                <div class="flex flex-row gap-3 w-full lg:w-auto">
+                    <div class="flex items-center gap-2 flex-1">
+                        <label for="speciesFilter" class="text-sm font-medium text-gray-700">Species:</label>
+                        <select name="species" id="speciesFilter"
+                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none cursor-pointer flex-1">
+                            <option value="All">All</option>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2 flex-1">
+                        <label for="sexFilter" class="text-sm font-medium text-gray-700">Sex:</label>
+                        <select name="sex" id="sexFilter"
+                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none cursor-pointer flex-1">
+                            <option value="All">All</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm font-medium text-gray-700 whitespace-nowrap">Sort by Name:</label>
+                        <button id="sortButton" class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none hover:bg-gray-50 transition-colors">
+                            <i id="sortIcon" class="fas <?= ($sort === 'asc') ? 'fa-sort-alpha-up' : 'fa-sort-alpha-down' ?>"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <!-- Pets Table -->
             <?php if (count($pets) > 0): ?>
@@ -323,7 +309,7 @@ ob_end_flush();
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-200">
                             <?php foreach ($pets as $pet): ?>
-                                <tr class="hover:bg-gray-50 transition-colors">
+                                <tr class="hover:bg-gray-50 transition-colors" data-name="<?= htmlspecialchars(strtolower($pet['pet_name'])) ?>" data-species="<?= htmlspecialchars(strtolower($pet['pet_species'])) ?>" data-sex="<?= htmlspecialchars(strtolower($pet['pet_sex'])) ?>" data-breed="<?= htmlspecialchars(strtolower($pet['pet_breed'])) ?>" data-client="<?= htmlspecialchars(strtolower($pet['client_name'])) ?>">
                                     <td class="px-4 py-2 text-gray-700"><?= htmlspecialchars($pet['pet_name']) ?></td>
                                     <td class="px-4 py-2 text-gray-600"><?= htmlspecialchars($pet['pet_species']) ?></td>
                                     <td class="px-4 py-2 text-gray-600"><?= htmlspecialchars($pet['pet_sex']) ?></td>
@@ -423,6 +409,22 @@ ob_end_flush();
         </script>
 
         <script>
+            // Sort button functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                const sortButton = document.getElementById('sortButton');
+                const sortIcon = document.getElementById('sortIcon');
+
+                if (sortButton) {
+                    sortButton.addEventListener('click', function() {
+                        const url = new URL(window.location.href);
+                        const currentSort = url.searchParams.get('sort') || 'asc';
+                        const newSort = currentSort === 'asc' ? 'desc' : 'asc';
+                        url.searchParams.set('sort', newSort);
+                        window.location.href = url.toString();
+                    });
+                }
+            });
+
             // Client-side filtering for search input
             document.addEventListener('DOMContentLoaded', function() {
                 const searchInput = document.getElementById('search');
@@ -456,6 +458,52 @@ ob_end_flush();
                         searchInput.dispatchEvent(new Event('input'));
                     }
                 }
+            });
+        </script>
+
+        <script>
+            // Client-side filtering for species and sex
+            document.addEventListener('DOMContentLoaded', function() {
+                const speciesFilter = document.getElementById('speciesFilter');
+                const sexFilter = document.getElementById('sexFilter');
+
+                function applyFilters() {
+                    const selectedSpecies = speciesFilter.value.toLowerCase();
+                    const selectedSex = sexFilter.value.toLowerCase();
+                    const rows = document.querySelectorAll('tbody tr');
+                    let visibleCount = 0;
+
+                    rows.forEach(row => {
+                        const species = row.getAttribute('data-species') || '';
+                        const sex = row.getAttribute('data-sex') || '';
+
+                        const speciesMatch = selectedSpecies === 'all' || species === selectedSpecies;
+                        const sexMatch = selectedSex === 'all' || sex === selectedSex;
+
+                        if (speciesMatch && sexMatch) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    const noResults = document.getElementById('noResults');
+                    if (noResults) {
+                        noResults.style.display = (visibleCount === 0) ? 'block' : 'none';
+                    }
+                }
+
+                if (speciesFilter) {
+                    speciesFilter.addEventListener('change', applyFilters);
+                }
+
+                if (sexFilter) {
+                    sexFilter.addEventListener('change', applyFilters);
+                }
+
+                // Apply filters on page load
+                applyFilters();
             });
         </script>
 

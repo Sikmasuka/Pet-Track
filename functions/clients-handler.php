@@ -51,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Basic validation for client fields
     if (empty($client_name) || empty($client_address) || empty($client_contact)) {
         $error = "All client fields are required";
+    } elseif (!preg_match('/^[0-9]{11}$/', $client_contact)) {
+        $error = "Contact number must be exactly 11 digits";
     } else {
         try {
             if (isset($_POST['add_client'])) {

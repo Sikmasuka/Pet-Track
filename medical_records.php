@@ -122,12 +122,23 @@ if (isset($_GET['edit_record_id']) && is_numeric($_GET['edit_record_id'])) {
     $recordToEdit = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+// Handle sort parameter
+$sort = isset($_GET['sort']) ? strtolower(trim($_GET['sort'])) : 'date_desc';
+
+$orderBy = 'Medical_Records.date DESC';
+if ($sort === 'name_asc') {
+    $orderBy = 'Pet.pet_name ASC';
+} elseif ($sort === 'name_desc') {
+    $orderBy = 'Pet.pet_name DESC';
+}
+
 // Fetch active medical records with pet names
-$stmt = $pdo->prepare("SELECT Medical_Records.record_id, Pet.pet_name, Medical_Records.date, Medical_Records.medical_condition, Medical_Records.medical_diagnosis, Medical_Records.medical_symptoms, Medical_Records.medical_treatment 
-                       FROM Medical_Records 
-                       JOIN Pet ON Medical_Records.pet_id = Pet.pet_id 
-                       WHERE Medical_Records.status = 1 
-                       ORDER BY Medical_Records.date DESC");
+$query = "SELECT Medical_Records.record_id, Pet.pet_name, Medical_Records.date, Medical_Records.medical_condition, Medical_Records.medical_diagnosis, Medical_Records.medical_symptoms, Medical_Records.medical_treatment 
+          FROM Medical_Records 
+          JOIN Pet ON Medical_Records.pet_id = Pet.pet_id 
+          WHERE Medical_Records.status = 1 
+          ORDER BY $orderBy";
+$stmt = $pdo->prepare($query);
 $stmt->execute();
 $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -331,10 +342,19 @@ ob_end_flush();
                 </div>
             <?php endif; ?>
 
-            <!-- Search Bar -->
-            <div class="mb-4">
-                <label for="search" class="text-sm font-medium text-gray-700 mr-2">Search Medical Records:</label>
-                <input type="text" id="search" class="border border-gray-300 rounded-lg px-4 py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="Search by pet name, condition, diagnosis, symptoms, or treatment...">
+            <!-- Search Bar and Sort -->
+            <div class="mb-4 flex flex-col lg:flex-row gap-3">
+                <div class="flex items-center gap-2 w-full lg:w-auto">
+                    <label for="search" class="text-sm font-medium text-gray-700 whitespace-nowrap">Search Medical Records:</label>
+                    <input type="text" id="search" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none w-full lg:w-64" placeholder="Search by pet name, condition, diagnosis, symptoms, or treatment...">
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700 whitespace-nowrap">Sort by Name:</label>
+                    <button id="sortButton" class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none hover:bg-gray-50 transition-colors">
+                        <i id="sortIcon" class="fas <?= ($sort === 'name_asc') ? 'fa-sort-alpha-up' : 'fa-sort-alpha-down' ?>"></i>
+                    </button>
+                </div>
             </div>
 
             <?php if (count($records) > 0): ?>
@@ -504,6 +524,25 @@ ob_end_flush();
                         }
                     }
                     noResults.style.display = (visibleCount === 0 && searchTerm) ? 'block' : 'none';
+                });
+            }
+
+            // Sort button functionality
+            const sortButton = document.getElementById('sortButton');
+            const sortIcon = document.getElementById('sortIcon');
+            if (sortButton) {
+                sortButton.addEventListener('click', function() {
+                    const currentSort = '<?= $sort ?>';
+                    let newSort = 'name_asc';
+                    if (currentSort === 'name_asc') {
+                        newSort = 'name_desc';
+                    } else if (currentSort === 'name_desc') {
+                        newSort = 'date_desc';
+                    }
+                    // Update URL with new sort parameter
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('sort', newSort);
+                    window.location.href = url.toString();
                 });
             }
         });

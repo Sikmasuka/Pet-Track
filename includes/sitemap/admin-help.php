@@ -135,7 +135,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
                 <i class="fas fa-calendar-days mr-2"></i> Appointments
             </a>
 
-            <a href="../includes/sitemap/admin-help.php"
+            <a href="../sitemap/admin-help.php"
                 class="block text-sm text-white bg-emerald-800 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-question-circle mr-2"></i> Help/Support
             </a>
@@ -250,7 +250,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                 <!-- Accounts -->
-                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
+                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors" onclick="window.location.href='../../admin/admin.php'">
                     <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-3">
                         <i class="fas fa-users-cog text-teal-600"></i> Admin Accounts
                     </h2>
@@ -265,7 +265,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
                 </section>
 
                 <!-- Clients -->
-                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
+                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors" onclick="window.location.href='../../admin/records/client-records.php'">
                     <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-3">
                         <i class="fas fa-users text-teal-600"></i> Clients
                     </h2>
@@ -277,7 +277,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
                 </section>
 
                 <!-- Pets -->
-                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
+                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors" onclick="window.location.href='../../admin/records/pet-records.php'">
                     <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-3">
                         <i class="fas fa-paw text-teal-600"></i> Pets (View Only)
                     </h2>
@@ -289,7 +289,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
                 </section>
 
                 <!-- Medical Records -->
-                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
+                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors" onclick="window.location.href='../../admin/records/medical-records.php'">
                     <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-3">
                         <i class="fas fa-file-medical text-teal-600"></i> Medical Records (View Only)
                     </h2>
@@ -301,7 +301,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
                 </section>
 
                 <!-- Appointments -->
-                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
+                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors" onclick="window.location.href='../../admin/admin-appointments.php'">
                     <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-3">
                         <i class="fas fa-calendar-alt text-teal-600"></i> Appointments
                     </h2>
@@ -313,7 +313,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
                 </section>
 
                 <!-- Payments -->
-                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
+                <section class="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:bg-gray-100 transition-colors" onclick="window.location.href='../../admin/records/admin-payments.php'">
                     <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-3">
                         <i class="fas fa-credit-card text-teal-600"></i> Payments
                     </h2>
