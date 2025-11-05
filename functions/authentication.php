@@ -17,6 +17,7 @@ if (isset($_SESSION['admin_id'])) {
     header('Location: dashboard.php');
     exit;
 }
+// Clients can stay on index.php when logged in
 
 // Process login form
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
@@ -36,13 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         return;
     }
 
-    // ✅ Step 5: Check both Admin and Veterinarian tables
+    // ✅ Step 5: Check Admin, Veterinarian, and Client tables
     $stmt = $pdo->prepare("
-        SELECT 'admin' AS role, admin_id AS id, admin_username AS username, admin_password AS password 
+        SELECT 'admin' AS role, admin_id AS id, admin_username AS username, admin_password AS password
         FROM Admin WHERE admin_username = :username
         UNION
-        SELECT 'veterinarian' AS role, vet_id AS id, vet_username AS username, vet_password AS password 
+        SELECT 'veterinarian' AS role, vet_id AS id, vet_username AS username, vet_password AS password
         FROM Veterinarian WHERE vet_username = :username
+        UNION
+        SELECT 'client' AS role, client_id AS id, client_username AS username, client_password AS password
+        FROM Client WHERE client_username = :username
     ");
     $stmt->execute(['username' => $username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -98,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $redirect_url = './admin/admin-dashboard.php';
 
             logAction($pdo, $user['id'], 'Login', $_SESSION['username'] . ' logged in', 'Admin');
-        } else {
+        } elseif ($user['role'] === 'veterinarian') {
             // Veterinarian login
             // Fetch vet_name for session
             $stmt2 = $pdo->prepare("SELECT vet_name FROM Veterinarian WHERE vet_id = :id");
@@ -114,6 +118,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $redirect_url = 'dashboard.php';
 
             logAction($pdo, $user['id'], 'Login', $_SESSION['vet_name'] . ' logged in', 'Veterinarian');
+        } else {
+            // Client login
+            // Fetch client_name and contact for session
+            $stmt2 = $pdo->prepare("SELECT client_name, client_contact_number FROM Client WHERE client_id = :id");
+            $stmt2->execute(['id' => $user['id']]);
+            $client = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+            $_SESSION['client_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['client_name'] = $client['client_name'] ?? '';
+            $_SESSION['client_contact'] = $client['client_contact_number'] ?? '';
+            $_SESSION['role'] = 'client';
+
+            $login_success = true;
+            $redirect_url = './index.php';
+
+            logAction($pdo, $user['id'], 'Login', $_SESSION['client_name'] . ' logged in', 'Client');
         }
     } else {
         // Invalid password
@@ -122,8 +143,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 }
 
 // 🔴 ADD THIS PART BELOW
-if ($login_success) {
-    // Instead of header() redirect, show loader with smooth transition
+if ($login_success && $user['role'] !== 'client') {
+    // Instead of header() redirect, show loader with smooth transition for admin and vet
     echo '
     <!DOCTYPE html>
     <html lang="en">

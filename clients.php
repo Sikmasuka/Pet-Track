@@ -1,16 +1,13 @@
 <?php
 require_once __DIR__ . '/functions/clients-handler.php';
-
 // Fetch vet data for modal
 $stmt = $pdo->prepare("SELECT * FROM veterinarian WHERE vet_id = ?");
 $stmt->execute([$_SESSION['vet_id']]);
 $vet = $stmt->fetch(PDO::FETCH_ASSOC);
-
 // Fetch unique medical conditions for autocomplete suggestions
 $stmtConditions = $pdo->prepare("SELECT medical_condition FROM Medical_Records WHERE medical_condition IS NOT NULL AND medical_condition != ''");
 $stmtConditions->execute();
 $allConditions = $stmtConditions->fetchAll(PDO::FETCH_COLUMN);
-
 $uniqueConditions = [];
 foreach ($allConditions as $cond) {
     $split = array_map('trim', explode(',', $cond));
@@ -20,27 +17,21 @@ foreach ($allConditions as $cond) {
 }
 $uniqueConditions = array_keys($uniqueConditions);
 sort($uniqueConditions);
-
 // Optional: Add defaults if DB is empty
 if (empty($uniqueConditions)) {
-    $uniqueConditions = ['runny nose', 'sneezing', 'coughing', 'ear infection'];  // Add more as needed
+    $uniqueConditions = ['runny nose', 'sneezing', 'coughing', 'ear infection']; // Add more as needed
 }
-
 $sort = isset($_GET['sort']) ? strtolower(trim($_GET['sort'])) : 'asc';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-
 // Always fetch ALL active clients (no filtering here - done client-side)
 $table = 'Client'; // correct table name
-$column = 'client_name';   // correct column name
-
+$column = 'client_name'; // correct column name
 $query = "SELECT * FROM $table WHERE status = 1 ORDER BY $column " . ($sort === 'desc' ? 'DESC' : 'ASC');
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $clients = $stmt->fetchAll();
-
 ob_end_flush();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -277,12 +268,10 @@ ob_end_flush();
 
 <body class="bg-slate-100 min-h-screen text-gray-800">
     <?php include('./includes/edit-profile.php'); ?>
-
     <!-- Mobile Menu Button -->
     <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 bg-teal-700 text-white p-3 rounded-md shadow-lg hover:bg-teal-600 transition-colors">
         <i class="fas fa-bars"></i>
     </button>
-
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-teal-800">
         <!-- Sidebar Header -->
@@ -296,7 +285,6 @@ ob_end_flush();
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
-
         <!-- Sidebar Navigation -->
         <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5">
             <a href="dashboard.php" class="block text-sm text-white hover:bg-teal-800 px-4 py-2 rounded-md transition-colors">
@@ -324,7 +312,6 @@ ob_end_flush();
                 <i class="fas fa-question-circle mr-2"></i> Help/Support
             </a>
         </nav>
-
         <!-- Logout -->
         <div class="pt-4">
             <a href="#" onclick="confirmLogout(event)" class="block text-md text-white hover:bg-red-600 px-4 py-2 rounded-md transition-colors">
@@ -332,20 +319,15 @@ ob_end_flush();
             </a>
         </div>
     </aside>
-
     <!-- Overlay for mobile menu -->
     <div id="overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
-
     <!-- Main Content -->
     <div class="relative ml-0 lg:ml-52 p-4 pt-16 lg:pt-4 min-h-screen">
-
         <div id="loadingScreen" class="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 z-50 hidden">
             <img src="image/MainIcon.png" alt="Loading Icon" class="w-20 h-20 animate-pulse">
             <p class="mt-4 text-teal-700 font-semibold text-lg">Loading...</p>
         </div>
-
         <header class="bg-white shadow-lg rounded-lg text-gray-800 py-4 mb-6 lg:mb-8 p-4 lg:p-6 border border-slate-200">
-
             <!-- Top Section with Dropdown -->
             <div class="flex justify-between items-center">
                 <!-- Page Title -->
@@ -353,10 +335,8 @@ ob_end_flush();
                     <h1 class="text-xl lg:text-2xl font-bold">Manage Clients</h1>
                     <p class="text-sm text-gray-600 mt-1">Manage and View All Clients Records in the Pet Track System</p>
                 </div>
-
                 <!-- Right Side (Notifications + Profile) -->
                 <div class="flex items-center gap-2">
-
                     <!-- Notification Bell -->
                     <div class="relative inline-block text-left">
                         <button id="notificationButton" class="flex items-center justify-center w-10 h-10 bg-gray-100 border border-gray-200 rounded-full hover:bg-gray-200 text-gray-800 text-lg transition-colors relative">
@@ -375,7 +355,6 @@ ob_end_flush();
                             </div>
                         </div>
                     </div>
-
                     <!-- Profile Dropdown -->
                     <div class="relative inline-block text-left">
                         <button id="profileButton" class="flex items-center justify-center w-10 h-10 bg-gray-100 border border-gray-200 rounded-full hover:bg-gray-200 text-gray-800 text-lg transition-colors">
@@ -415,29 +394,23 @@ ob_end_flush();
                 </div>
             </div>
         </header>
-
-
         <main class="bg-white p-4 lg:p-6 rounded-lg shadow-lg border border-slate-200">
             <?php if (isset($error) || isset($_GET['error'])): ?>
                 <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
                     <p><?= htmlspecialchars($error ?? $_GET['error']) ?></p>
                 </div>
             <?php endif; ?>
-
             <?php if (isset($_GET['message'])): ?>
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
                     <p><?= htmlspecialchars($_GET['message']) ?></p>
                 </div>
             <?php endif; ?>
-
             <div class="flex flex-row justify-between items-center mb-4">
                 <h2 class="text-lg sm:text-xl lg:text-xl font-semibold text-gray-800">List of Clients</h2>
-
                 <button onclick="showClientModal('add')" class="bg-indigo-500 text-white px-4 py-2 font-semibold rounded-md hover:bg-indigo-600 transition-colors text-sm sm:text-base">
                     <i class="fas fa-plus mr-2"></i>Add New Client
                 </button>
             </div>
-
             <div>
                 <!-- Combined Sort and Search Row -->
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
@@ -459,8 +432,6 @@ ob_end_flush();
                     </div>
                 </div>
             </div>
-
-
             <?php if (count($clients) > 0): ?>
                 <div class="table-container">
                     <table class="min-w-full divide-y divide-slate-200">
@@ -500,7 +471,6 @@ ob_end_flush();
             <?php endif; ?>
         </main>
     </div>
-
     <!-- Add/Edit Client, Pet & Medical Record Modal -->
     <div id="clientModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
         <div class="bg-white rounded-lg shadow-lg w-11/12 max-w-2xl max-h-[85vh] overflow-hidden flex flex-col border border-teal-800">
@@ -511,10 +481,12 @@ ob_end_flush();
                 <input type="hidden" name="client_id" id="client_id">
                 <input type="hidden" name="pet_id" id="pet_id">
                 <input type="hidden" name="record_id" id="record_id">
-
                 <!-- Client Information -->
-                <div>
-                    <h4 class="text-sm font-bold text-gray-700 mb-2">Client Information</h4>
+                <div class="bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-base font-semibold text-emerald-600 mb-4 flex items-center gap-2">
+                        <i class="fas fa-user-edit text-emerald-600"></i>
+                        Client Information
+                    </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Client Name</label>
@@ -530,10 +502,12 @@ ob_end_flush();
                         </div>
                     </div>
                 </div>
-
                 <!-- Pet Information -->
-                <div>
-                    <h4 class="text-sm font-bold text-gray-700 mb-2">Pet Information</h4>
+                <div class="bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-base font-semibold text-emerald-600 mb-4 flex items-center gap-2">
+                        <i class="fas fa-paw text-emerald-600"></i>
+                        Pet Information
+                    </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Pet Name</label>
@@ -573,16 +547,21 @@ ob_end_flush();
                         </div>
                     </div>
                 </div>
-
-                <!-- Medical Record Information -->
-                <div>
-                    <h4 class="text-sm font-bold text-gray-700 mb-2">Medical Record Information</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Medical History Information -->
+                <div class="bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-base font-semibold text-emerald-600 mb-4 flex items-center gap-2">
+                        <i class="fas fa-file-medical text-emerald-600"></i>
+                        Medical History Information
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Conditions -->
                         <div>
-                            <label class="block text-xs text-gray-500 mb-1">Conditions (comma-separated)</label>
-                            <div id="conditionsContainer" class="flex flex-wrap items-center w-full p-2 border border-slate-300 rounded-md text-sm bg-gray-50 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-transparent min-h-[38px] gap-1">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Conditions</label>
+                            <div id="conditionsContainer" class="flex flex-wrap items-center w-full p-2 border border-slate-300 rounded-md bg-gray-50 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-transparent min-h-[42px] gap-2">
                                 <!-- Tags will be dynamically added here -->
-                                <input type="text" id="conditionInput" list="conditionSuggestions" class="flex-1 outline-none bg-transparent min-w-[150px]" placeholder="Type a condition...">
+                                <input type="text" id="conditionInput" list="conditionSuggestions"
+                                    class="flex-1 outline-none bg-transparent min-w-[150px] text-sm"
+                                    placeholder="Type a condition...">
                             </div>
                             <datalist id="conditionSuggestions">
                                 <?php foreach ($uniqueConditions as $cond): ?>
@@ -590,22 +569,31 @@ ob_end_flush();
                                     <?php endforeach; ?>
                             </datalist>
                             <input type="hidden" name="medical_condition" id="medicalConditionHidden" required>
+                            <p class="text-xs text-gray-400 mt-1">Separate multiple conditions with commas.</p>
                         </div>
+                        <!-- Diagnosis -->
                         <div>
-                            <label class="block text-xs text-gray-500 mb-1">Diagnosis</label>
-                            <textarea name="medical_diagnosis" id="medicalDiagnosis" class="w-full p-2 border border-slate-300 rounded-md text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" required></textarea>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Diagnosis</label>
+                            <textarea name="medical_diagnosis" id="medicalDiagnosis"
+                                class="w-full h-[90px] p-2 border border-slate-300 rounded-md bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm resize-none"
+                                placeholder="Enter diagnosis..." required></textarea>
                         </div>
+                        <!-- Symptoms -->
                         <div>
-                            <label class="block text-xs text-gray-500 mb-1">Symptoms</label>
-                            <textarea name="medical_symptoms" id="medicalSymptoms" class="w-full p-2 border border-slate-300 rounded-md text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" required></textarea>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Symptoms</label>
+                            <textarea name="medical_symptoms" id="medicalSymptoms"
+                                class="w-full h-[90px] p-2 border border-slate-300 rounded-md bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm resize-none"
+                                placeholder="Describe symptoms..." required></textarea>
                         </div>
+                        <!-- Treatment -->
                         <div>
-                            <label class="block text-xs text-gray-500 mb-1">Treatment</label>
-                            <textarea name="medical_treatment" id="medicalTreatment" class="w-full p-2 border border-slate-300 rounded-md text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" required></textarea>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Treatment</label>
+                            <textarea name="medical_treatment" id="medicalTreatment"
+                                class="w-full h-[90px] p-2 border border-slate-300 rounded-md bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm resize-none"
+                                placeholder="Describe treatment plan..." required></textarea>
                         </div>
                     </div>
                 </div>
-
                 <!-- Action Buttons -->
                 <div class="flex justify-between mt-4 pt-2 border-t border-slate-200">
                     <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 transition-colors text-sm">Save</button>
@@ -615,12 +603,9 @@ ob_end_flush();
             </form>
         </div>
     </div>
-
-
     <!-- Alternative Neat Card-Style Client Modal -->
     <div id="clientViewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4">
         <div class="bg-white w-full max-w-xl rounded-lg shadow-xl overflow-hidden flex flex-col">
-
             <!-- Header -->
             <div class="bg-emerald-600 px-5 py-4 flex justify-between items-center">
                 <h3 class="text-lg font-semibold text-white">Client Profile</h3>
@@ -628,10 +613,8 @@ ob_end_flush();
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-
             <!-- Content -->
             <div class="p-6 space-y-5 overflow-y-auto max-h-[70vh]">
-
                 <!-- Client Information Card -->
                 <div class="border rounded-lg p-4 shadow-sm bg-gray-50">
                     <h4 class="flex items-center text-sm font-semibold text-emerald-700 mb-3">
@@ -652,7 +635,6 @@ ob_end_flush();
                         </div>
                     </div>
                 </div>
-
                 <!-- Pet Information Card -->
                 <div class="border rounded-lg p-4 shadow-sm bg-gray-50">
                     <h4 class="flex items-center text-sm font-semibold text-emerald-700 mb-3">
@@ -665,21 +647,31 @@ ob_end_flush();
                         <div id="petInfoList" class="space-y-3"></div>
                     </div>
                 </div>
-
-                <!-- Medical Records Card -->
+                <!-- Medical Information Card (e.g., Symptoms, Diagnosis, Treatment) -->
                 <div class="border rounded-lg p-4 shadow-sm bg-gray-50">
                     <h4 class="flex items-center text-sm font-semibold text-emerald-700 mb-3">
-                        <i class="fas fa-file-medical mr-2"></i> Medical Records
+                        <i class="fas fa-file-medical mr-2"></i> Medical Information
                     </h4>
                     <div id="medicalInfoContainer">
                         <div id="noMedicalInfo" class="text-center text-gray-400 text-sm py-3 border rounded bg-white">
-                            <i class="fas fa-file-medical mr-1"></i> No medical records
+                            <i class="fas fa-file-medical mr-1"></i> No medical information
                         </div>
                         <div id="medicalInfoList" class="space-y-3"></div>
                     </div>
                 </div>
+                <!-- Medical History Card (e.g., Conditions, Historical Records, Consultations) -->
+                <div class="border rounded-lg p-4 shadow-sm bg-gray-50">
+                    <h4 class="flex items-center text-sm font-semibold text-emerald-700 mb-3">
+                        <i class="fas fa-history mr-2"></i> Medical History
+                    </h4>
+                    <div id="medicalHistoryContainer">
+                        <div id="noMedicalHistory" class="text-center text-gray-400 text-sm py-3 border rounded bg-white">
+                            <i class="fas fa-history mr-1"></i> No medical history
+                        </div>
+                        <div id="medicalHistoryList" class="space-y-3"></div>
+                    </div>
+                </div>
             </div>
-
             <!-- Footer -->
             <div class="bg-gray-100 px-5 py-3 flex justify-end border-t">
                 <button onclick="hideViewModal()" class="px-4 py-2 text-sm bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition">
@@ -688,7 +680,6 @@ ob_end_flush();
             </div>
         </div>
     </div>
-
     <script>
         function showClientModal(action) {
             const modal = document.getElementById('clientModal');
@@ -697,17 +688,14 @@ ob_end_flush();
             const formAction = document.getElementById('formAction');
             const speciesTooltip = document.getElementById('speciesTooltip');
             const sexTooltip = document.getElementById('sexTooltip');
-
             // Check if required elements exist
             if (!modal || !form || !modalTitle || !formAction) {
                 console.error('Required modal elements not found');
                 return;
             }
-
             // Reset form but preserve existing values for edit mode
             const updateInput = form.querySelector('input[name="update_client"]');
             if (updateInput) updateInput.remove();
-
             // Enable dropdowns and hide tooltips by default
             const petSpecies = document.getElementById('petSpecies');
             const petSex = document.getElementById('petSex');
@@ -715,20 +703,17 @@ ob_end_flush();
             if (petSex) petSex.disabled = false;
             if (speciesTooltip) speciesTooltip.classList.add('hidden');
             if (sexTooltip) sexTooltip.classList.add('hidden');
-
             // List of fields to clear required attributes
             const fields = [
                 'petName', 'petSpecies', 'petSex', 'petBreed',
                 'petWeight', 'petBirthDate', 'medicalCondition',
                 'medicalDiagnosis', 'medicalSymptoms', 'medicalTreatment'
             ];
-
             // Clear required attributes for all fields if they exist
             fields.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) element.removeAttribute('required');
             });
-
             if (action === 'add') {
                 form.reset(); // Clear form for adding new client
                 formAction.name = 'add_client';
@@ -754,9 +739,7 @@ ob_end_flush();
                 const saveButton = form.querySelector('button[type="submit"]');
                 if (saveButton) saveButton.style.display = 'none';
             }
-
             modal.classList.remove('hidden');
-
             // Clean URL after showing modal
             const url = new URL(window.location.href);
             url.searchParams.delete('edit_client_id');
@@ -772,39 +755,35 @@ ob_end_flush();
             url.searchParams.delete('view_client_id');
             window.history.replaceState({}, document.title, url);
         }
-
         // Function to show view modal
         function showViewModal(clientId) {
             console.log('showViewModal called with ID:', clientId);
-
             // Clean URL immediately to prevent other handlers from triggering
             const url = new URL(window.location.href);
             url.searchParams.delete('view_client_id');
             url.searchParams.delete('edit_client_id');
             window.history.replaceState({}, document.title, url);
-
             const modal = document.getElementById('clientViewModal');
-
             // Show modal immediately
             modal.classList.remove('hidden');
             document.body.classList.add('modal-open');
-
             // Set loading state
             document.getElementById('viewClientName').textContent = 'Loading...';
             document.getElementById('viewClientContact').textContent = 'Loading...';
             document.getElementById('viewClientAddress').textContent = 'Loading...';
-
             // Clear previous content
             const petInfoList = document.getElementById('petInfoList');
             const medicalInfoList = document.getElementById('medicalInfoList');
+            const medicalHistoryList = document.getElementById('medicalHistoryList');
             const noPetInfo = document.getElementById('noPetInfo');
             const noMedicalInfo = document.getElementById('noMedicalInfo');
-
+            const noMedicalHistory = document.getElementById('noMedicalHistory');
             if (petInfoList) petInfoList.innerHTML = '';
             if (medicalInfoList) medicalInfoList.innerHTML = '';
+            if (medicalHistoryList) medicalHistoryList.innerHTML = '';
             if (noPetInfo) noPetInfo.style.display = 'block';
             if (noMedicalInfo) noMedicalInfo.style.display = 'block';
-
+            if (noMedicalHistory) noMedicalHistory.style.display = 'block';
             // Fetch client data
             fetch(`?get_client_details=${clientId}`)
                 .then(response => {
@@ -821,142 +800,183 @@ ob_end_flush();
                     showViewModalError(error.message);
                 });
         }
-
         // Function to populate view modal with data
         function populateViewModal(data) {
             try {
                 const clientAddress = data.client.client_address || 'Not provided';
-
                 // Client Information
-                document.getElementById('viewClientName').textContent = data.client.client_name || 'Not provided';
-                document.getElementById('viewClientContact').textContent = data.client.client_contact_number || 'Not provided';
-                document.getElementById('viewClientAddress').textContent = clientAddress;
-
-                // Pet Information
+                document.getElementById('viewClientName').textContent = data.client.client_name || '-';
+                document.getElementById('viewClientContact').textContent = data.client.client_contact_number || '-';
+                document.getElementById('viewClientAddress').textContent = clientAddress || '-';
+                // Pet Information (only basic info)
                 const petInfoList = document.getElementById('petInfoList');
                 const noPetInfo = document.getElementById('noPetInfo');
-
                 if (data.pets && data.pets.length > 0) {
-                    noPetInfo.style.display = 'none';
+                    if (noPetInfo) noPetInfo.style.display = 'none';
                     petInfoList.innerHTML = data.pets.map(pet => `
-                        <div class="bg-white rounded border border-gray-200 p-3">
-                            <div class="font-medium text-sm text-gray-800 mb-2">${escapeHtml(pet.pet_name || 'Unnamed Pet')}</div>
-                            <div class="space-y-1">
-                                <div class="info-row">
-                                    <span class="info-label">Species</span>
-                                    <span class="info-value">${escapeHtml(pet.pet_species || '-')}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Sex</span>
-                                    <span class="info-value">${escapeHtml(pet.pet_sex || '-')}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Breed</span>
-                                    <span class="info-value">${escapeHtml(pet.pet_breed || '-')}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Weight</span>
-                                    <span class="info-value">${pet.pet_weight ? pet.pet_weight + ' kg' : '-'}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Age</span>
-                                    <span class="info-value">${calculateAge(pet.pet_birth_date) || '-'}</span>
-                                </div>
+                    <!-- Pet Profile Card -->
+                    <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mb-4">
+                        <!-- Basic Information -->
+                        <div class="p-4">
+                            <h5 class="text-sm font-semibold text-gray-500 mb-3">Basic Information</h5>
+                            <!-- Pet Details -->
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                                <div><strong class="font-medium text-gray-500 block">Name:</strong> <span class="text-gray-800">${escapeHtml(pet.pet_name || '-')}</span></div>
+                                <div><strong class="font-medium text-gray-500 block">Age:</strong> <span class="text-gray-800">${calculateAge(pet.pet_birth_date) || '-'}</span></div>
+                                <div><strong class="font-medium text-gray-500 block">Breed:</strong> <span class="text-gray-800">${escapeHtml(pet.pet_breed || '-')}</span></div>
+                                <div><strong class="font-medium text-gray-500 block">Sex:</strong> <span class="text-gray-800">${escapeHtml(pet.pet_sex || '-')}</span></div>
+                                <div><strong class="font-medium text-gray-500 block">Weight:</strong> <span class="text-gray-800">${pet.pet_weight ? pet.pet_weight + ' kg' : '-'}</span></div>
+                                <div><strong class="font-medium text-gray-500 block">Species:</strong> <span class="text-gray-800">${escapeHtml(pet.pet_species || '-')}</span></div>
                             </div>
                         </div>
-                    `).join('');
+                    </div>
+                `).join('');
                 } else {
-                    noPetInfo.style.display = 'block';
-                    petInfoList.innerHTML = '';
+                    if (noPetInfo) noPetInfo.style.display = 'block';
+                    petInfoList.innerHTML = ''; // Clear any previous content
                 }
-
-                // Medical Records Information
+                // Collect all medical information and history across all pets
+                let allMedicalInfo = [];
+                let allMedicalHistory = [];
+                data.pets.forEach(pet => {
+                    const medicalRecords = (data.medicalRecords || []).filter(record => record.pet_id === pet.pet_id);
+                    medicalRecords.forEach(record => {
+                        // Separate into medical info (symptoms, diagnosis, treatment) and history (conditions, dates, consultations)
+                        allMedicalInfo.push({
+                            pet_name: pet.pet_name,
+                            symptoms: record.medical_symptoms,
+                            diagnosis: record.medical_diagnosis,
+                            treatment: record.medical_treatment,
+                            date: record.record_date || record.date
+                        });
+                        allMedicalHistory.push({
+                            pet_name: pet.pet_name,
+                            condition: record.medical_condition,
+                            type: 'medical',
+                            date: record.record_date || record.date
+                        });
+                    });
+                    const consultations = (pet.consultations || []);
+                    consultations.forEach(consult => {
+                        allMedicalHistory.push({
+                            pet_name: pet.pet_name,
+                            ...consult,
+                            type: 'consultation',
+                            date: consult.consultation_date
+                        });
+                    });
+                });
+                // Sort by date, most recent first
+                allMedicalInfo.sort((a, b) => new Date(b.date) - new Date(a.date));
+                allMedicalHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+                // Populate Medical Information
                 const medicalInfoList = document.getElementById('medicalInfoList');
                 const noMedicalInfo = document.getElementById('noMedicalInfo');
-
-                if (data.medicalRecords && data.medicalRecords.length > 0) {
-                    noMedicalInfo.style.display = 'none';
-                    medicalInfoList.innerHTML = data.medicalRecords.map(record => `
-                        <div class="bg-white rounded border border-gray-200 p-3">
-                            <div class="font-medium text-sm text-gray-800 mb-2">Record for ${escapeHtml(record.pet_name || 'Pet')}</div>
-                            <div class="space-y-1">
-                                <div class="info-row">
-                                    <span class="info-label">Condition</span>
-                                    <span class="info-value">${escapeHtml(record.medical_condition || '-')}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Diagnosis</span>
-                                    <span class="info-value">${escapeHtml(record.medical_diagnosis || '-')}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Treatment</span>
-                                    <span class="info-value">${escapeHtml(record.medical_treatment || '-')}</span>
-                                </div>
+                if (allMedicalInfo.length > 0) {
+                    if (noMedicalInfo) noMedicalInfo.style.display = 'none';
+                    medicalInfoList.innerHTML = allMedicalInfo.map(item => `
+                        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mb-4 p-4 text-sm">
+                            <div class="flex justify-between items-center mb-4">
+                                <strong class="font-semibold text-emerald-700"><i class="fas fa-file-medical mr-1"></i> Medical Info for ${escapeHtml(item.pet_name)}</strong>
+                                <span class="text-gray-400">${escapeHtml(new Date(item.date).toLocaleDateString())}</span>
                             </div>
+                            <p><strong class="font-medium text-gray-500">Symptoms:</strong> ${escapeHtml(item.symptoms || '-')}</p>
+                            <p><strong class="font-medium text-gray-500">Diagnosis:</strong> ${escapeHtml(item.diagnosis || '-')}</p>
+                            <p><strong class="font-medium text-gray-500">Treatment:</strong> ${escapeHtml(item.treatment || '-')}</p>
                         </div>
                     `).join('');
                 } else {
-                    noMedicalInfo.style.display = 'block';
-                    medicalInfoList.innerHTML = '';
+                    if (noMedicalInfo) noMedicalInfo.style.display = 'block';
                 }
-
+                // Populate Medical History
+                const medicalHistoryList = document.getElementById('medicalHistoryList');
+                const noMedicalHistory = document.getElementById('noMedicalHistory');
+                if (allMedicalHistory.length > 0) {
+                    if (noMedicalHistory) noMedicalHistory.style.display = 'none';
+                    medicalHistoryList.innerHTML = allMedicalHistory.map(item => {
+                        if (item.type === 'medical') {
+                            return `
+                                <div class="bg-white rounded-md border p-3 text-xs">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <strong class="font-semibold text-emerald-700"><i class="fas fa-file-medical mr-1"></i> Medical Record for ${escapeHtml(item.pet_name)}</strong>
+                                        <span class="text-gray-400">${escapeHtml(new Date(item.date).toLocaleDateString())}</span>
+                                    </div>
+                                    <p class="flex justify-between items-center"><strong class="font-medium text-gray-500">Condition:</strong> ${escapeHtml(item.condition || '-')} <i class="fas fa-eye text-green-500 ml-2"></i></p>
+                                </div>`;
+                        } else if (item.type === 'consultation') {
+                            return `
+                                <div class="bg-white rounded-md border p-3 text-xs">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <strong class="font-semibold text-indigo-700"><i class="fas fa-stethoscope mr-1"></i> Consultation for ${escapeHtml(item.pet_name)}</strong>
+                                        <span class="text-gray-400">${escapeHtml(new Date(item.date).toLocaleDateString())}</span>
+                                    </div>
+                                    <p><strong class="font-medium text-gray-500">Vet:</strong> ${escapeHtml(item.vet_name || 'N/A')}</p>
+                                    <p class="flex justify-between items-center"><strong class="font-medium text-gray-500">Notes:</strong> ${escapeHtml(item.notes || '-')} <i class="fas fa-eye text-green-500 ml-2"></i></p>
+                                </div>`;
+                        }
+                        return '';
+                    }).join('');
+                } else {
+                    if (noMedicalHistory) noMedicalHistory.style.display = 'block';
+                }
             } catch (error) {
                 console.error('Error populating view modal:', error);
                 showViewModalError('Error displaying client details');
             }
         }
-
         // Function to show error in view modal
         function showViewModalError(errorMessage) {
             document.getElementById('viewClientName').textContent = 'Error loading data';
             document.getElementById('viewClientContact').textContent = '-';
             document.getElementById('viewClientAddress').textContent = '-';
-
             const petInfoList = document.getElementById('petInfoList');
-            const noPetInfo = document.getElementById('noPetInfo');
             const medicalInfoList = document.getElementById('medicalInfoList');
+            const medicalHistoryList = document.getElementById('medicalHistoryList');
+            const noPetInfo = document.getElementById('noPetInfo');
             const noMedicalInfo = document.getElementById('noMedicalInfo');
-
+            const noMedicalHistory = document.getElementById('noMedicalHistory');
             if (noPetInfo) noPetInfo.style.display = 'none';
             if (noMedicalInfo) noMedicalInfo.style.display = 'none';
-
+            if (noMedicalHistory) noMedicalHistory.style.display = 'none';
             if (petInfoList) {
                 petInfoList.innerHTML = `<div class="text-center text-red-500 text-sm py-2">
-                    <i class="fas fa-exclamation-triangle mr-1"></i>Error loading pets: ${escapeHtml(errorMessage)}
-                </div>`;
+                <i class="fas fa-exclamation-triangle mr-1"></i>Error loading pets: ${escapeHtml(errorMessage)}
+            </div>`;
             }
-
             if (medicalInfoList) {
                 medicalInfoList.innerHTML = `<div class="text-center text-red-500 text-sm py-2">
-                    <i class="fas fa-exclamation-triangle mr-1"></i>Error loading records: ${escapeHtml(errorMessage)}
-                </div>`;
+                <i class="fas fa-exclamation-triangle mr-1"></i>Error loading medical info: ${escapeHtml(errorMessage)}
+            </div>`;
             }
-
+            if (medicalHistoryList) {
+                medicalHistoryList.innerHTML = `<div class="text-center text-red-500 text-sm py-2">
+                <i class="fas fa-exclamation-triangle mr-1"></i>Error loading medical history: ${escapeHtml(errorMessage)}
+            </div>`;
+            }
         }
-
         // Function to hide view modal
         function hideViewModal() {
             console.log('Hiding view modal');
             const modal = document.getElementById('clientViewModal');
             modal.classList.add('hidden');
             document.body.classList.remove('modal-open');
-
             // Reset content
             document.getElementById('viewClientName').textContent = '-';
             document.getElementById('viewClientContact').textContent = '-';
             document.getElementById('viewClientAddress').textContent = '-';
-
             const noPetInfo = document.getElementById('noPetInfo');
             const noMedicalInfo = document.getElementById('noMedicalInfo');
+            const noMedicalHistory = document.getElementById('noMedicalHistory');
             const petInfoList = document.getElementById('petInfoList');
             const medicalInfoList = document.getElementById('medicalInfoList');
-
+            const medicalHistoryList = document.getElementById('medicalHistoryList');
             if (noPetInfo) noPetInfo.style.display = 'block';
             if (noMedicalInfo) noMedicalInfo.style.display = 'block';
+            if (noMedicalHistory) noMedicalHistory.style.display = 'block';
             if (petInfoList) petInfoList.innerHTML = '';
             if (medicalInfoList) medicalInfoList.innerHTML = '';
+            if (medicalHistoryList) medicalHistoryList.innerHTML = '';
         }
-
         // Helper function to escape HTML
         function escapeHtml(unsafe) {
             if (unsafe === null || unsafe === undefined) return '';
@@ -968,22 +988,18 @@ ob_end_flush();
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
         }
-
         // Helper function to calculate age from birth date
         function calculateAge(birthDate) {
             if (!birthDate) return '-';
-
             try {
                 const birth = new Date(birthDate);
                 const now = new Date();
                 let years = now.getFullYear() - birth.getFullYear();
                 let months = now.getMonth() - birth.getMonth();
-
                 if (months < 0) {
                     years--;
                     months += 12;
                 }
-
                 if (years === 0) {
                     return `${months} month${months !== 1 ? 's' : ''}`;
                 } else {
@@ -994,12 +1010,10 @@ ob_end_flush();
                 return '-';
             }
         }
-
         // Handle URL parameters on page load
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const viewClientId = urlParams.get('view_client_id');
-
             if (viewClientId) {
                 console.log('Found view_client_id in URL on page load:', viewClientId);
                 // Small timeout to ensure DOM is fully ready
@@ -1017,7 +1031,6 @@ ob_end_flush();
                 }
                 return false;
             }
-
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'This will also delete all associated pets and medical records. You won\'t be able to revert this!',
@@ -1035,7 +1048,6 @@ ob_end_flush();
             });
             return false;
         }
-
         // Show SweetAlert2 for success messages on page load
         <?php if (isset($_GET['message'])): ?>
             document.addEventListener('DOMContentLoaded', function() {
@@ -1064,7 +1076,6 @@ ob_end_flush();
                 }
             });
         <?php endif; ?>
-
         // Populate fields for edit mode
         <?php if ($clientToEdit): ?>
             document.addEventListener('DOMContentLoaded', function() {
@@ -1143,7 +1154,6 @@ ob_end_flush();
                 console.error("Modal not found:", modalId);
             }
         }
-
         document.getElementById('clientForm').addEventListener('submit', function(event) {
             if (modalTitle.textContent.includes('View')) {
                 event.preventDefault(); // Prevent submit in view mode
@@ -1153,13 +1163,11 @@ ob_end_flush();
             const petFields = ['petName', 'petSpecies', 'petSex', 'petBreed', 'petWeight', 'petBirthDate'];
             const petId = document.getElementById('pet_id').value.trim();
             const hasPetData = petFields.some(id => document.getElementById(id).value.trim());
-
             // Debugging: Log form data
             console.log('Submitting form with pet_id:', petId);
             console.log('Pet fields:', petFields.map(id => ({
                 [id]: document.getElementById(id).value.trim()
             })));
-
             // If any pet field is filled, all pet fields must be filled
             if (hasPetData) {
                 for (const id of petFields) {
@@ -1177,7 +1185,6 @@ ob_end_flush();
                     }
                 }
             }
-
             // If any medical field is filled, all medical fields must be filled
             const hasMedicalData = medicalFields.some(id => document.getElementById(id).value.trim());
             if (hasMedicalData) {
@@ -1197,7 +1204,6 @@ ob_end_flush();
                 }
             }
         });
-
         // Handle multiple conditions with tag-like input
         document.addEventListener('DOMContentLoaded', function() {
             const conditionsContainer = document.getElementById('conditionsContainer');
@@ -1205,35 +1211,29 @@ ob_end_flush();
             const medicalConditionHidden = document.getElementById('medicalConditionHidden');
             const conditionSuggestions = document.getElementById('conditionSuggestions');
             let conditions = [];
-
             // Function to update hidden input with concatenated conditions
             function updateHiddenInput() {
                 medicalConditionHidden.value = conditions.join(', ');
             }
-
             // Function to render tags
             function renderTags() {
                 // Clear existing tags (except input)
                 conditionsContainer.querySelectorAll('.condition-tag').forEach(tag => tag.remove());
-
                 // Add tags before the input
                 conditions.forEach((condition, index) => {
                     const tag = document.createElement('span');
                     tag.className = 'condition-tag bg-emerald-100 text-emerald-800 text-xs font-medium px-2 py-1 rounded mr-1 mb-1 flex items-center';
                     tag.innerHTML = `
-                ${escapeHtml(condition)}
-                <span class="ml-1 cursor-pointer text-emerald-600 hover:text-emerald-800" data-index="${index}">&times;</span>
-            `;
+            ${escapeHtml(condition)}
+            <span class="ml-1 cursor-pointer text-emerald-600 hover:text-emerald-800" data-index="${index}">&times;</span>
+        `;
                     conditionsContainer.insertBefore(tag, conditionInput);
                 });
-
                 updateHiddenInput();
             }
-
             // Handle input events
             conditionInput.addEventListener('input', function(e) {
                 const value = this.value.trim();
-
                 // If a comma is entered, add the condition and reset input
                 if (value.includes(',')) {
                     const newConditions = value.split(',').map(c => c.trim()).filter(c => c);
@@ -1246,7 +1246,6 @@ ob_end_flush();
                     renderTags();
                 }
             });
-
             // Handle Enter key to add condition
             conditionInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ',') {
@@ -1259,7 +1258,6 @@ ob_end_flush();
                     }
                 }
             });
-
             // Handle tag removal
             conditionsContainer.addEventListener('click', function(e) {
                 if (e.target.classList.contains('cursor-pointer')) {
@@ -1268,7 +1266,6 @@ ob_end_flush();
                     renderTags();
                 }
             });
-
             // Handle datalist selection
             conditionInput.addEventListener('change', function() {
                 const value = this.value.trim();
@@ -1282,13 +1279,11 @@ ob_end_flush();
                     }
                 }
             });
-
             // Populate conditions in edit mode
             <?php if ($medicalRecordToEdit && !empty($medicalRecordToEdit['medical_condition'])): ?>
                 conditions = <?= json_encode(array_map('trim', explode(',', $medicalRecordToEdit['medical_condition']))) ?>;
                 renderTags();
             <?php endif; ?>
-
             // Helper function to escape HTML (already defined in your code)
             function escapeHtml(unsafe) {
                 if (unsafe === null || unsafe === undefined) return '';
@@ -1301,7 +1296,6 @@ ob_end_flush();
                     .replace(/'/g, "&#039;");
             }
         });
-
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             let currentSort = urlParams.get('sort') ? urlParams.get('sort').toLowerCase() : 'asc';
@@ -1310,16 +1304,14 @@ ob_end_flush();
             const sortIcon = document.getElementById('sortIcon');
             const tbody = document.querySelector('tbody');
             const noResults = document.getElementById('noResults');
-
             // Set initial icon based on current sort
             if (sortIcon) {
-                sortIcon.className = currentSort === 'asc' ? 'fas fa-sort-alpha-up' : 'fas fa-sort-alpha-down';
+                sortIcon.className = `fas ${currentSort === 'asc' ? 'fa-sort-alpha-up' : 'fa-sort-alpha-down'}`;
             }
-
             // Handle sort button click
             if (sortButton) {
                 sortButton.addEventListener('click', function() {
-                    currentSort = currentSort === 'asc' ? 'desc' : 'asc';
+                    currentSort = urlParams.get('sort') === 'desc' ? 'asc' : 'desc';
                     if (sortIcon) {
                         sortIcon.className = currentSort === 'asc' ? 'fas fa-sort-alpha-up' : 'fas fa-sort-alpha-down';
                     }
@@ -1329,11 +1321,9 @@ ob_end_flush();
                     } else {
                         url.searchParams.set('sort', currentSort);
                     }
-                    window.history.replaceState({}, document.title, url);
-                    applySortAndFilter();
+                    window.location.href = url.toString();
                 });
             }
-
             // Handle search input (live filtering)
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
@@ -1346,11 +1336,9 @@ ob_end_flush();
                         url.searchParams.delete('search');
                     }
                     window.history.replaceState({}, document.title, url);
-
                     applySortAndFilter();
                 });
             }
-
             // Function to sort rows
             function sortRows(direction) {
                 const rows = Array.from(tbody.querySelectorAll('tr'));
@@ -1363,43 +1351,30 @@ ob_end_flush();
                 });
                 rows.forEach(row => tbody.appendChild(row));
             }
-
             // Filter function
             function filterClients() {
                 const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
                 let visibleCount = 0;
-
                 const rows = tbody.querySelectorAll('tr');
                 rows.forEach(row => {
                     const name = row.dataset.name;
                     const address = row.dataset.address;
                     const contact = row.dataset.contact;
-
                     const matchesSearch = !searchTerm ||
                         name.includes(searchTerm) ||
                         address.includes(searchTerm) ||
                         contact.includes(searchTerm);
-
                     row.style.display = matchesSearch ? '' : 'none';
                     if (matchesSearch) visibleCount++;
                 });
-
                 if (noResults) {
                     noResults.style.display = (visibleCount === 0) ? 'block' : 'none';
                 }
             }
-
-            // Combined sort and filter
-            function applySortAndFilter() {
-                sortRows(currentSort);
-                filterClients();
-            }
-
             // Apply initial sort and filter on page load
             applySortAndFilter();
         });
     </script>
-
     <!-- scripts -->
     <script src="./js/dashboard.js"></script>
     <script src="./js/sidebarHandler.js"></script>

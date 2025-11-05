@@ -15605,3 +15605,97 @@ Event: Jikoy Galindo on 2025-10-24 at 10:30:00 (count: 1, duration: 90)
 Event: Maricar T. Bahala on 2025-10-30 at 09:30:00 (count: 2, duration: 90)
 Event: Orlando B. Dela Cera on 2025-10-30 at 14:30:00 (count: 2, duration: 90)
 Events found: 3
+Time: 2025-11-02 18:41:46 - Start: 2025-11-01, End: 2025-11-30, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-11-30
+Count for 2025-11-02: 1
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-11-02 19:54:39 - Start: 2025-11-01, End: 2025-11-30, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-11-30
+Count for 2025-11-02: 1
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-11-02 19:54:52 - Start: 2025-11-01, End: 2025-11-30, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-11-30
+Count for 2025-11-02: 1
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-11-02 19:54:57 - Start: 2025-11-01, End: 2025-11-30, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-11-30
+Count for 2025-11-02: 1
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-11-02 19:55:00 - Start: 2025-11-01, End: 2025-11-30, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-11-30
+Count for 2025-11-02: 1
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-11-02 22:56:52 - Start: 2025-11-02, End: 2025-11-02, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-02&end=2025-11-02
+Count for 2025-11-02: 1
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 1, duration: 90)
+Events found: 1
+Script executed at 2025-11-02 22:57:09
+Database connection successful.
+Form data: Array
+(
+    [owner_name] => kaykay
+    [contact_number] => 09392516651
+    [appointment_date] => 2025-11-02
+    [appointment_time] => 08:00:00
+    [reason] => Checkup
+)
+
+Appointment logged: Guest kaykay booked an appointment on November 2, 2025 at 8:00 AM
+Time: 2025-11-03 08:47:05 - Start: 2025-11-28, End: 2025-11-28, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-28&end=2025-11-28
+Events found: 0
+Time: 2025-11-03 08:47:06 - Start: 2025-11-28, End: 2025-11-28, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-28&end=2025-11-28
+Events found: 0
+Time: 2025-11-03 08:47:07 - Start: 2025-11-03, End: 2025-11-03, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-03&end=2025-11-03
+Events found: 0
+Time: 2025-11-03 08:47:09 - Start: 2025-11-04, End: 2025-11-04, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-04&end=2025-11-04
+Events found: 0
+Time: 2025-11-03 08:47:10 - Start: 2025-11-03, End: 2025-11-03, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-03&end=2025-11-03
+Events found: 0
+Time: 2025-11-03 08:47:10 - Start: 2025-11-04, End: 2025-11-04, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-04&end=2025-11-04
+Events found: 0
+Time: 2025-11-03 08:47:11 - Start: 2025-11-03, End: 2025-11-03, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-03&end=2025-11-03
+Events found: 0
+Time: 2025-11-03 08:47:11 - Start: 2025-11-04, End: 2025-11-04, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-04&end=2025-11-04
+Events found: 0
+Time: 2025-11-03 08:47:12 - Start: 2025-11-03, End: 2025-11-03, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-03&end=2025-11-03
+Events found: 0
+Time: 2025-11-03 08:47:35 - Start: 2025-11-01, End: 2025-12-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-12-01
+Count for 2025-11-02: 2
+Event: kaykay on 2025-11-02 at 08:00:00 (count: 2, duration: 90)
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 2, duration: 90)
+Events found: 2
+Time: 2025-11-03 08:47:35 - Start: 2025-11-01, End: 2025-12-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-12-01
+Count for 2025-11-02: 2
+Event: kaykay on 2025-11-02 at 08:00:00 (count: 2, duration: 90)
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 2, duration: 90)
+Events found: 2
+Time: 2025-11-03 18:51:57 - Start: 2025-11-03, End: 2025-11-03, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-03&end=2025-11-03
+Events found: 0
+Time: 2025-11-03 18:51:58 - Start: 2025-11-06, End: 2025-11-06, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-06&end=2025-11-06
+Events found: 0
+Script executed at 2025-11-03 18:52:55
+Database connection successful.
+Form data: Array
+(
+    [owner_name] => eadrian
+    [contact_number] => 09392516661
+    [appointment_date] => 2025-11-06
+    [appointment_time] => 09:30:00
+    [reason] => Vaccination
+)
+
+Appointment logged: Guest eadrian booked an appointment on November 6, 2025 at 9:30 AM
+Time: 2025-11-05 22:03:51 - Start: 2025-11-01, End: 2025-12-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-12-01
+Count for 2025-11-02: 2
+Count for 2025-11-06: 1
+Event: kaykay on 2025-11-02 at 08:00:00 (count: 2, duration: 90)
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 2, duration: 90)
+Event: eadrian on 2025-11-06 at 09:30:00 (count: 1, duration: 90)
+Events found: 3
+Time: 2025-11-05 22:03:51 - Start: 2025-11-01, End: 2025-12-01, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-12-01
+Count for 2025-11-02: 2
+Count for 2025-11-06: 1
+Event: kaykay on 2025-11-02 at 08:00:00 (count: 2, duration: 90)
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 2, duration: 90)
+Event: eadrian on 2025-11-06 at 09:30:00 (count: 1, duration: 90)
+Events found: 3

@@ -1,10 +1,8 @@
-# TODO: Move Pet Filters Below List
-
-- [x] Separate the "List of Pets" title from the filters section
-- [x] Move the entire filters div (search bar and selects) below the pets table
-- [x] Restructure filters layout: horizontal row for large screens (lg+), stacked for smaller screens
-- [x] Test layout on large screen to ensure one-row arrangement
-- [x] Clarify user requirement: filters below the "List of Pets" title, not below the table
-- [x] Remove duplicate filters section below the table
-- [x] Make species and sex filters in one row on mobile
-- [x] Add A-Z/Z-A sort filter for pets
+- [x] Add secure session start and login checks at top of index.php
+- [x] Add CSRF token generation in index.php
+- [x] Add CSRF hidden input to login modal form
+- [x] Add CSRF hidden input to register modal form
+- [x] Add error message display in login modal
+- [ ] Add success handling for login in index.php (loader like index_backup.php)
+- [ ] Secure register.php with CSRF and success handling
+- [ ] Test login and registration functionality

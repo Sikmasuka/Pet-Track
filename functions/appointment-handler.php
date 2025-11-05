@@ -33,7 +33,7 @@ try {
 } catch (PDOException $e) {
     file_put_contents('debug.log', "Connection error: " . $e->getMessage() . "\n", FILE_APPEND);
     $_SESSION['error'] = "Database connection failed: " . $e->getMessage();
-    header("Location: ../landing-page.php");
+    header("Location: ../index.php");
     exit();
 }
 
