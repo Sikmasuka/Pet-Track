@@ -624,65 +624,65 @@ require_once 'functions/authentication.php';
                                 <label for="owner" class="block text-sm font-medium text-gray-700">Owner Name</label>
                                 <input type="text" id="owner" name="owner_name" value="<?= htmlspecialchars($_SESSION['username'] ?? '') ?>" placeholder="Enter Full Name" required
                                     class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                                        <input type="text" id="address" name="address" placeholder="Enter Address" required
-                                            class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
-                                    </div>
-                                    <div>
-                                        <label for="contact" class="block text-sm font-medium text-gray-700">Contact Number</label>
-                                        <input type="text" id="contact" name="contact_number" required
-                                            pattern="^09\d{9}$"
-                                            maxlength="11"
-                                            placeholder="e.g. 09171234567"
-                                            value="<?= htmlspecialchars($_SESSION['client_contact'] ?? '') ?>"
-                                            title="Enter a valid Philippine number starting with 09 and 11 digits long"
-                                            class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
-                                    </div>
+                            </div>
+                            <div>
+                                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                                <input type="text" id="address" name="address" placeholder="Enter Address" required
+                                    class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
+                            </div>
+                            <div>
+                                <label for="contact" class="block text-sm font-medium text-gray-700">Contact Number</label>
+                                <input type="text" id="contact" name="contact_number" required
+                                    pattern="^09\d{9}$"
+                                    maxlength="11"
+                                    placeholder="e.g. 09171234567"
+                                    value="<?= htmlspecialchars($_SESSION['client_contact'] ?? '') ?>"
+                                    title="Enter a valid Philippine number starting with 09 and 11 digits long"
+                                    class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
+                            </div>
+                        </div>
+                        <!-- Pet Information -->
+                        <div class="space-y-4">
+                            <h4 class="text-base font-semibold text-gray-800">Pet Information</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="pet_name" class="block text-sm font-medium text-gray-700">Pet Name</label>
+                                    <input type="text" id="pet_name" name="pet_name" placeholder="Enter Pet Name" required
+                                        class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
+                                </div>
+                                <div>
+                                    <label for="pet_species" class="block text-sm font-medium text-gray-700">Species</label>
+                                    <select name="pet_species" id="pet_species" required class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]">
+                                        <option value="">Select Species</option>
+                                        <option value="Dog">Dog</option>
+                                        <option value="Cat">Cat</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="pet_sex" class="block text-sm font-medium text-gray-700">Sex</label>
+                                    <select name="pet_sex" id="pet_sex" required class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]">
+                                        <option value="">Select Sex</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="pet_breed" class="block text-sm font-medium text-gray-700">Breed</label>
+                                    <input type="text" id="pet_breed" name="pet_breed" placeholder="Enter Pet Breed" required class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
+                                </div>
+                                <div>
+                                    <label for="pet_weight" class="block text-sm font-medium text-gray-700">Weight (kg)</label>
+                                    <input type="number" step="0.01" min="0" id="pet_weight" name="pet_weight" placeholder="e.g., 5.2" required
+                                        class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
+                                </div>
+                                <div>
+                                    <label for="pet_birth_date" class="block text-sm font-medium text-gray-700">Birth Date</label>
+                                    <input type="date" id="pet_birth_date" name="pet_birth_date" required
+                                        class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
                                 </div>
                             </div>
-                            <!-- Pet Information -->
-                            <div class="space-y-4">
-                                <h4 class="text-base font-semibold text-gray-800">Pet Information</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="pet_name" class="block text-sm font-medium text-gray-700">Pet Name</label>
-                                        <input type="text" id="pet_name" name="pet_name" placeholder="Enter Pet Name" required
-                                            class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
-                                    </div>
-                                    <div>
-                                        <label for="pet_species" class="block text-sm font-medium text-gray-700">Species</label>
-                                        <select name="pet_species" id="pet_species" required class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]">
-                                            <option value="">Select Species</option>
-                                            <option value="Dog">Dog</option>
-                                            <option value="Cat">Cat</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label for="pet_sex" class="block text-sm font-medium text-gray-700">Sex</label>
-                                        <select name="pet_sex" id="pet_sex" required class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]">
-                                            <option value="">Select Sex</option>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label for="pet_breed" class="block text-sm font-medium text-gray-700">Breed</label>
-                                        <input type="text" id="pet_breed" name="pet_breed" placeholder="Enter Pet Breed" required class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
-                                    </div>
-                                    <div>
-                                        <label for="pet_weight" class="block text-sm font-medium text-gray-700">Weight (kg)</label>
-                                        <input type="number" step="0.01" min="0" id="pet_weight" name="pet_weight" placeholder="e.g., 5.2" required
-                                            class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
-                                    </div>
-                                    <div>
-                                        <label for="pet_birth_date" class="block text-sm font-medium text-gray-700">Birth Date</label>
-                                        <input type="date" id="pet_birth_date" name="pet_birth_date" required
-                                            class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="space-y-4">
                             <!-- Left: Calendar -->
                             <div class="flex flex-col justify-center">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>

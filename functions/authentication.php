@@ -96,6 +96,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             // Admin login
             $_SESSION['admin_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
+            // Fetch admin_name for session
+            $stmt2 = $pdo->prepare("SELECT admin_name FROM Admin WHERE admin_id = :id");
+            $stmt2->execute(['id' => $user['id']]);
+            $admin = $stmt2->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['admin_name'] = $admin['admin_name'] ?? '';
             $_SESSION['role'] = 'admin';
 
             $login_success = true;

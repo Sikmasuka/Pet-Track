@@ -50,6 +50,8 @@ if (isset($_POST['add_vet'])) {
  * Handle updating an existing veterinarian
  */
 if (isset($_POST['update_vet'])) {
+    // This logic will need to be updated to handle changes in the Users table as well.
+    // For now, focusing on the core separation.
     if (!empty($_POST['vet_password'])) {
         $stmt = $pdo->prepare("UPDATE Veterinarian SET vet_name=?, vet_contact_number=?, vet_username=?, vet_password=? WHERE vet_id=?");
         $stmt->execute([
@@ -61,12 +63,7 @@ if (isset($_POST['update_vet'])) {
         ]);
     } else {
         $stmt = $pdo->prepare("UPDATE Veterinarian SET vet_name=?, vet_contact_number=?, vet_username=? WHERE vet_id=?");
-        $stmt->execute([
-            $_POST['vet_name'],
-            $_POST['vet_contact_number'],
-            $_POST['vet_username'],
-            $_POST['vet_id']
-        ]);
+        $stmt->execute([$_POST['vet_name'], $_POST['vet_contact_number'], $_POST['vet_username'], $_POST['vet_id']]);
     }
     header("Location: admin.php");
     exit;

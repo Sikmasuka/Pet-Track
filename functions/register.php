@@ -64,21 +64,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     if (empty($errors)) {
         $stmt = $pdo->prepare("SELECT client_id FROM client WHERE client_username = ? OR client_email = ?");
         $stmt->execute([$username, $email]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result) {
+        if ($stmt->fetch()) {
             $errors[] = "Username or email already exists.";
         }
     }
 
     if (empty($errors)) {
-        // Hash password
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        try {
+            // Hash password
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        // Insert new client
-        $stmt = $pdo->prepare("INSERT INTO client (client_name, client_username, client_email, client_address, client_contact_number, client_password, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
-        if ($stmt->execute([$fullname, $username, $email, $address, $contact, $hashed_password])) {
-            // Get the new client ID
+            // Insert new client
+            $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_username, client_password, client_email, client_address, client_contact_number) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$fullname, $username, $hashed_password, $email, $address, $contact]);
             $client_id = $pdo->lastInsertId();
 
             // Auto-login the new client
@@ -86,17 +84,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             $_SESSION['username'] = $username;
             $_SESSION['client_name'] = $fullname;
             $_SESSION['client_contact'] = $contact;
-            $_SESSION['role'] = 'client';
 
             // Log the registration/login
             require_once 'logs.php';
-            logAction($pdo, $client_id, 'Registration', $fullname . ' registered and logged in', 'Client');
+            logAction($pdo, $user_id, 'Registration', $fullname . ' registered and logged in', 'Client');
 
+            $pdo->commit();
             // Redirect to index.php (now logged in, profile dropdown will show)
             header('Location: ../index.php?message=Registration successful. You are now logged in.');
             exit;
-        } else {
-            $errors[] = "Registration failed. Please try again.";
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            $errors[] = "Registration failed due to a database error.";
         }
     }
 

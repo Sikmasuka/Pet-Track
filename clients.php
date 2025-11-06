@@ -701,15 +701,15 @@ ob_end_flush();
             const petSex = document.getElementById('petSex');
             if (petSpecies) petSpecies.disabled = false;
             if (petSex) petSex.disabled = false;
-            if (speciesTooltip) speciesTooltip.classList.add('hidden');
-            if (sexTooltip) sexTooltip.classList.add('hidden');
+            if (speciesTooltip) speciesTooltip.style.display = 'none';
+            if (sexTooltip) sexTooltip.style.display = 'none';
             // List of fields to clear required attributes
             const fields = [
                 'petName', 'petSpecies', 'petSex', 'petBreed',
                 'petWeight', 'petBirthDate', 'medicalCondition',
                 'medicalDiagnosis', 'medicalSymptoms', 'medicalTreatment'
             ];
-            // Clear required attributes for all fields if they exist
+            // Clear required attributes for all fields initially
             fields.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) element.removeAttribute('required');
@@ -717,7 +717,7 @@ ob_end_flush();
             if (action === 'add') {
                 form.reset(); // Clear form for adding new client
                 formAction.name = 'add_client';
-                modalTitle.textContent = 'Add New Client, Pet, and Medical Record';
+                modalTitle.textContent = 'Add New Client (with optional Pet & Medical Record)';
                 // Set required attributes for add mode
                 fields.forEach(id => {
                     const element = document.getElementById(id);
@@ -725,7 +725,7 @@ ob_end_flush();
                 });
             } else if (action === 'edit') {
                 modalTitle.textContent = 'Edit Client, Pet, and Medical Record';
-                formAction.name = 'update_client';
+                formAction.name = 'update_client'; // This will be handled by the PHP
             } else if (action === 'view') {
                 modalTitle.textContent = 'View Client, Pet, and Medical Record';
                 formAction.name = ''; // No form action for view
@@ -803,11 +803,10 @@ ob_end_flush();
         // Function to populate view modal with data
         function populateViewModal(data) {
             try {
-                const clientAddress = data.client.client_address || 'Not provided';
                 // Client Information
                 document.getElementById('viewClientName').textContent = data.client.client_name || '-';
-                document.getElementById('viewClientContact').textContent = data.client.client_contact_number || '-';
-                document.getElementById('viewClientAddress').textContent = clientAddress || '-';
+                document.getElementById('viewClientContact').textContent = data.client.client_contact_number || 'Not provided';
+                document.getElementById('viewClientAddress').textContent = data.client.client_address || 'Not provided';
                 // Pet Information (only basic info)
                 const petInfoList = document.getElementById('petInfoList');
                 const noPetInfo = document.getElementById('noPetInfo');
@@ -1093,14 +1092,14 @@ ob_end_flush();
                     document.getElementById('pet_id').value = <?= json_encode($petToEdit['pet_id'] ?? '') ?>;
                     document.getElementById('petName').value = <?= json_encode($petToEdit['pet_name'] ?? '') ?>;
                     document.getElementById('petSex').value = <?= json_encode($petToEdit['pet_sex'] ?? '') ?>;
-                    document.getElementById('petBreed').value = <?= json_encode($petToEdit['pet_breed'] ?? '') ?>;
+                    document.getElementById('petBreed').value = <?= json_encode($petToEdit['pet_breed'] ?? '') ?>; // Corrected ID
                     document.getElementById('petWeight').value = <?= json_encode($petToEdit['pet_weight'] ?? '') ?>;
                     document.getElementById('petBirthDate').value = <?= json_encode($petToEdit['pet_birth_date'] ?? '') ?>;
                     document.getElementById('petSpecies').value = <?= json_encode($petToEdit['pet_species'] ?? '') ?>;
                     document.getElementById('petSpecies').disabled = false;
                     document.getElementById('petSex').disabled = false;
-                    document.getElementById('speciesTooltip').classList.add('hidden');
-                    document.getElementById('sexTooltip').classList.add('hidden');
+                    document.getElementById('speciesTooltip').style.display = 'none';
+                    document.getElementById('sexTooltip').style.display = 'none';
                     // Set required attributes for pet fields when pet exists
                     document.getElementById('petName').setAttribute('required', '');
                     document.getElementById('petSpecies').setAttribute('required', '');
@@ -1119,8 +1118,8 @@ ob_end_flush();
                     document.getElementById('petSpecies').value = '';
                     document.getElementById('petSpecies').disabled = false;
                     document.getElementById('petSex').disabled = false;
-                    document.getElementById('speciesTooltip').classList.add('hidden');
-                    document.getElementById('sexTooltip').classList.add('hidden');
+                    document.getElementById('speciesTooltip').style.display = 'none';
+                    document.getElementById('sexTooltip').style.display = 'none';
                 <?php endif; ?>
                 // Set medical record values if exists
                 <?php if ($medicalRecordToEdit): ?>
@@ -1129,7 +1128,7 @@ ob_end_flush();
                     document.getElementById('medicalDiagnosis').value = <?= json_encode($medicalRecordToEdit['medical_diagnosis'] ?? '') ?>;
                     document.getElementById('medicalSymptoms').value = <?= json_encode($medicalRecordToEdit['medical_symptoms'] ?? '') ?>;
                     document.getElementById('medicalTreatment').value = <?= json_encode($medicalRecordToEdit['medical_treatment'] ?? '') ?>;
-                    // Set required attributes for medical record fields when record exists
+                    // Set required attributes for medical record fields when record exists (if pet_id is also present)
                     document.getElementById('medicalCondition').setAttribute('required', '');
                     document.getElementById('medicalDiagnosis').setAttribute('required', '');
                     document.getElementById('medicalSymptoms').setAttribute('required', '');
@@ -1155,14 +1154,15 @@ ob_end_flush();
             }
         }
         document.getElementById('clientForm').addEventListener('submit', function(event) {
-            if (modalTitle.textContent.includes('View')) {
+            const currentModalTitle = document.getElementById('modalTitle').textContent;
+            if (currentModalTitle.includes('View')) {
                 event.preventDefault(); // Prevent submit in view mode
                 return;
             }
             const medicalFields = ['medicalConditionHidden', 'medicalDiagnosis', 'medicalSymptoms', 'medicalTreatment'];
             const petFields = ['petName', 'petSpecies', 'petSex', 'petBreed', 'petWeight', 'petBirthDate'];
             const petId = document.getElementById('pet_id').value.trim();
-            const hasPetData = petFields.some(id => document.getElementById(id).value.trim());
+            const hasPetData = petFields.some(id => document.getElementById(id) && document.getElementById(id).value.trim());
             // Debugging: Log form data
             console.log('Submitting form with pet_id:', petId);
             console.log('Pet fields:', petFields.map(id => ({
@@ -1170,7 +1170,7 @@ ob_end_flush();
             })));
             // If any pet field is filled, all pet fields must be filled
             if (hasPetData) {
-                for (const id of petFields) {
+                for (const id of petFields) { // Ensure all pet fields are filled if any are
                     if (!document.getElementById(id).value.trim()) {
                         event.preventDefault();
                         Swal.fire({
@@ -1186,7 +1186,7 @@ ob_end_flush();
                 }
             }
             // If any medical field is filled, all medical fields must be filled
-            const hasMedicalData = medicalFields.some(id => document.getElementById(id).value.trim());
+            const hasMedicalData = medicalFields.some(id => document.getElementById(id) && document.getElementById(id).value.trim());
             if (hasMedicalData) {
                 for (const id of medicalFields) {
                     if (!document.getElementById(id).value.trim()) {

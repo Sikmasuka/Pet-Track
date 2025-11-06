@@ -39,18 +39,34 @@ try {
 
 // Get and log form data
 $owner_name = trim($_POST['owner_name'] ?? '');
+$address = trim($_POST['address'] ?? '');
 $contact_number = trim($_POST['contact_number'] ?? '');
 $appointment_date = trim($_POST['appointment_date'] ?? '');
 $appointment_time = trim($_POST['appointment_time'] ?? '') . ':00'; // Ensure seconds
 $reason = trim($_POST['reason'] ?? '');
 
-file_put_contents('debug.log', "Form data: " . print_r(['owner_name' => $owner_name, 'contact_number' => $contact_number, 'appointment_date' => $appointment_date, 'appointment_time' => $appointment_time, 'reason' => $reason], true) . "\n", FILE_APPEND);
+// Pet details from the form
+$pet_name = trim($_POST['pet_name'] ?? '');
+$pet_species = trim($_POST['pet_species'] ?? '');
+$pet_sex = trim($_POST['pet_sex'] ?? '');
+$pet_breed = trim($_POST['pet_breed'] ?? '');
+$pet_weight = trim($_POST['pet_weight'] ?? '');
+$pet_birth_date = trim($_POST['pet_birth_date'] ?? '');
+
+
+file_put_contents('debug.log', "Form data: " . print_r([
+    'owner_name' => $owner_name,
+    'contact_number' => $contact_number,
+    'appointment_date' => $appointment_date,
+    'appointment_time' => $appointment_time,
+    'reason' => $reason
+], true) . "\n", FILE_APPEND);
 
 try {
     // Basic validation
     if (empty($owner_name) || empty($contact_number) || empty($appointment_date) || empty($appointment_time) || empty($reason)) {
         $_SESSION['error'] = "Please fill in all required fields.";
-        header("Location: ../landing-page.php");
+        header("Location: ../index.php");
         exit();
     }
 
@@ -58,7 +74,7 @@ try {
     $dateObj = DateTime::createFromFormat('Y-m-d', $appointment_date);
     if ($dateObj === false || $appointment_date !== $dateObj->format('Y-m-d')) {
         $_SESSION['error'] = "Invalid appointment date. Use YYYY-MM-DD format.";
-        header("Location: ../landing-page.php");
+        header("Location: ../index.php");
         exit();
     }
 
@@ -66,7 +82,7 @@ try {
     $today = new DateTime('now', new DateTimeZone('Asia/Manila'));
     if (new DateTime($appointment_date) < $today->setTime(0, 0, 0)) {
         $_SESSION['error'] = "Cannot book appointments for past dates.";
-        header("Location: ../landing-page.php");
+        header("Location: ../index.php");
         exit();
     }
 
@@ -74,14 +90,14 @@ try {
     $timeObj = DateTime::createFromFormat('H:i:s', $appointment_time, new DateTimeZone('Asia/Manila'));
     if ($timeObj === false) {
         $_SESSION['error'] = "Invalid appointment time.";
-        header("Location: ../landing-page.php");
+        header("Location: ../index.php");
         exit();
     }
     $hours = (int)$timeObj->format('H');
     $minutes = (int)$timeObj->format('i');
     if ($hours < 8 || $hours > 18 || ($hours === 18 && $minutes > 0)) {
         $_SESSION['error'] = "Appointments can only be booked between 8:00 AM and 6:00 PM.";
-        header("Location: ../landing-page.php");
+        header("Location: ../index.php");
         exit();
     }
 
@@ -91,7 +107,7 @@ try {
     $count = $stmt->fetchColumn();
     if ($count >= 6) {
         $_SESSION['error'] = "This day is fully booked (6/6 appointments). Please choose another date.";
-        header("Location: ../landing-page.php");
+        header("Location: ../index.php");
         exit();
     }
 
@@ -117,9 +133,44 @@ try {
 
         if ($startTime < $existingEnd && $endTime > $existingStart) {
             $_SESSION['error'] = "This time slot overlaps with an existing appointment. Please choose another time.";
-            header("Location: ../landing-page.php");
+            header("Location: ../index.php");
             exit();
         }
+    }
+
+    // Begin transaction for client/pet creation
+    $pdo->beginTransaction();
+
+    // 1. Find or create the client
+    $stmt = $pdo->prepare("SELECT client_id FROM Client WHERE client_name = ? AND client_contact_number = ?");
+    $stmt->execute([$owner_name, $contact_number]);
+    $client = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($client) {
+        $client_id = $client['client_id'];
+    } else {
+        // Client does not exist, create a new one
+        $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number, status) VALUES (?, ?, ?, 1)");
+        $stmt->execute([$owner_name, $address, $contact_number]);
+        $client_id = $pdo->lastInsertId();
+    }
+
+    // 2. Find or create the pet for this client
+    $stmt = $pdo->prepare("SELECT pet_id FROM Pet WHERE client_id = ? AND pet_name = ?");
+    $stmt->execute([$client_id, $pet_name]);
+    $pet = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($pet) {
+        $pet_id = $pet['pet_id'];
+        // Optional: You could update the pet's details here if they've changed
+    } else {
+        // Pet does not exist for this client, create a new one
+        $stmt = $pdo->prepare(
+            "INSERT INTO Pet (client_id, pet_name, pet_species, pet_sex, pet_breed, pet_weight, pet_birth_date, status) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, 1)"
+        );
+        $stmt->execute([$client_id, $pet_name, $pet_species, $pet_sex, $pet_breed, $pet_weight, $pet_birth_date]);
+        $pet_id = $pdo->lastInsertId();
     }
 
     // Insert into database
@@ -140,21 +191,25 @@ try {
     // Verify insertion
     $lastId = $pdo->lastInsertId();
     if ($lastId > 0) {
+        $pdo->commit(); // Commit client/pet changes
         logAppointment($pdo, $owner_name, $appointment_date, $appointment_time);
         $_SESSION['success'] = "Appointment booked successfully! (ID: $lastId)";
     } else {
         $_SESSION['error'] = "Appointment was not saved. Please try again.";
     }
-    header("Location: ../landing-page.php");
+    header("Location: ../index.php");
     exit();
 } catch (PDOException $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
     file_put_contents('debug.log', "Insert error: " . $e->getMessage() . "\n", FILE_APPEND);
     $_SESSION['error'] = "Failed to book appointment: " . $e->getMessage();
-    header("Location: ../landing-page.php");
+    header("Location: ../index.php");
     exit();
 } catch (Exception $e) {
     file_put_contents('debug.log', "General error: " . $e->getMessage() . "\n", FILE_APPEND);
     $_SESSION['error'] = "An unexpected error occurred: " . $e->getMessage();
-    header("Location: ../landing-page.php");
+    header("Location: ../index.php");
     exit();
 }

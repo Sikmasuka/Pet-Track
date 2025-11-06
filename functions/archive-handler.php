@@ -128,10 +128,21 @@ function deleteFromArchive($pdo, $id, $table)
             $pdo->prepare("DELETE FROM Pet WHERE client_id = ?")->execute([$id]);
 
             // Delete client
-            $pdo->prepare("DELETE FROM client WHERE client_id = ?")->execute([$id]);
+            // Anonymize the client record by nullifying personal data but preserving
+            // login credentials (username, password, email).
+            // Set status to 2 to hide it from all lists.
+            $stmt = $pdo->prepare(
+                "UPDATE client 
+                 SET client_name = 'Deleted Client', 
+                     client_address = 'Deleted', 
+                     client_contact_number = '00000000000',
+                     status = 2
+                 WHERE client_id = ?"
+            );
+            $stmt->execute([$id]);
 
             // Log the delete action
-            $description = "$username permanently deleted client '$client_name' and associated pets and medical records";
+            $description = "$username permanently deleted data for client '$client_name' (ID: $id) and associated pets/records. Account preserved.";
             logAction($pdo, $_SESSION['vet_id'], 'delete', $description, 'Admin');
 
             $pdo->commit();
