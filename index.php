@@ -39,6 +39,77 @@ if (isset($_SESSION['admin_id'])) {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/landing-page.css" />
 </head>
+<style>
+    /* Custom styles for calendar day indicators */
+    .day-cell {
+        position: relative;
+        transition: background-color 0.2s;
+    }
+
+    .day-cell.has-appointments {
+        background-color: rgba(40, 167, 69, 0.1);
+        /* Light green */
+    }
+
+    .day-cell.full-day {
+        background-color: rgba(220, 53, 69, 0.1);
+        /* Light red */
+    }
+
+    .day-cell.has-appointments .day-number {
+        font-weight: bold;
+        color: #166534;
+        /* Darker green */
+    }
+
+    .day-cell.full-day .day-number {
+        font-weight: bold;
+        color: #b91c1c;
+        /* Darker red */
+    }
+
+    .appointment-indicator {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        z-index: 2;
+    }
+
+    /* Legend styles */
+    .calendar-legend {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .legend-circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+
+    .legend-has-appointments {
+        background-color: #28a745;
+        /* Green */
+    }
+
+    .legend-full {
+        background-color: #dc3545;
+        /* Red */
+    }
+</style>
 
 <body>
     <!-- Header -->
@@ -687,6 +758,18 @@ if (isset($_SESSION['admin_id'])) {
                             <!-- Left: Calendar -->
                             <div class="flex flex-col justify-center">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                                <!-- Calendar Legend -->
+                                <div class="calendar-legend">
+                                    <div class="legend-item">
+                                        <div class="legend-circle legend-has-appointments"></div>
+                                        <span>Has Appointments</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-circle legend-full"></div>
+                                        <span>Fully Booked</span>
+                                    </div>
+                                </div>
+
                                 <div id="calendarContainer" class="p-4 bg-gray-50 rounded-md border border-gray-200 shadow-sm">
                                     <div class="flex justify-between items-center mb-3">
                                         <button type="button" id="prevMonth" class="px-3 py-1 bg-[#169976] text-white rounded hover:bg-[#137a60]">&lt;</button>
@@ -914,6 +997,7 @@ if (isset($_SESSION['admin_id'])) {
                 const calendarDays = document.getElementById("calendarDays");
                 const prevMonth = document.getElementById("prevMonth");
                 const nextMonth = document.getElementById("nextMonth");
+                const submitButton = document.getElementById("submitButton");
                 const selectedDate = document.getElementById("selectedDate");
 
                 function renderCalendar() {
@@ -928,6 +1012,14 @@ if (isset($_SESSION['admin_id'])) {
                     const lastDay = new Date(year, month + 1, 0);
                     const daysInMonth = lastDay.getDate();
                     const startingDay = firstDay.getDay();
+
+                    // Fetch appointment counts for the month
+                    const startDate = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+                    const endDate = `${year}-${String(month + 1).padStart(2, '0')}-${daysInMonth}`;
+
+                    fetch(`./functions/get-appointments.php?start=${startDate}&end=${endDate}`)
+                        .then(response => response.json())
+                        .then(updateCalendarUI);
                     // Add empty days for the first week
                     for (let i = 0; i < startingDay; i++) {
                         const emptyDiv = document.createElement("div");
@@ -936,12 +1028,16 @@ if (isset($_SESSION['admin_id'])) {
                     // Add days of the month
                     for (let day = 1; day <= daysInMonth; day++) {
                         const dayDiv = document.createElement("div");
-                        dayDiv.textContent = day;
-                        dayDiv.classList.add("cursor-pointer", "hover:bg-gray-200", "rounded-full", "p-1", "text-center");
+                        dayDiv.classList.add("day-cell", "cursor-pointer", "hover:bg-gray-200", "rounded-full", "p-1", "text-center");
+                        const dayNumber = document.createElement("span");
+                        dayNumber.textContent = day;
+                        dayNumber.classList.add("day-number");
+                        dayDiv.appendChild(dayNumber);
+
                         const current = new Date(year, month, day);
                         if (current < new Date().setHours(0, 0, 0, 0)) {
                             dayDiv.classList.add("text-gray-400", "cursor-not-allowed");
-                        } else {
+                        } else { // Only add click listener for valid days
                             dayDiv.addEventListener("click", () => {
                                 selectedDate.value = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                                 const days = document.querySelectorAll("#calendarDays div");
@@ -952,6 +1048,40 @@ if (isset($_SESSION['admin_id'])) {
                         }
                         calendarDays.appendChild(dayDiv);
                     }
+                }
+
+                function updateCalendarUI(events) {
+                    const dayCounts = {};
+                    events.forEach(event => {
+                        const date = event.start.split('T')[0];
+                        dayCounts[date] = (dayCounts[date] || 0) + 1;
+                    });
+
+                    const dayElements = calendarDays.querySelectorAll('.day-cell');
+                    dayElements.forEach(dayEl => {
+                        const day = dayEl.textContent;
+                        if (!day) return;
+
+                        const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        const count = dayCounts[dateStr] || 0;
+
+                        // Clear previous indicators
+                        const existingIndicator = dayEl.querySelector('.appointment-indicator');
+                        if (existingIndicator) existingIndicator.remove();
+
+                        if (count > 0) {
+                            const indicator = document.createElement('div');
+                            indicator.className = 'appointment-indicator';
+                            if (count >= 6) {
+                                dayEl.classList.add('full-day');
+                                indicator.style.backgroundColor = '#dc3545'; // Red
+                            } else {
+                                dayEl.classList.add('has-appointments');
+                                indicator.style.backgroundColor = '#28a745'; // Green
+                            }
+                            dayEl.appendChild(indicator);
+                        }
+                    });
                 }
                 prevMonth.addEventListener("click", () => {
                     currentDate.setMonth(currentDate.getMonth() - 1);

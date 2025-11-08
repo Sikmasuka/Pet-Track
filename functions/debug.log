@@ -16131,3 +16131,44 @@ Form data: Array
 )
 
 Appointment logged: Guest Eadrian booked an appointment on November 12, 2025 at 8:00 AM
+Time: 2025-11-08 16:05:51 - Start: 2025-11-01, End: 2025-11-30, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-11-30
+Count for 2025-11-02: 2
+Count for 2025-11-10: 6
+Count for 2025-11-12: 1
+Event: kaykay on 2025-11-02 at 08:00:00 (count: 2, duration: 90)
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 2, duration: 90)
+Event: eadrian on 2025-11-10 at 08:00:00 (count: 6, duration: 90)
+Event: eadrian on 2025-11-10 at 09:30:00 (count: 6, duration: 90)
+Event: Kaykay on 2025-11-10 at 11:00:00 (count: 6, duration: 90)
+Event: Eadrian on 2025-11-10 at 12:30:00 (count: 6, duration: 90)
+Event: Eadrian on 2025-11-10 at 14:00:00 (count: 6, duration: 90)
+Event: Kaykay on 2025-11-10 at 15:30:00 (count: 6, duration: 90)
+Event: Eadrian on 2025-11-12 at 08:00:00 (count: 1, duration: 90)
+Events found: 9
+Time: 2025-11-08 16:05:53 - Start: 2025-11-10, End: 2025-11-10, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-10&end=2025-11-10
+Count for 2025-11-10: 6
+Event: eadrian on 2025-11-10 at 08:00:00 (count: 6, duration: 90)
+Event: eadrian on 2025-11-10 at 09:30:00 (count: 6, duration: 90)
+Event: Kaykay on 2025-11-10 at 11:00:00 (count: 6, duration: 90)
+Event: Eadrian on 2025-11-10 at 12:30:00 (count: 6, duration: 90)
+Event: Eadrian on 2025-11-10 at 14:00:00 (count: 6, duration: 90)
+Event: Kaykay on 2025-11-10 at 15:30:00 (count: 6, duration: 90)
+Events found: 6
+Time: 2025-11-08 16:05:55 - Start: 2025-11-12, End: 2025-11-12, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-12&end=2025-11-12
+Count for 2025-11-12: 1
+Event: Eadrian on 2025-11-12 at 08:00:00 (count: 1, duration: 90)
+Events found: 1
+Time: 2025-11-08 16:11:50 - Start: 2025-11-01, End: 2025-11-30, Server: /Pet-Track/functions/get-appointments.php?start=2025-11-01&end=2025-11-30
+Count for 2025-11-02: 2
+Count for 2025-11-10: 6
+Count for 2025-11-12: 1
+Event: kaykay on 2025-11-02 at 08:00:00 (count: 2, duration: 90)
+Event: Kent Ralf Baccaro on 2025-11-02 at 15:30:00 (count: 2, duration: 90)
+Event: eadrian on 2025-11-10 at 08:00:00 (count: 6, duration: 90)
+Event: eadrian on 2025-11-10 at 09:30:00 (count: 6, duration: 90)
+Event: Kaykay on 2025-11-10 at 11:00:00 (count: 6, duration: 90)
+Event: Eadrian on 2025-11-10 at 12:30:00 (count: 6, duration: 90)
+Event: Eadrian on 2025-11-10 at 14:00:00 (count: 6, duration: 90)
+Event: Kaykay on 2025-11-10 at 15:30:00 (count: 6, duration: 90)
+Event: Eadrian on 2025-11-12 at 08:00:00 (count: 1, duration: 90)
+Events found: 9
