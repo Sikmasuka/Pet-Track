@@ -41,12 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $stmt = $pdo->prepare("
         SELECT 'admin' AS role, admin_id AS id, admin_username AS username, admin_password AS password
         FROM Admin WHERE admin_username = :username
-        UNION
+        UNION ALL
         SELECT 'veterinarian' AS role, vet_id AS id, vet_username AS username, vet_password AS password
         FROM Veterinarian WHERE vet_username = :username
-        UNION
-        SELECT 'client' AS role, client_id AS id, client_username AS username, client_password AS password
-        FROM Client WHERE client_username = :username
+        UNION ALL
+        SELECT 'client' AS role, ca.client_id AS id, ca.username, ca.password
+        FROM client_accounts ca WHERE ca.username = :username
     ");
     $stmt->execute(['username' => $username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -125,8 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             logAction($pdo, $user['id'], 'Login', $_SESSION['vet_name'] . ' logged in', 'Veterinarian');
         } else {
             // Client login
-            // Fetch client_name and contact for session
-            $stmt2 = $pdo->prepare("SELECT client_name, client_contact_number FROM Client WHERE client_id = :id");
+            // Fetch client_name and contact for session from the `Client` table
+            $stmt2 = $pdo->prepare("SELECT client_name, client_contact_number FROM Client WHERE client_id = :id AND status = 1");
             $stmt2->execute(['id' => $user['id']]);
             $client = $stmt2->fetch(PDO::FETCH_ASSOC);
 

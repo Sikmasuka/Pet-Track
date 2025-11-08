@@ -251,10 +251,10 @@ ob_end_flush();
                                     </div>
                                     <div>
                                         <p class="text-sm font-semibold text-gray-800">
-                                            <?php echo isset($vetName) ? $vetName : $adminName; ?>
+                                            <?php echo $adminName; ?>
                                         </p>
                                         <p class="text-xs text-gray-500">
-                                            <?php echo isset($vetName) ? 'Veterinarian' : 'Admin'; ?>
+                                            Admin
                                         </p>
                                     </div>
                                 </div>

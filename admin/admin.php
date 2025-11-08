@@ -284,7 +284,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
         <div id="addModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
             <div id="modalContent" class="bg-white rounded-lg shadow-lg w-full max-w-lg overflow-hidden border border-slate-200 flex flex-col">
                 <!-- Modal Header -->
-                <div class="bg-indigo-500 px-4 py-3">
+                <div class="bg-emerald-600 px-4 py-3">
                     <h3 id="petModalTitle" class="text-lg lg:text-xl font-bold text-center text-white">
                         Add Veterinarian
                     </h3>
@@ -294,13 +294,13 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
                     <form method="POST" id="addVetForm" class="grid grid-cols-1 gap-3">
                         <label for="vet_name" class="font-medium text-sm text-gray-800">Name</label>
                         <input type="text" name="vet_name" id="vet_name" placeholder="Name" required
-                            class="p-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                            class="p-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                         <label for="vet_contact_number" class="font-medium text-sm text-gray-800">Contact Number</label>
                         <input type="text" name="vet_contact_number" id="vet_contact_number" placeholder="Contact Number" required
-                            class="p-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                            class="p-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                         <label for="vet_username" class="font-medium text-sm text-gray-800">Username</label>
                         <input type="text" name="vet_username" id="vet_username" placeholder="Username" required
-                            class="p-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                            class="p-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                         <label for="vet_password" class="font-medium text-sm text-gray-800">Password</label>
                         <div class="relative">
                             <input type="password" name="vet_password" id="vet_password" placeholder="(e.g., MyPass@2025)" required
@@ -321,7 +321,7 @@ $adminName = htmlspecialchars($currentAdmin['admin_name'] ?? 'Admin');
                 <!-- Modal Footer -->
                 <div class="flex justify-end items-center gap-3 p-4 border-t border-gray-200">
                     <button type="submit" form="addVetForm" name="add_vet"
-                        class="bg-indigo-500 text-white px-4 py-2 text-sm rounded-md hover:bg-indigo-600 transition-colors">
+                        class="bg-emerald-600 text-white px-4 py-2 text-sm rounded-md hover:bg-emerald-700 transition-colors">
                         Add Veterinarian
                     </button>
                     <button type="button" id="closeAddModal"

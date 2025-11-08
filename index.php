@@ -1,12 +1,4 @@
 <?php
-// Check if the user is already logged in
-if (isset($_SESSION['admin_id'])) {
-    header('Location: admin/admin-dashboard.php');
-    exit;
-} elseif (isset($_SESSION['vet_id'])) {
-    header('Location: dashboard.php');
-    exit;
-}
 // Start session securely (same as in authentication.php)
 if (session_status() === PHP_SESSION_NONE) {
     session_start([
@@ -23,6 +15,15 @@ $_SESSION['last_activity'] = time();
 $_SESSION['expire_time'] = 3600; // 1 hour
 // Include authentication script
 require_once 'functions/authentication.php';
+
+// Check if the user is already logged in or just logged in
+if (isset($_SESSION['admin_id'])) {
+    header('Location: admin/admin-dashboard.php');
+    exit;
+} elseif (isset($_SESSION['vet_id'])) {
+    header('Location: dashboard.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>

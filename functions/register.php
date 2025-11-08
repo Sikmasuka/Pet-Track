@@ -60,34 +60,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
         $errors[] = "Passwords do not match.";
     }
 
-    // Check if username or email already exists
-    if (empty($errors)) {
-        $stmt = $pdo->prepare("SELECT client_id FROM client WHERE client_username = ? OR client_email = ?");
-        $stmt->execute([$username, $email]);
-        if ($stmt->fetch()) {
-            $errors[] = "Username or email already exists.";
-        }
-    }
-
     if (empty($errors)) {
         try {
+            $pdo->beginTransaction();
+
+            // Step 1: Check if username or email already exists in the new accounts table
+            $stmt = $pdo->prepare("SELECT account_id FROM client_accounts WHERE username = ? OR email = ?");
+            $stmt->execute([$username, $email]);
+            if ($stmt->fetch()) {
+                throw new Exception("Username or email already exists.");
+            }
+
+            // Step 2: Create the client record with personal info
+            $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number) VALUES (?, ?, ?)");
+            $stmt->execute([$fullname, $address, $contact]);
+            $client_id = $pdo->lastInsertId();
+
             // Hash password
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Insert new client
-            $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_username, client_password, client_email, client_address, client_contact_number) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$fullname, $username, $hashed_password, $email, $address, $contact]);
-            $client_id = $pdo->lastInsertId();
+            // Step 3: Create the client account record with login info
+            $stmt = $pdo->prepare("INSERT INTO client_accounts (client_id, username, email, password) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$client_id, $username, $email, $hashed_password]);
 
             // Auto-login the new client
             $_SESSION['client_id'] = $client_id;
             $_SESSION['username'] = $username;
             $_SESSION['client_name'] = $fullname;
             $_SESSION['client_contact'] = $contact;
-
-            // Log the registration/login
             require_once 'logs.php';
-            logAction($pdo, $user_id, 'Registration', $fullname . ' registered and logged in', 'Client');
+            logAction($pdo, $client_id, 'Registration', $fullname . ' registered and logged in', 'Client');
 
             $pdo->commit();
             // Redirect to index.php (now logged in, profile dropdown will show)
@@ -95,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             exit;
         } catch (PDOException $e) {
             $pdo->rollBack();
-            $errors[] = "Registration failed due to a database error.";
+            $errors[] = "Registration failed due to a database error: " . $e->getMessage();
         }
     }
 

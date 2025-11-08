@@ -24,7 +24,6 @@ if (!DateTime::createFromFormat('Y-m-d', $start_date) || !DateTime::createFromFo
 
 // Debug: Log the received dates and environment
 file_put_contents(__DIR__ . '/debug.log', "Time: " . date('Y-m-d H:i:s') . " - Start: $start_date, End: $end_date, Server: " . $_SERVER['REQUEST_URI'] . "\n", FILE_APPEND);
-
 try {
     // Test database connection
     $pdo->query("SELECT 1"); // Simple ping to check connection

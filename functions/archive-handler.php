@@ -127,10 +127,8 @@ function deleteFromArchive($pdo, $id, $table)
             // Delete client's pets
             $pdo->prepare("DELETE FROM Pet WHERE client_id = ?")->execute([$id]);
 
-            // Delete client
-            // Anonymize the client record by nullifying personal data but preserving
-            // login credentials (username, password, email).
-            // Set status to 2 to hide it from all lists.
+            // Anonymize the client record by nullifying personal data but preserving the record.
+            // Set status to 2 (or another value for 'anonymized') to hide it from all lists.
             $stmt = $pdo->prepare(
                 "UPDATE client 
                  SET client_name = 'Deleted Client', 
