@@ -31,9 +31,9 @@ ob_end_flush();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard - Balingasag Dog and Cat Clinic</title>
     <script src="Assets/chart.js"></script>
-    <link rel="icon" href="image/MainIcon.png" type="image/x-icon">
+    <link rel="icon" href="image/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="Assets/FontAwsome/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -69,6 +69,23 @@ ob_end_flush();
         ::-webkit-scrollbar-thumb:hover {
             background: #475569;
         }
+
+        /* Custom scrollbar for Recent Activities table */
+        .activities-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .activities-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            /* Light grey track */
+        }
+
+        .activities-container::-webkit-scrollbar-thumb {
+            background: #0d9488;
+            /* Teal thumb */
+            border-radius: 4px;
+        }
     </style>
 </head>
 
@@ -82,15 +99,18 @@ ob_end_flush();
 
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-teal-800">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl lg:text-2xl font-semibold flex items-center gap-2">
-                <img src="image/MainIconWhite.png" alt="Dashboard" class="w-6 lg:w-8">
-                <span class="md:inline">Dashboard</span>
-            </h2>
-            <button id="closeSidebarBtn" class="lg:hidden absolute top-4 right-4 text-white hover:text-gray-200 duration-200">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+        <div class="flex flex-col items-center">
+            <img src="image/logoWhite.png" alt="Balingasag Dog and Cat Clinic Logo" class="h-16 w-auto object-contain drop-shadow-lg">
+            <div class="text-center leading-tight">
+                <h2 class="text-xl font-extrabold tracking-wide text-white">
+                    Balingasag
+                </h2>
+                <p class="text-base font-medium text-gray-200">
+                    Dog & Cat Clinic
+                </p>
+            </div>
         </div>
+
         <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5">
             <a href="dashboard.php" class="block text-sm text-white bg-teal-800 px-4 py-2 rounded-md hover:bg-teal-900 transition-colors">
                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
@@ -123,6 +143,7 @@ ob_end_flush();
             </a>
         </div>
     </aside>
+
 
     <div id="overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
 
@@ -263,38 +284,59 @@ ob_end_flush();
 
             <h2 class="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800 mb-6">Analytics Overview</h2>
             <div class="flex flex-col lg:flex-row gap-8">
-                <div class="flex-1 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
-                    <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Monthly Income</h3>
-                    <div class="chart-container">
-                        <canvas id="incomeChart"></canvas>
+                <!-- === RECENT ACTIVITIES === -->
+                <div class="w-full lg:w-3/5 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
+
+                    <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">
+                        Recent Activities
+                    </h3>
+
+                    <!--  Scrollable container – now fully responsive  -->
+                    <div class="w-full overflow-x-auto rounded-lg border border-slate-200">
+                        <div class="max-h-96 overflow-y-auto activities-container">
+                            <table class="min-w-full divide-y divide-slate-200" style="table-layout: fixed;">
+                                <thead class="bg-gray-300 sticky top-0 z-10">
+                                    <tr>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider" style="width: 10%;">#</th>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider" style="width: 30%;">Name</th>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider" style="width: 40%;">Description</th>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider" style="width: 20%;">Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="activities-body" class="bg-white divide-y divide-slate-200">
+                                    <!-- rows injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div id="pagination" class="mt-3 flex flex-wrap justify-center gap-1"></div>
+                </div>
+
+                <!-- Most common medical condition -->
+                <div class="lg:w-1/3 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
+                    <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">
+                        Most Common Medical Conditions
+                    </h3>
+
+                    <!-- Fixed-size chart container -->
+                    <div class="chart-container flex justify-center items-center">
+                        <canvas id="conditionChart" width="250" height="250"></canvas>
                     </div>
                 </div>
-                <div class="flex-0.5 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
-                    <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Most Common Medical Conditions</h3>
-                    <div class="chart-container">
-                        <canvas id="conditionChart"></canvas>
-                    </div>
-                </div>
+
             </div>
+
             <div class="mt-8 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
-                <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Recent Activities</h3>
-                <div class="table-container overflow-x-scroll lg:overflow-x-hidden">
-                    <table class="min-w-full divide-y divide-slate-200">
-                        <thead class="bg-gray-300">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs text-gray-700 uppercase tracking-wider">#</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-700 uppercase tracking-wider">Name</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-700 uppercase tracking-wider">Description</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-700 uppercase tracking-wider">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="activities-body" class="bg-white divide-y divide-slate-200">
-                        </tbody>
-                    </table>
-                    <!-- Remove server-side pagination since it's handled by AJAX -->
+                <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Monthly Income</h3>
+                <div class="chart-container">
+                    <canvas id="incomeChart"></canvas>
                 </div>
             </div>
         </main>
+
     </div>
 
     <script>
@@ -362,7 +404,9 @@ ob_end_flush();
             }
         });
 
-        // AJAX polling for Recent Activities
+        /* -------------------------------------------------------------
+   Recent Activities – AJAX + smooth replace
+   ------------------------------------------------------------- */
         let currentPage = 1;
         let isFetching = false;
 
@@ -370,105 +414,93 @@ ob_end_flush();
             if (isFetching) return;
             isFetching = true;
 
-            const tbody = document.getElementById("activities-body");
+            const tbody = document.getElementById('activities-body');
             if (!tbody) {
-                console.error("Activities table body not found");
                 isFetching = false;
                 return;
             }
 
-            // Create a new tbody element in memory (not attached to DOM)
-            const newTbody = document.createElement("tbody");
-            newTbody.classList.add("bg-white", "divide-y", "divide-slate-200");
-
-            // Add a temporary loading row to the new tbody
-            newTbody.innerHTML = '<tr><td colspan="4" class="px-4 py-2 text-sm text-center text-gray-500">Loading...</td></tr>';
+            // ---- show a tiny loader inside the tbody (no DOM swap) ----
+            tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-2 text-center text-gray-500">Loading...</td></tr>`;
 
             try {
-                const response = await fetch(`./functions/get-recent-activities.php?page=${page}`);
-                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-                const text = await response.text();
-                console.log("Raw response:", text);
-                const data = text ? JSON.parse(text) : {};
-                console.log("Parsed data:", data);
+                const res = await fetch(`./functions/get-recent-activities.php?page=${page}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-                // Clear the new tbody and populate with actual data
-                newTbody.innerHTML = '';
+                const data = await res.json(); // ← make sure PHP returns JSON
+                const rows = [];
+
                 if (!data.activities || data.activities.length === 0) {
-                    newTbody.innerHTML = '<tr><td colspan="4" class="px-4 py-2 text-sm text-center text-gray-500">No recent activities</td></tr>';
+                    rows.push(`<tr><td colspan="4" class="px-4 py-2 text-center text-gray-500">No recent activities</td></tr>`);
                 } else {
-                    data.activities.forEach((activity, index) => {
-                        const serial = data.offset + index + 1;
-                        const timestamp = new Date(activity.Timestamp);
-                        const formattedDate = isNaN(timestamp.getTime()) ? 'Unknown' : timestamp.toLocaleString();
-                        const row = `
+                    data.activities.forEach((act, i) => {
+                        const nr = data.offset + i + 1;
+                        const ts = new Date(act.Timestamp);
+                        const date = isNaN(ts) ? 'Unknown' : ts.toLocaleString();
+
+                        // truncate long description (optional)
+                        const desc = (act.Description || 'No description');
+                        const shortDesc = desc.length > 60 ? desc.substring(0, 57) + '...' : desc;
+
+                        rows.push(`
                     <tr class="hover:bg-gray-50 opacity-0 transition-opacity duration-300">
-                        <td class="px-4 py-2 text-sm whitespace-nowrap">${serial}</td>
-                        <td class="px-4 py-2 text-sm whitespace-nowrap">${activity.name || 'Veterinarian'}</td>
-                        <td class="px-4 py-2 text-sm whitespace-nowrap">${activity.Description || 'No description'}</td>
-                        <td class="px-4 py-2 text-sm whitespace-nowrap">${formattedDate}</td>
-                    </tr>
-                `;
-                        newTbody.insertAdjacentHTML("beforeend", row);
+                        <td class="px-4 py-2 text-sm whitespace-nowrap">${nr}</td>
+                        <td class="px-4 py-2 text-sm whitespace-nowrap max-w-xs truncate" title="${act.name || 'Veterinarian'}">
+                            ${act.name || 'Veterinarian'}
+                        </td>
+                        <td class="px-4 py-2 text-sm max-w-xs truncate" title="${desc}">${shortDesc}</td>
+                        <td class="px-4 py-2 text-sm whitespace-nowrap">${date}</td>
+                    </tr>`);
                     });
                 }
 
-                // Smoothly replace the old tbody with the new one
-                const parentTable = tbody.parentElement;
-                tbody.classList.add("opacity-0"); // Fade out old content
-                setTimeout(() => {
-                    parentTable.replaceChild(newTbody, tbody); // Swap tbody
-                    newTbody.id = "activities-body"; // Restore the ID
-                    newTbody.classList.remove("opacity-0"); // Fade in new content
+                // ---- replace content & animate rows ----
+                tbody.innerHTML = rows.join('');
 
-                    // Fade in each row for a smoother effect
-                    newTbody.querySelectorAll("tr").forEach((row, index) => {
-                        setTimeout(() => {
-                            row.classList.remove("opacity-0");
-                        }, index * 50); // Stagger row animations
-                    });
-                }, 300); // Match the duration of the opacity transition
+                // stagger fade-in
+                tbody.querySelectorAll('tr').forEach((r, idx) => {
+                    setTimeout(() => r.classList.remove('opacity-0'), idx * 50);
+                });
 
-                // Update pagination
-                const pagination = document.getElementById("pagination");
-                if (pagination) {
-                    pagination.innerHTML = '';
+                // ---- pagination ----
+                const pag = document.getElementById('pagination');
+                pag.innerHTML = '';
+
+                if (data.totalPages > 1) {
                     if (data.currentPage > 1) {
-                        pagination.innerHTML += `<button onclick="fetchRecentActivities(${data.currentPage - 1})" class="px-3 py-1 bg-gray-100 text-gray-800 rounded hover:bg-gray-200">« Prev</button>`;
+                        pag.innerHTML += `<button onclick="fetchRecentActivities(${data.currentPage-1})"
+                                         class="px-3 py-1 bg-gray-100 text-gray-800 rounded hover:bg-gray-200">Prev</button>`;
                     }
+
                     for (let i = 1; i <= data.totalPages; i++) {
-                        pagination.innerHTML += `<button onclick="fetchRecentActivities(${i})" class="px-3 py-1 ${i === data.currentPage ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700'} rounded hover:bg-indigo-500 hover:text-white">${i}</button>`;
+                        pag.innerHTML += `<button onclick="fetchRecentActivities(${i})"
+                                         class="px-3 py-1 rounded ${i===data.currentPage?'bg-indigo-500 text-white':'bg-gray-100 text-gray-700'} hover:bg-indigo-500 hover:text-white">${i}</button>`;
                     }
+
                     if (data.currentPage < data.totalPages) {
-                        pagination.innerHTML += `<button onclick="fetchRecentActivities(${data.currentPage + 1})" class="px-3 py-1 bg-gray-100 text-gray-800 rounded hover:bg-gray-200">Next »</button>`;
+                        pag.innerHTML += `<button onclick="fetchRecentActivities(${data.currentPage+1})"
+                                         class="px-3 py-1 bg-gray-100 text-gray-800 rounded hover:bg-gray-200">Next</button>`;
                     }
                 }
 
                 currentPage = data.currentPage;
-            } catch (error) {
-                console.error("Fetch error:", error.message);
-                console.log("Response text on error:", await response.text());
-                newTbody.innerHTML = `<tr><td colspan="4" class="px-4 py-2 text-sm text-center text-red-500">Failed to load activities: ${error.message}</td></tr>`;
-                const parentTable = tbody.parentElement;
-                parentTable.replaceChild(newTbody, tbody);
-                newTbody.id = "activities-body";
-                newTbody.classList.remove("opacity-0");
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-2 text-center text-red-500">
+            Failed to load activities
+        </td></tr>`;
             } finally {
                 isFetching = false;
             }
         }
 
-        // Poll every 10 seconds on page 1
+        /* poll page 1 every 10 s */
         setInterval(() => {
-            if (currentPage === 1 && !isFetching) {
-                fetchRecentActivities(1);
-            }
-        }, 10000);
+            if (currentPage === 1 && !isFetching) fetchRecentActivities(1);
+        }, 10_000);
 
-        // Initial fetch
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchRecentActivities(1);
-        });
+        /* initial load */
+        document.addEventListener('DOMContentLoaded', () => fetchRecentActivities(1));
     </script>
 
     <script src="./js/dashboard.js"></script>

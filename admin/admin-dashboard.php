@@ -103,22 +103,24 @@ ob_end_flush();
 
     <!-- Sidebar -->
     <aside id="sidebar"
-        class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-emerald-900">
+        class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-emerald-900">
 
         <!-- Header -->
-        <div class="flex items-center justify-between">
-            <h2 class="text-xl lg:text-2xl font-semibold flex items-center gap-2">
-                <img src="../image/MainIconWhite.png" alt="Dashboard" class="w-6 lg:w-8">
-                <span class="md:inline">Dashboard</span>
-            </h2>
-            <button id="closeSidebarBtn"
-                class="lg:hidden text-gray-300 hover:text-white duration-200">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+        <div class="flex flex-col items-center">
+            <img src="../image/logoWhite.png" alt="Balingasag Dog and Cat Clinic Logo"
+                class="h-16 w-auto object-contain drop-shadow-lg">
+            <div class="text-center leading-tight mt-2">
+                <h2 class="text-xl font-extrabold tracking-wide text-white">
+                    Balingasag
+                </h2>
+                <p class="text-base font-medium text-gray-200">
+                    Dog & Cat Clinic
+                </p>
+            </div>
         </div>
 
         <!-- Navigation -->
-        <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5">
+        <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5 overflow-y-auto">
             <a href="admin-dashboard.php"
                 class="block text-sm text-white bg-teal-800 hover:bg-emerald-700 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
@@ -168,7 +170,6 @@ ob_end_flush();
                 </div>
             </div>
 
-
             <!-- Active Link Example -->
             <a href="./admin-appointments.php"
                 class="block text-sm text-white hover:bg-emerald-700 px-4 py-2 rounded-md">
@@ -189,6 +190,7 @@ ob_end_flush();
             </a>
         </div>
     </aside>
+
 
     <!-- Overlay for mobile menu -->
     <div id="overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>

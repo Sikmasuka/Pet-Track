@@ -32,8 +32,8 @@ if (isset($_SESSION['admin_id'])) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="image/MainIcon.png" type="image/x-icon" />
-    <title>PetTrack - Balingasag Dog and Cat Clinic</title>
+    <link rel="icon" href="image/logo.png" type="image/x-icon" />
+    <title>Balingasag Dog and Cat Clinic</title>
     <script src="Assets/chart.js"></script>
     <link rel="stylesheet" href="Assets/FontAwsome/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -113,20 +113,23 @@ if (isset($_SESSION['admin_id'])) {
 
 <body>
     <!-- Header -->
-    <header class="fixed top-0 left-0 w-full h-16 z-50 bg-white shadow-sm">
-        <div class="flex items-center justify-between h-full px-4 md:px-8 max-w-7xl mx-auto">
+    <header id="mainHeader"
+        class="fixed top-0 left-0 w-full h-28 z-50 bg-white shadow-sm transition-all duration-300 ease-in-out">
+        <div class="flex items-center justify-between h-full px-4 md:px-8 max-w-7xl mx-auto transition-all duration-300 ease-in-out">
             <!-- Logo -->
             <div class="flex items-center">
-                <img src="./image/logo.png" alt="PetTrack Logo" class="w-16 h-14 object-contain">
-                <p class="text-[#169976] font-bold text-2xl md:text-3xl tracking-tight">PetTrack</p>
+                <img id="logo" src="./image/MainLogo.png" alt="Balingasag Dog and Cat Clinic Logo"
+                    class="w-56 h-32 md:w-64 md:h-36 object-contain transition-all duration-300 ease-in-out">
             </div>
+
             <!-- Navigation Links -->
             <nav class="hidden md:flex items-center gap-8">
-                <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors" href="#">Home</a>
-                <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors" href="#about">About</a>
-                <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors" href="#services">Services</a>
-                <a class="text-gray-700 font-medium hover:text-[#169976] transition-colors" href="#contacts">Contact</a>
+                <a class="text-gray-700 font-medium text-xl hover:text-[#169976] transition-colors" href="#">Home</a>
+                <a class="text-gray-700 font-medium text-xl hover:text-[#169976] transition-colors" href="#about">About</a>
+                <a class="text-gray-700 font-medium text-xl hover:text-[#169976] transition-colors" href="#services">Services</a>
+                <a class="text-gray-700 font-medium text-xl hover:text-[#169976] transition-colors" href="#contacts">Contact</a>
             </nav>
+
             <!-- Right Side Buttons -->
             <div class="flex items-center gap-3">
                 <?php if (isset($_SESSION['client_id'])): ?>
@@ -155,7 +158,8 @@ if (isset($_SESSION['admin_id'])) {
                             </div>
                             <!-- Links -->
                             <div class="py-1">
-                                <a href="#" id="editProfileLink" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-150">
+                                <a href="#" id="editProfileLink"
+                                    class="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-150">
                                     <i class="fas fa-edit text-indigo-400"></i>
                                     <div>
                                         <div class="font-medium">Edit Profile</div>
@@ -185,12 +189,14 @@ if (isset($_SESSION['admin_id'])) {
                         Register
                     </button>
                 <?php endif; ?>
+
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
                     <i class="fas fa-bars text-2xl"></i>
                 </button>
             </div>
         </div>
+
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden flex-col md:hidden bg-white shadow-md py-4 px-6 space-y-4 text-center">
             <a class="block text-gray-700 font-medium hover:text-[#169976] transition-colors" href="#">Home</a>
@@ -218,6 +224,7 @@ if (isset($_SESSION['admin_id'])) {
             <?php endif; ?>
         </div>
     </header>
+
     <!-- Hero Section -->
     <section
         class="hero-section flex items-center pt-24 px-4 md:px-8 bg-cover bg-center bg-no-repeat relative"
@@ -327,7 +334,7 @@ if (isset($_SESSION['admin_id'])) {
     <section id="about" class="about-section py-20 md:py-32">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="section-title">About PetTrack</h2>
+                <h2 class="section-title">About Our Clinic</h2>
                 <p class="section-subtitle">
                     Web-based management system for Balingasag Dog and Cat Clinic, addressing record-keeping challenges.
                 </p>
@@ -424,66 +431,96 @@ if (isset($_SESSION['admin_id'])) {
         </div>
     </section>
     <!-- Footer -->
-    <footer id="contacts" class="py-16 text-white">
+    <footer id="contacts" class="py-16 text-white bg-[#0f4c3a]">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-                            <img src="./image/MainIcon.png" alt="Paw" class="w-6 h-6 inline">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12 mb-8">
+                <!-- Clinic Info -->
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-3 mb-5">
+                        <img src="./image/logoWhite.png" alt="Balingasag Dog and Cat Clinic Logo" class="w-16 h-16 object-contain">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Balingasag Dog and Cat Clinic</h3>
                         </div>
-                        <p class="text-white font-bold text-2xl">PetTrack</p>
                     </div>
-                    <p class="mb-6 text-white/80 leading-relaxed">Management system for Balingasag Dog and Cat Clinic</p>
-                    <div class="space-y-3">
+                    <p class="mb-6 text-white/80 leading-relaxed text-sm">
+                        Management system for Balingasag Dog and Cat Clinic — streamlining pet care with modern technology.
+                    </p>
+                    <div class="space-y-3 text-sm">
                         <div class="flex items-center gap-3 footer-link">
-                            <i class="fas fa-phone-alt"></i>
+                            <i class="fas fa-phone-alt text-[#169976]"></i>
                             <span>(123) 456-7890</span>
                         </div>
                         <div class="flex items-center gap-3 footer-link">
-                            <i class="fas fa-envelope"></i>
-                            <span>@pettrack.com</span>
+                            <i class="fas fa-envelope text-[#169976]"></i>
+                            <span>clinic@pettrack.com</span>
                         </div>
                         <div class="flex items-center gap-3 footer-link">
-                            <a href="https://vetphilippines.com/misamis-oriental/balingasag/balingasag-dog-and-cat-clinic-2/" target="_blank" class="flex items-center gap-2 text-white-600 hover:text-white-800">
+                            <a href="https://vetphilippines.com/misamis-oriental/balingasag/balingasag-dog-and-cat-clinic-2/"
+                                target="_blank"
+                                class="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs">
                                 <i class="fas fa-info-circle"></i>
-                                For more info visit vetphilippines.com
+                                More info on vetphilippines.com
                             </a>
                         </div>
                     </div>
                 </div>
+
+                <!-- Location -->
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Our Location</h3>
-                    <div class="flex items-start gap-3 mb-6">
-                        <i class="fas fa-map-marker-alt mt-1"></i>
-                        <p class="text-white/80 leading-relaxed">
-                            PQXJ+Q9J, Butuan - Cagayan de Oro - Iligan Rd, Balingasag, Misamis Oriental
+                    <h3 class="text-xl font-bold mb-5 text-white">Our Location</h3>
+                    <div class="flex items-start gap-3 mb-6 text-white/80 text-sm leading-relaxed">
+                        <i class="fas fa-map-marker-alt mt-1 text-[#169976] flex-shrink-0"></i>
+                        <p>
+                            PQXJ+Q9J, Butuan - Cagayan de Oro - Iligan Rd,<br>
+                            Balingasag, Misamis Oriental, Philippines
                         </p>
                     </div>
-                    <div class="flex gap-4">
-                        <a href="https://www.facebook.com/JP.delacera.78/" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
-                            <i class="fab fa-facebook-f"></i>
+                    <div class="flex gap-3">
+                        <a href="https://www.facebook.com/JP.delacera.78/"
+                            class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all duration-200"
+                            aria-label="Facebook">
+                            <i class="fab fa-facebook-f text-white"></i>
                         </a>
-                        <a href="https://www.instagram.com/explore/locations/104208107917496/balingasag-dog-and-cat-clinic/" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
-                            <i class="fab fa-instagram"></i>
+                        <a href="https://www.instagram.com/explore/locations/104208107917496/balingasag-dog-and-cat-clinic/"
+                            class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all duration-200"
+                            aria-label="Instagram">
+                            <i class="fab fa-instagram text-white"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all">
-                            <i class="fab fa-twitter"></i>
+                        <a href="#"
+                            class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-all duration-200"
+                            aria-label="Twitter">
+                            <i class="fab fa-twitter text-white"></i>
                         </a>
                     </div>
                 </div>
+
+                <!-- Google Map -->
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Find Us</h3>
-                    <div class="rounded-xl overflow-hidden h-48 shadow-lg">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1262.921952432691!2d124.78045648758747!3d8.74964320210998!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32ffe1fbecdd99ad%3A0x73cf6beb3b523f24!2sBalingasag%20Dog%20And%20Cat%20Clinic!5e1!3m2!1sen!2sph!4v1755610325757!5m2!1sen!2sph" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <h3 class="text-xl font-bold mb-5 text-white">Find Us</h3>
+                    <div class="rounded-xl overflow-hidden h-48 shadow-lg border border-white/10">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1262.921952432691!2d124.78045648758747!3d8.74964320210998!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32ffe1fbecdd99ad%3A0x73cf6beb3b523f24!2sBalingasag%20Dog%20And%20Cat%20Clinic!5e1!3m2!1sen!2sph!4v1755610325757!5m2!1sen!2sph"
+                            width="100%"
+                            height="100%"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
                     </div>
                 </div>
             </div>
-            <div class="border-t border-white/10 pt-8 text-center">
-                <p class="text-white/60">© 2025 PetTrack. All rights reserved. Developed by St. Rita’s College of Balingasag, Inc.</p>
+
+            <!-- Copyright -->
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/60 text-sm">
+                    © 2025 Balingasag Dog and Cat Clinic. All rights reserved.<br class="sm:hidden">
+                    <span class="block sm:inline">Developed with care by <strong>St. Rita’s College of Balingasag, Inc.</strong></span>
+                </p>
             </div>
         </div>
     </footer>
+
     <!-- 🔒 LOGIN MODAL -->
     <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
@@ -491,7 +528,7 @@ if (isset($_SESSION['admin_id'])) {
                 <i class="fa fa-times text-lg"></i>
             </button>
             <div class="text-center mb-4">
-                <img src="image/logo.png" alt="PetTrack Logo" class="w-14 mx-auto mb-2">
+                <img src="image/logo.png" alt="Balingasag Dog and Cat Clinic Logo" class="w-14 mx-auto mb-2">
                 <h2 class="text-2xl font-bold text-[#169976]">Welcome Back!</h2>
                 <p class="text-sm text-gray-500">Login to continue</p>
             </div>
@@ -570,9 +607,9 @@ if (isset($_SESSION['admin_id'])) {
             </button>
             <!-- 🐶 Header -->
             <div class="text-center mb-4 mt-2">
-                <img src="image/logo.png" alt="PetTrack Logo" class="w-14 mx-auto mb-2">
+                <img src="image/logo.png" alt="Balingasag Dog and Cat Clinic Logo" class="w-14 mx-auto mb-2">
                 <h2 class="text-2xl font-bold text-[#169976]">Create an Account</h2>
-                <p class="text-sm text-gray-500">Join PetTrack and start managing your pet’s care</p>
+                <p class="text-sm text-gray-500">Join our clinic and start managing your pet’s care</p>
             </div>
             <!-- 📝 Register Form -->
             <form action="./functions/register.php" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
@@ -819,15 +856,7 @@ if (isset($_SESSION['admin_id'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Header scroll effect
-            window.addEventListener('scroll', () => {
-                const header = document.querySelector('header');
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
+
             setTimeout(() => {
                 const error = document.getElementById('errorMessage');
                 if (error) {
@@ -1181,8 +1210,64 @@ if (isset($_SESSION['admin_id'])) {
                 return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
             }
         });
+
+        window.addEventListener("scroll", () => {
+            const header = document.getElementById("mainHeader");
+            const logo = document.getElementById("logo");
+            const navLinks = document.querySelectorAll("header nav a");
+            const actionButtons = document.querySelectorAll("header .flex.items-center.gap-3 button");
+            const mobileMenuButton = document.getElementById("mobile-menu-button");
+
+            if (window.scrollY > 50) {
+                // Shrunk state
+                header.classList.remove("h-28");
+                header.classList.add("h-20", "shadow-md");
+
+                // Shrink logo
+                logo.classList.remove("w-56", "h-32", "md:w-64", "md:h-36");
+                logo.classList.add("w-24", "h-16", "md:w-28", "md:h-20");
+
+                // Shrink nav links
+                navLinks.forEach(link => {
+                    link.classList.remove("text-xl");
+                    link.classList.add("text-base");
+                });
+
+                // Shrink buttons (Login/Register)
+                actionButtons.forEach(btn => {
+                    btn.classList.remove("px-5", "py-2", "md:text-base", "text-sm");
+                    btn.classList.add("px-3", "py-1.5", "text-xs", "md:text-sm");
+                });
+
+                // Optional: shrink mobile menu button icon
+                mobileMenuButton.querySelector("i").classList.remove("text-2xl");
+                mobileMenuButton.querySelector("i").classList.add("text-xl");
+            } else {
+                // Default state
+                header.classList.remove("h-20", "shadow-md");
+                header.classList.add("h-28");
+
+                // Restore logo
+                logo.classList.remove("w-24", "h-16", "md:w-28", "md:h-20");
+                logo.classList.add("w-56", "h-32", "md:w-64", "md:h-36");
+
+                // Restore nav links
+                navLinks.forEach(link => {
+                    link.classList.remove("text-base");
+                    link.classList.add("text-xl");
+                });
+
+                // Restore buttons
+                actionButtons.forEach(btn => {
+                    btn.classList.remove("px-3", "py-1.5", "text-xs", "md:text-sm");
+                    btn.classList.add("px-5", "py-2", "md:text-base", "text-sm");
+                });
+
+                // Restore mobile menu icon
+                mobileMenuButton.querySelector("i").classList.remove("text-xl");
+                mobileMenuButton.querySelector("i").classList.add("text-2xl");
+            }
+        });
     </script>
     <script src="./js/landing-page.js"></script>
 </body>
-
-</html>

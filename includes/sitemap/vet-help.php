@@ -28,10 +28,10 @@ $vet = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pets</title>
+    <title>Help - Balingasag Dog and Cat Clinic</title>
     <script src="/Assets/Extension.js"></script>
     <link rel="stylesheet" href="../../Assets/FontAwsome/css/all.min.css">
-    <link rel="icon" href="image/MainIcon.png" type="image/x-icon">
+    <link rel="icon" href="../../image/logo.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .mobile-menu-hidden {
@@ -73,15 +73,19 @@ $vet = $stmt->fetch(PDO::FETCH_ASSOC);
 
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-teal-800">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl lg:text-2xl font-semibold flex items-center gap-2">
-                <img src="../../image/MainIconWhite.png" alt="Dashboard" class="w-6 lg:w-8">
-                <span class="md:inline">Dashboard</span>
-            </h2>
-            <button id="closeSidebarBtn" class="lg:hidden absolute top-4 right-4 text-white hover:text-gray-200 duration-200">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+        <!-- logo -->
+        <div class="flex flex-col items-center">
+            <img src="../../image/LogoWhite.png" alt="Balingasag Dog and Cat Clinic Logo" class="h-16 w-auto object-contain drop-shadow-lg">
+            <div class="text-center leading-tight">
+                <h2 class="text-xl font-extrabold tracking-wide text-white">
+                    Balingasag
+                </h2>
+                <p class="text-base font-medium text-gray-200">
+                    Dog & Cat Clinic
+                </p>
+            </div>
         </div>
+
         <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5">
             <a href="../../dashboard.php" class="block text-sm text-white px-4 py-2 rounded-md hover:bg-teal-900 transition-colors">
                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard

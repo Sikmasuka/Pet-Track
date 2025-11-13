@@ -32,6 +32,17 @@ $user = $stmt->fetch();
 $vetName = $user ? htmlspecialchars($user['vet_name']) : "Veterinarian not found";
 $username = $user ? htmlspecialchars($user['vet_username']) : "Unknown";
 
+// Fetch clinic details
+try {
+    $stmt = $pdo->query("SELECT name, address, phone FROM Clinic_Details WHERE id = 1");
+    $clinic = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$clinic) {
+        $clinic = ['name' => 'PetTrack Clinic', 'address' => '123 Clinic Street, Animal City', 'phone' => '(123) 456-7890'];
+    }
+} catch (PDOException $e) {
+    $clinic = ['name' => 'PetTrack Clinic', 'address' => '123 Clinic Street, Animal City', 'phone' => '(123) 456-7890'];
+}
+
 // Handle POST requests for adding/updating medical records
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -151,10 +162,10 @@ ob_end_flush();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Records</title>
+    <title>Medical Records - Balingasag Dog and Cat Clinic</title>
     <script src="Assets/Extension.js"></script>
     <link rel="stylesheet" href="Assets/FontAwsome/css/all.min.css">
-    <link rel="icon" href="image/MainIcon.png" type="image/x-icon">
+    <link rel="icon" href="image/logo.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .custom-scrollbar::-webkit-scrollbar {
@@ -217,26 +228,29 @@ ob_end_flush();
 
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-teal-800">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl lg:text-2xl font-semibold flex items-center gap-2">
-                <img src="image/MainIconWhite.png" alt="Dashboard" class="w-6 lg:w-8">
-                <span class="md:inline">Dashboard</span>
-            </h2>
-            <button id="closeSidebarBtn" class="lg:hidden absolute top-4 right-4 text-white hover:text-gray-200 duration-200">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+        <div class="flex flex-col items-center">
+            <img src="image/logoWhite.png" alt="Balingasag Dog and Cat Clinic Logo" class="h-16 w-auto object-contain drop-shadow-lg">
+            <div class="text-center leading-tight">
+                <h2 class="text-xl font-extrabold tracking-wide text-white">
+                    Balingasag
+                </h2>
+                <p class="text-base font-medium text-gray-200">
+                    Dog & Cat Clinic
+                </p>
+            </div>
         </div>
+
         <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5">
             <a href="dashboard.php" class="block text-sm text-white px-4 py-2 rounded-md hover:bg-teal-900 transition-colors">
                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
             </a>
-            <a href="clients.php" class="block text-sm text-white hover:bg-teal-800 px-4 py-2 rounded-md transition-colors">
+            <a href="clients.php" class="block text-sm text-white hover:bg-teal-800 bg-teal-800 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-user mr-2"></i> Clients
             </a>
             <a href="pets.php" class="block text-sm text-white hover:bg-teal-800 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-paw mr-2"></i> Pets
             </a>
-            <a href="medical_records.php" class="block text-sm text-white bg-teal-800 hover:bg-teal-800 px-4 py-2 rounded-md transition-colors">
+            <a href="medical_records.php" class="block text-sm text-white hover:bg-teal-800 bg-teal-800 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-file-medical mr-2"></i> Medical Records
             </a>
             <a href="payment_methods.php" class="block text-sm text-white hover:bg-teal-800 px-4 py-2 rounded-md transition-colors">
@@ -369,17 +383,30 @@ ob_end_flush();
                                     <th class="px-2 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider min-w-[120px]">Diagnosis</th>
                                     <th class="px-2 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider min-w-[120px]">Symptoms</th>
                                     <th class="px-2 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider min-w-[120px]">Treatment</th>
+                                    <th class="px-2 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider min-w-[80px]">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-slate-200">
                                 <?php foreach ($records as $record): ?>
                                     <tr class="hover:bg-gray-50 transition-colors">
                                         <td class="px-4 py-2 text-gray-700"><?= htmlspecialchars($record['pet_name']) ?></td>
-                                        <td class="px-4 py-2 text-gray-600"><?= htmlspecialchars($record['date']) ?></td>
-                                        <td class="px-4 py-2 text-gray-600"><?= htmlspecialchars($record['medical_condition']) ?></td>
-                                        <td class="px-4 py-2 text-gray-600"><?= htmlspecialchars($record['medical_diagnosis']) ?></td>
-                                        <td class="px-4 py-2 text-gray-600"><?= htmlspecialchars($record['medical_symptoms']) ?></td>
-                                        <td class="px-4 py-2 text-gray-600"><?= htmlspecialchars($record['medical_treatment']) ?></td>
+                                        <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($record['date']) ?></td>
+                                        <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($record['medical_condition']) ?></td>
+                                        <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($record['medical_diagnosis']) ?></td>
+                                        <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($record['medical_symptoms']) ?></td>
+                                        <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($record['medical_treatment']) ?></td>
+                                        <td class="px-4 py-2 text-sm text-gray-600">
+                                            <?php
+                                            $printData = htmlspecialchars(json_encode([
+                                                'record' => $record,
+                                                'clinic' => $clinic,
+                                                'vet_name' => $vetName
+                                            ]), ENT_QUOTES, 'UTF-8');
+                                            ?>
+                                            <button onclick="printMedicalRecord(this)" data-print='<?= $printData ?>' class="text-indigo-500 hover:text-indigo-700 hover:underline" title="Print Medical Record">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -391,6 +418,11 @@ ob_end_flush();
             <?php endif; ?>
         </main>
     </div>
+
+    <!-- Hidden Iframe for Printing -->
+    <iframe id="printFrame" class="hidden"></iframe>
+
+
 
     <script>
         function confirmArchive(recordId) {
@@ -546,6 +578,85 @@ ob_end_flush();
                 });
             }
         });
+
+        function printMedicalRecord(buttonElement) {
+            try {
+                const printDataString = buttonElement.getAttribute('data-print');
+                const {
+                    record,
+                    clinic,
+                    vet_name
+                } = JSON.parse(printDataString);
+                const formattedDate = new Date(record.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                const printHTML = `
+                <html>
+                <head>
+                    <title>Medical Record for ${record.pet_name}</title>
+                    <style>
+                        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 25px; color: #333; }
+                        .header { text-align: center; border-bottom: 2px solid #4CAF50; padding-bottom: 15px; margin-bottom: 25px; }
+                        .clinic-name { font-size: 24px; font-weight: bold; color: #2E8B57; }
+                        .clinic-details { font-size: 12px; color: #555; }
+                        .section { margin-bottom: 20px; }
+                        .section-title { font-size: 16px; font-weight: bold; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px; }
+                        .details-table { width: 100%; border-collapse: collapse; }
+                        .details-table td { padding: 8px; border-bottom: 1px solid #f0f0f0; }
+                        .details-table td:first-child { font-weight: 600; color: #555; width: 120px; }
+                        .footer { text-align: center; margin-top: 40px; font-size: 12px; color: #777; }
+                        .signature-line { border-top: 1px solid #555; width: 250px; margin: 40px auto 5px auto; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="clinic-name">${clinic.name || 'PetTrack Clinic'}</div>
+                        <div class="clinic-details">${clinic.address || ''} | ${clinic.phone || ''}</div>
+                    </div>
+                    <h2 style="text-align: center; margin-bottom: 20px;">Official Medical Record</h2>
+
+                    <div class="section">
+                        <div class="section-title">Record Details</div>
+                        <table class="details-table">
+                            <tr><td>Pet Name:</td><td>${record.pet_name || '-'}</td></tr>
+                            <tr><td>Date:</td><td>${formattedDate}</td></tr>
+                            <tr><td>Condition(s):</td><td>${record.medical_condition || '-'}</td></tr>
+                            <tr><td>Symptoms:</td><td>${record.medical_symptoms || '-'}</td></tr>
+                            <tr><td>Diagnosis:</td><td>${record.medical_diagnosis || '-'}</td></tr>
+                            <tr><td>Treatment:</td><td>${record.medical_treatment || '-'}</td></tr>
+                        </table>
+                    </div>
+
+                    <div class="footer">
+                        <div class="signature-line"></div>
+                        <div>${vet_name || 'Veterinarian Signature'}</div>
+                        <p>This document is a true and accurate record of the pet's medical history at our clinic.</p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+                const frame = document.getElementById('printFrame');
+                frame.contentDocument.open();
+                frame.contentDocument.write(printHTML);
+                frame.contentDocument.close();
+                setTimeout(() => {
+                    frame.contentWindow.focus();
+                    frame.contentWindow.print();
+                }, 250);
+
+            } catch (error) {
+                console.error('Error preparing print data:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Printing Error',
+                    text: 'Could not prepare the medical record for printing. Please try again.',
+                });
+            }
+        }
     </script>
 
     <script src="./js/dashboard.js"></script>

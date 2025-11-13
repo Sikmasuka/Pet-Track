@@ -10,10 +10,10 @@ include "includes/sitemap/Help/support.php";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Profile - Balingasag Dog and Cat Clinic</title>
     <script src="Assets/Extension.js"></script>
     <link rel="stylesheet" href="Assets/FontAwsome/css/all.min.css">
-    <link rel="icon" href="image/MainIcon.png" type="image/x-icon">
+    <link rel="icon" href="image/logo.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom dark theme scrollbar */
@@ -48,9 +48,8 @@ include "includes/sitemap/Help/support.php";
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-[200px] bg-slate-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-slate-700">
         <!-- Sidebar Header -->
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl lg:text-2xl font-semibold flex items-center gap-2">
-                <img src="image/MainIconWhite.png" alt="Dashboard" class="w-6 lg:w-8">
-                <span class="md:inline">Dashboard</span>
+            <h2 class="text-xl lg:text-2xl font-semibold flex items-center gap-2 w-full">
+                <img src="image/logo.png" alt="Balingasag Dog and Cat Clinic Logo" class="w-full h-auto object-contain">
             </h2>
             <!-- Close button (mobile only) -->
             <button id="closeSidebarBtn" class="lg:hidden absolute top-4 right-4 text-gray-300 hover:text-white duration-200">

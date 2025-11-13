@@ -38,10 +38,10 @@ ob_end_flush();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Clients</title>
+    <title>Clients - Balingasag Dog and Cat Clinic</title>
     <script src="Assets/Extension.js"></script>
     <link rel="stylesheet" href="Assets/FontAwsome/css/all.min.css">
-    <link rel="icon" href="image/MainIcon.png" type="image/x-icon">
+    <link rel="icon" href="image/logo.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .az-btn {
@@ -272,25 +272,26 @@ ob_end_flush();
     <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 bg-teal-700 text-white p-3 rounded-md shadow-lg hover:bg-teal-600 transition-colors">
         <i class="fas fa-bars"></i>
     </button>
+
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-teal-800">
-        <!-- Sidebar Header -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl lg:text-2xl font-semibold flex items-center gap-2">
-                <img src="image/MainIconWhite.png" alt="Dashboard" class="w-6 lg:w-8">
-                <span class="md:inline">Dashboard</span>
-            </h2>
-            <!-- Close button (mobile only) -->
-            <button id="closeSidebarBtn" class="lg:hidden absolute top-4 right-4 text-white hover:text-gray-200 duration-200">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+        <div class="flex flex-col items-center">
+            <img src="image/logoWhite.png" alt="Balingasag Dog and Cat Clinic Logo" class="h-16 w-auto object-contain drop-shadow-lg">
+            <div class="text-center leading-tight">
+                <h2 class="text-xl font-extrabold tracking-wide text-white">
+                    Balingasag
+                </h2>
+                <p class="text-base font-medium text-gray-200">
+                    Dog & Cat Clinic
+                </p>
+            </div>
         </div>
-        <!-- Sidebar Navigation -->
+
         <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5">
-            <a href="dashboard.php" class="block text-sm text-white hover:bg-teal-800 px-4 py-2 rounded-md transition-colors">
+            <a href="dashboard.php" class="block text-sm text-white px-4 py-2 rounded-md hover:bg-teal-900 transition-colors">
                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
             </a>
-            <a href="clients.php" class="block text-sm text-white bg-teal-800 px-4 py-2 rounded-md transition-colors">
+            <a href="clients.php" class="block text-sm text-white hover:bg-teal-800 bg-teal-800 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-user mr-2"></i> Clients
             </a>
             <a href="pets.php" class="block text-sm text-white hover:bg-teal-800 px-4 py-2 rounded-md transition-colors">
@@ -312,13 +313,13 @@ ob_end_flush();
                 <i class="fas fa-question-circle mr-2"></i> Help/Support
             </a>
         </nav>
-        <!-- Logout -->
         <div class="pt-4">
             <a href="#" onclick="confirmLogout(event)" class="block text-md text-white hover:bg-red-600 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-sign-out-alt mr-2"></i> Logout
             </a>
         </div>
     </aside>
+
     <!-- Overlay for mobile menu -->
     <div id="overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
     <!-- Main Content -->
@@ -333,7 +334,7 @@ ob_end_flush();
                 <!-- Page Title -->
                 <div>
                     <h1 class="text-xl lg:text-2xl font-bold">Manage Clients</h1>
-                    <p class="text-sm text-gray-600 mt-1">Manage and View All Clients Records in the Pet Track System</p>
+                    <p class="text-sm text-gray-600 mt-1">Manage and View All Clients Records in the System</p>
                 </div>
                 <!-- Right Side (Notifications + Profile) -->
                 <div class="flex items-center gap-2">
@@ -898,10 +899,16 @@ ob_end_flush();
                                 <div class="bg-white rounded-md border p-3 text-xs">
                                     <div class="flex justify-between items-center mb-2">
                                         <strong class="font-semibold text-emerald-700"><i class="fas fa-file-medical mr-1"></i> Medical Record for ${escapeHtml(item.pet_name)}</strong>
-                                        <span class="text-gray-400">${escapeHtml(new Date(item.date).toLocaleDateString())}</span>
+                                        <span class="text-gray-400 text-xs">${escapeHtml(new Date(item.date).toLocaleDateString())}</span>
                                     </div>
-                                    <p class="flex justify-between items-center"><strong class="font-medium text-gray-500">Condition:</strong> ${escapeHtml(item.condition || '-')} <i class="fas fa-eye text-green-500 ml-2"></i></p>
-                                </div>`;
+                                    <div class="flex justify-between items-center">
+                                        <p class="flex-1"><strong class="font-medium text-gray-500">Condition:</strong> ${escapeHtml(item.condition || '-')}</p>
+                                        <button onclick="showFullRecord(${item.record_id})" class="text-green-500 hover:text-green-700 ml-2 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
                         } else if (item.type === 'consultation') {
                             return `
                                 <div class="bg-white rounded-md border p-3 text-xs">
@@ -910,8 +917,11 @@ ob_end_flush();
                                         <span class="text-gray-400">${escapeHtml(new Date(item.date).toLocaleDateString())}</span>
                                     </div>
                                     <p><strong class="font-medium text-gray-500">Vet:</strong> ${escapeHtml(item.vet_name || 'N/A')}</p>
-                                    <p class="flex justify-between items-center"><strong class="font-medium text-gray-500">Notes:</strong> ${escapeHtml(item.notes || '-')} <i class="fas fa-eye text-green-500 ml-2"></i></p>
-                                </div>`;
+                                    <div class="flex justify-between items-center">
+                                        <p class="flex-1"><strong class="font-medium text-gray-500">Notes:</strong> ${escapeHtml(item.notes || '-')}</p>
+                                    </div>
+                                </div>
+                            `;
                         }
                         return '';
                     }).join('');
@@ -1008,6 +1018,32 @@ ob_end_flush();
                 console.error('Error calculating age:', error);
                 return '-';
             }
+        }
+
+        function showFullRecord(recordId) {
+            fetch(`?get_client_details=&record_id=${recordId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error || !data.record) {
+                        Swal.fire('Error', data.error || 'Could not find record details.', 'error');
+                        return;
+                    }
+                    const record = data.record;
+                    const pet = data.pet;
+                    Swal.fire({
+                        title: `Medical Record for ${escapeHtml(pet.pet_name)}`,
+                        html: `
+                            <div class="text-left text-sm space-y-2">
+                                <p><strong>Date:</strong> ${new Date(record.date).toLocaleDateString()}</p>
+                                <p><strong>Condition:</strong> ${escapeHtml(record.medical_condition)}</p>
+                                <p><strong>Symptoms:</strong> ${escapeHtml(record.medical_symptoms)}</p>
+                                <p><strong>Diagnosis:</strong> ${escapeHtml(record.medical_diagnosis)}</p>
+                                <p><strong>Treatment:</strong> ${escapeHtml(record.medical_treatment)}</p>
+                            </div>
+                        `,
+                        confirmButtonText: 'Close'
+                    });
+                }).catch(err => Swal.fire('Error', 'Could not fetch record details.', 'error'));
         }
         // Handle URL parameters on page load
         document.addEventListener('DOMContentLoaded', function() {

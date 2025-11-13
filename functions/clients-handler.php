@@ -443,6 +443,64 @@ if (isset($_GET['get_client_details'])) {
     }
 }
 
+// Handle fetching full medical record details for printing
+if (isset($_GET['get_medical_record_details']) && is_numeric($_GET['get_medical_record_details'])) {
+    header('Content-Type: application/json');
+    // Suppress PHP notices and warnings to ensure a clean JSON output
+    error_reporting(0);
+    ini_set('display_errors', 0);
+
+    $record_id = (int)$_GET['get_medical_record_details'];
+
+    try {
+        // Fetch the medical record
+        $stmt = $pdo->prepare("SELECT * FROM Medical_Records WHERE record_id = ?");
+        $stmt->execute([$record_id]);
+        $record = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$record) {
+            echo json_encode(['error' => 'Medical record not found.']);
+            exit;
+        }
+
+        // Fetch the associated pet
+        $stmt = $pdo->prepare("SELECT * FROM Pet WHERE pet_id = ?");
+        $stmt->execute([$record['pet_id'] ?? null]);
+        $pet = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['pet_name' => 'Unknown Pet', 'client_id' => null];
+
+        $client = ['client_name' => 'Unknown Owner'];
+        if (!empty($pet['client_id'])) {
+            // Fetch the client (owner)
+            $stmt = $pdo->prepare("SELECT * FROM Client WHERE client_id = ?");
+            $stmt->execute([$pet['client_id']]);
+            $client = $stmt->fetch(PDO::FETCH_ASSOC) ?: $client;
+        }
+
+        // Fetch the veterinarian who created the record
+        $vet_name = 'Unknown Vet';
+        if (!empty($record['vet_id'])) {
+            $stmt = $pdo->prepare("SELECT vet_name FROM veterinarian WHERE vet_id = ?");
+            $stmt->execute([$record['vet_id']]);
+            $vet = $stmt->fetch(PDO::FETCH_ASSOC);
+            $vet_name = $vet['vet_name'] ?? $vet_name;
+        }
+
+        // Fetch clinic details
+        $stmt = $pdo->query("SELECT name, address, phone FROM Clinic_Details WHERE id = 1");
+        $clinic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            'record' => $record,
+            'pet' => $pet,
+            'client' => $client,
+            'vet_name' => $vet_name,
+            'clinic' => $clinic ?: ['name' => 'PetTrack Clinic', 'address' => '123 Clinic Street, Animal City', 'phone' => '(123) 456-7890']
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+    }
+    exit;
+}
 /**
  * Fetch all clients
  */
