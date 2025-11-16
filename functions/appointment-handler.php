@@ -1,215 +1,250 @@
 <?php
-// Ensure session starts
+// functions/appointment-handler.php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once __DIR__ . "/../db.php"; // Include your database connection
-require_once __DIR__ . "/../functions/logs.php"; // Include logging functions
-date_default_timezone_set('Asia/Manila'); // Set to Philippine Standard Time (UTC+08:00)
 
-// Debug: Log script execution
-file_put_contents('debug.log', "Script executed at " . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
+/* --------------------------------------------------------------
+   DEBUG – KEEP THESE LINES ONLY WHILE DEBUGGING
+   They will write the real error to the browser console.
+-------------------------------------------------------------- */
+ini_set('display_errors', 0);               // do NOT show raw PHP errors on screen
+error_reporting(E_ALL);
 
-// New function to log appointment bookings
-function logAppointment($pdo, $owner_name, $appointment_date, $appointment_time)
-{
-    try {
-        $dateObj = DateTime::createFromFormat('Y-m-d', $appointment_date, new DateTimeZone('Asia/Manila'));
-        $timeObj = DateTime::createFromFormat('H:i:s', $appointment_time, new DateTimeZone('Asia/Manila'));
-        $formattedDate = $dateObj->format('F j, Y');
-        $formattedTime = $timeObj->format('g:i A');
-        $description = "Guest $owner_name booked an appointment on $formattedDate at $formattedTime";
-        logAction($pdo, 0, 'Appointment', $description, 'Guest');
-        file_put_contents('debug.log', "Appointment logged: $description\n", FILE_APPEND);
-    } catch (PDOException $e) {
-        file_put_contents('debug.log', "Log error in logAppointment: " . $e->getMessage() . "\n", FILE_APPEND);
-    }
+/* ----------------------------------------------------------- */
+
+require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../functions/logs.php';
+date_default_timezone_set('Asia/Manila');
+
+$ALLOWED_SLOTS = ['08:00', '09:30', '11:00', '12:30', '14:00', '15:30'];
+$MAX_PER_DAY   = 6;
+
+/* ----------------------- CSRF ----------------------- */
+if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    sendError('Invalid CSRF token.');
 }
 
-// Test database connection
-try {
-    $pdo->query("SELECT 1");
-    file_put_contents('debug.log', "Database connection successful.\n", FILE_APPEND);
-} catch (PDOException $e) {
-    file_put_contents('debug.log', "Connection error: " . $e->getMessage() . "\n", FILE_APPEND);
-    $_SESSION['error'] = "Database connection failed: " . $e->getMessage();
-    header("Location: ../index.php");
-    exit();
-}
-
-// Get and log form data
-$owner_name = trim($_POST['owner_name'] ?? '');
-$address = trim($_POST['address'] ?? '');
-$contact_number = trim($_POST['contact_number'] ?? '');
+/* ----------------------- INPUTS ----------------------- */
+$owner_name       = trim($_POST['owner_name'] ?? '');
+$address          = trim($_POST['address'] ?? '');
+$contact_number   = trim($_POST['contact_number'] ?? '');
 $appointment_date = trim($_POST['appointment_date'] ?? '');
-$appointment_time = trim($_POST['appointment_time'] ?? '') . ':00'; // Ensure seconds
-$reason = trim($_POST['reason'] ?? '');
+$appointment_time = trim($_POST['appointment_time'] ?? '');
+$reason           = trim($_POST['reason'] ?? '');
+$other_reason     = trim($_POST['other_reason'] ?? '');
+$pet_name         = trim($_POST['pet_name'] ?? '');
+$pet_species      = trim($_POST['pet_species'] ?? '');
+$pet_sex          = trim($_POST['pet_sex'] ?? '');
+$pet_breed        = trim($_POST['pet_breed'] ?? '');
+$pet_weight       = trim($_POST['pet_weight'] ?? '');
+$pet_birth_date   = trim($_POST['pet_birth_date'] ?? '');
 
-// Pet details from the form
-$pet_name = trim($_POST['pet_name'] ?? '');
-$pet_species = trim($_POST['pet_species'] ?? '');
-$pet_sex = trim($_POST['pet_sex'] ?? '');
-$pet_breed = trim($_POST['pet_breed'] ?? '');
-$pet_weight = trim($_POST['pet_weight'] ?? '');
-$pet_birth_date = trim($_POST['pet_birth_date'] ?? '');
+/* ------------------- LOGGED‑IN CLIENT ------------------- */
+$client_id = $_SESSION['client_id'] ?? null;
+if ($client_id) {
+    $owner_name     = $_SESSION['client_name']     ?? $owner_name;
+    $address        = $_SESSION['client_address']  ?? $address;
+    $contact_number = $_SESSION['client_contact']  ?? $contact_number;   // <-- from registration
+}
 
+/* ------------------- CONTACT VALIDATION ------------------- */
+if (empty($contact_number) || !preg_match('/^09\d{9}$/', $contact_number)) {
+    sendError('Valid Philippine mobile number (09xxxxxxxxx) is required.');
+}
 
-file_put_contents('debug.log', "Form data: " . print_r([
-    'owner_name' => $owner_name,
-    'contact_number' => $contact_number,
-    'appointment_date' => $appointment_date,
-    'appointment_time' => $appointment_time,
-    'reason' => $reason
-], true) . "\n", FILE_APPEND);
+/* ------------------- OTHER REQUIRED FIELDS ------------------- */
+if (
+    empty($owner_name) || empty($appointment_date) || empty($appointment_time) ||
+    empty($reason) || empty($pet_name) || empty($pet_species) ||
+    empty($pet_sex) || empty($pet_breed)
+) {
+    sendError('Please fill in all required fields.');
+}
 
+/* ------------------- DATE ------------------- */
+$dateObj = DateTime::createFromFormat('Y-m-d', $appointment_date);
+if (!$dateObj || $dateObj->format('Y-m-d') !== $appointment_date) {
+    sendError('Invalid date format.');
+}
+$today = new DateTime('today', new DateTimeZone('Asia/Manila'));
+if ($dateObj < $today) {
+    sendError('Cannot book past dates.');
+}
+
+/* ------------------- TIME ------------------- */
+if (!in_array($appointment_time, $ALLOWED_SLOTS)) {
+    sendError('Invalid time slot selected.');
+}
+$appointment_time_full = $appointment_time . ':00';
+
+/* ------------------- PET WEIGHT ------------------- */
+if (!is_numeric($pet_weight) || floatval($pet_weight) <= 0) {
+    sendError('Pet weight must be a positive number.');
+}
+$pet_weight = (float)$pet_weight;
+
+/* ------------------- PET BIRTH DATE ------------------- */
+if (!empty($pet_birth_date)) {
+    $birthObj = DateTime::createFromFormat('Y-m-d', $pet_birth_date);
+    if (!$birthObj || $birthObj->format('Y-m-d') !== $pet_birth_date) {
+        sendError('Invalid pet birth date.');
+    }
+}
+
+/* ------------------- REASON ------------------- */
+if ($reason === 'Other') {
+    if (empty($other_reason)) {
+        sendError('Please specify the reason when selecting “Other”.');
+    }
+    $reason = $other_reason;
+}
+
+/* --------------------------------------------------------------
+   DATABASE TRANSACTION
+-------------------------------------------------------------- */
 try {
-    // Basic validation
-    if (empty($owner_name) || empty($contact_number) || empty($appointment_date) || empty($appointment_time) || empty($reason)) {
-        $_SESSION['error'] = "Please fill in all required fields.";
-        header("Location: ../index.php");
-        exit();
+    $pdo->beginTransaction();
+
+    /* ----- DAILY LIMIT ----- */
+    $stmt = $pdo->prepare(
+        "SELECT COUNT(*) FROM appointments WHERE appointment_date = ? AND status = 'Scheduled'"
+    );
+    $stmt->execute([$appointment_date]);
+    if ($stmt->fetchColumn() >= $MAX_PER_DAY) {
+        $pdo->rollBack();
+        sendError('This day is fully booked (6/6).');
     }
 
-    // Validate and sanitize date
-    $dateObj = DateTime::createFromFormat('Y-m-d', $appointment_date);
-    if ($dateObj === false || $appointment_date !== $dateObj->format('Y-m-d')) {
-        $_SESSION['error'] = "Invalid appointment date. Use YYYY-MM-DD format.";
-        header("Location: ../index.php");
-        exit();
+    /* ----- TIME CONFLICT ----- */
+    $stmt = $pdo->prepare(
+        "SELECT id FROM appointments WHERE appointment_date = ? AND appointment_time = ? AND status = 'Scheduled'"
+    );
+    $stmt->execute([$appointment_date, $appointment_time_full]);
+    if ($stmt->fetch()) {
+        $pdo->rollBack();
+        sendError('This time slot was just taken. Please choose another.');
     }
 
-    // Ensure date is not in the past
-    $today = new DateTime('now', new DateTimeZone('Asia/Manila'));
-    if (new DateTime($appointment_date) < $today->setTime(0, 0, 0)) {
-        $_SESSION['error'] = "Cannot book appointments for past dates.";
-        header("Location: ../index.php");
-        exit();
-    }
+    /* ----- CLIENT (find or create) ----- */
+    if (!$client_id) {
+        $stmt = $pdo->prepare(
+            "SELECT client_id FROM Client WHERE client_name = ? AND client_contact_number = ?"
+        );
+        $stmt->execute([$owner_name, $contact_number]);
+        $row = $stmt->fetch();
 
-    // Validate time is between 8:00 AM and 6:00 PM
-    $timeObj = DateTime::createFromFormat('H:i:s', $appointment_time, new DateTimeZone('Asia/Manila'));
-    if ($timeObj === false) {
-        $_SESSION['error'] = "Invalid appointment time.";
-        header("Location: ../index.php");
-        exit();
-    }
-    $hours = (int)$timeObj->format('H');
-    $minutes = (int)$timeObj->format('i');
-    if ($hours < 8 || $hours > 18 || ($hours === 18 && $minutes > 0)) {
-        $_SESSION['error'] = "Appointments can only be booked between 8:00 AM and 6:00 PM.";
-        header("Location: ../index.php");
-        exit();
-    }
-
-    // Check total appointments for the date (max 6)
-    $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM appointments WHERE appointment_date = :appointment_date");
-    $stmt->execute(['appointment_date' => $appointment_date]);
-    $count = $stmt->fetchColumn();
-    if ($count >= 6) {
-        $_SESSION['error'] = "This day is fully booked (6/6 appointments). Please choose another date.";
-        header("Location: ../index.php");
-        exit();
-    }
-
-    // Check for time overlaps (90-minute slots)
-    $duration = 90; // Duration in minutes (1 hour 30 minutes)
-    $startTime = new DateTime("$appointment_date $appointment_time", new DateTimeZone('Asia/Manila'));
-    $endTime = clone $startTime;
-    $endTime->modify("+$duration minutes");
-
-    $stmt = $pdo->prepare("
-        SELECT appointment_time, duration 
-        FROM appointments 
-        WHERE appointment_date = :appointment_date 
-        AND status IN ('Scheduled')
-    ");
-    $stmt->execute(['appointment_date' => $appointment_date]);
-    $existingAppointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach ($existingAppointments as $existing) {
-        $existingStart = new DateTime("$appointment_date $existing[appointment_time]", new DateTimeZone('Asia/Manila'));
-        $existingEnd = clone $existingStart;
-        $existingEnd->modify("+$existing[duration] minutes");
-
-        if ($startTime < $existingEnd && $endTime > $existingStart) {
-            $_SESSION['error'] = "This time slot overlaps with an existing appointment. Please choose another time.";
-            header("Location: ../index.php");
-            exit();
+        if ($row) {
+            $client_id = $row['client_id'];
+        } else {
+            $stmt = $pdo->prepare(
+                "INSERT INTO Client (client_name, client_address, client_contact_number, status, created_at)
+                 VALUES (?, ?, ?, 1, NOW())"
+            );
+            $stmt->execute([$owner_name, $address, $contact_number]);
+            $client_id = $pdo->lastInsertId();
+            if (!$client_id) {
+                $pdo->rollBack();
+                sendError('Failed to create client record.');
+            }
         }
     }
 
-    // Begin transaction for client/pet creation
-    $pdo->beginTransaction();
-
-    // 1. Find or create the client
-    $stmt = $pdo->prepare("SELECT client_id FROM Client WHERE client_name = ? AND client_contact_number = ?");
-    $stmt->execute([$owner_name, $contact_number]);
-    $client = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($client) {
-        $client_id = $client['client_id'];
-    } else {
-        // Client does not exist, create a new one
-        $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number, status) VALUES (?, ?, ?, 1)");
-        $stmt->execute([$owner_name, $address, $contact_number]);
-        $client_id = $pdo->lastInsertId();
-    }
-
-    // 2. Find or create the pet for this client
-    $stmt = $pdo->prepare("SELECT pet_id FROM Pet WHERE client_id = ? AND pet_name = ?");
+    /* ----- PET (find or create) ----- */
+    $stmt = $pdo->prepare(
+        "SELECT pet_id FROM Pet WHERE client_id = ? AND pet_name = ?"
+    );
     $stmt->execute([$client_id, $pet_name]);
-    $pet = $stmt->fetch(PDO::FETCH_ASSOC);
+    $row = $stmt->fetch();
 
-    if ($pet) {
-        $pet_id = $pet['pet_id'];
-        // Optional: You could update the pet's details here if they've changed
+    if ($row) {
+        $pet_id = $row['pet_id'];
     } else {
-        // Pet does not exist for this client, create a new one
         $stmt = $pdo->prepare(
-            "INSERT INTO Pet (client_id, pet_name, pet_species, pet_sex, pet_breed, pet_weight, pet_birth_date, status) 
+            "INSERT INTO Pet
+             (client_id, pet_name, pet_species, pet_sex, pet_breed, pet_weight, pet_birth_date, status)
              VALUES (?, ?, ?, ?, ?, ?, ?, 1)"
         );
-        $stmt->execute([$client_id, $pet_name, $pet_species, $pet_sex, $pet_breed, $pet_weight, $pet_birth_date]);
+        $stmt->execute([
+            $client_id,
+            $pet_name,
+            $pet_species,
+            $pet_sex,
+            $pet_breed,
+            $pet_weight,
+            $pet_birth_date ?: null
+        ]);
         $pet_id = $pdo->lastInsertId();
+        if (!$pet_id) {
+            $pdo->rollBack();
+            sendError('Failed to create pet record.');
+        }
     }
 
-    // Insert into database
-    $stmt = $pdo->prepare("
-        INSERT INTO appointments (owner_name, contact_number, appointment_date, appointment_time, reason, status, duration)
-        VALUES (:owner_name, :contact_number, :appointment_date, :appointment_time, :reason, 'Scheduled', :duration)
-    ");
-    $params = [
-        'owner_name' => $owner_name,
-        'contact_number' => $contact_number,
-        'appointment_date' => $appointment_date,
-        'appointment_time' => $appointment_time,
-        'reason' => $reason,
-        'duration' => $duration
-    ];
-    $stmt->execute($params);
+    /* ----- INSERT APPOINTMENT ----- */
+    $duration = 90;
+    $stmt = $pdo->prepare(
+        "INSERT INTO appointments
+         (client_id, pet_id, owner_name, contact_number, appointment_date,
+          appointment_time, reason, status, duration)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'Scheduled', ?)"
+    );
+    $stmt->execute([
+        $client_id,
+        $pet_id,
+        $owner_name,
+        $contact_number,
+        $appointment_date,
+        $appointment_time_full,
+        $reason,
+        $duration
+    ]);
+    $appt_id = $pdo->lastInsertId();
 
-    // Verify insertion
-    $lastId = $pdo->lastInsertId();
-    if ($lastId > 0) {
-        $pdo->commit(); // Commit client/pet changes
-        logAppointment($pdo, $owner_name, $appointment_date, $appointment_time);
-        $_SESSION['success'] = "Appointment booked successfully! (ID: $lastId)";
-    } else {
-        $_SESSION['error'] = "Appointment was not saved. Please try again.";
-    }
-    header("Location: ../index.php");
-    exit();
-} catch (PDOException $e) {
+    /* ----- NOTIFICATION & LOG ----- */
+    logAppointment($pdo, $owner_name, $appointment_date, $appointment_time_full);
+
+    $pdo->commit();
+
+    $_SESSION['success'] = "Appointment booked successfully! ID: $appt_id";
+    header('Location: ../index.php');
+    exit;
+} catch (Throwable $e) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
-    file_put_contents('debug.log', "Insert error: " . $e->getMessage() . "\n", FILE_APPEND);
-    $_SESSION['error'] = "Failed to book appointment: " . $e->getMessage();
-    header("Location: ../index.php");
-    exit();
-} catch (Exception $e) {
-    file_put_contents('debug.log', "General error: " . $e->getMessage() . "\n", FILE_APPEND);
-    $_SESSION['error'] = "An unexpected error occurred: " . $e->getMessage();
-    header("Location: ../index.php");
-    exit();
+
+    // ------------------- CONSOLE LOGGING -------------------
+    $errorMsg = $e->getMessage();
+    $trace    = $e->getTraceAsString();
+
+    // Send JSON + JS to the browser so it prints to console
+    header('Content-Type: application/json');
+    echo json_encode([
+        'error'   => true,
+        'message' => $errorMsg,
+        'trace'   => $trace,
+        'js'      => "console.error('APPOINTMENT ERROR:', " . json_encode($errorMsg) . ");\n" .
+            "console.error('Stack trace:', " . json_encode($trace) . ");\n" .
+            "alert('Booking failed – check console (F12) for details.');"
+    ]);
+    exit;
+}
+
+/* --------------------------------------------------------------
+   Helper – send error + console log + redirect
+-------------------------------------------------------------- */
+function sendError(string $msg)
+{
+    $_SESSION['error'] = $msg;
+
+    // Log to console even on validation errors
+    header('Content-Type: application/json');
+    echo json_encode([
+        'error'   => true,
+        'message' => $msg,
+        'js'      => "console.warn('Validation Error:', " . json_encode($msg) . ");\n" .
+            "alert(" . json_encode($msg) . ");"
+    ]);
+    exit;
 }

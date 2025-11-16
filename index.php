@@ -103,10 +103,14 @@ if (isset($_SESSION['admin_id'])) {
     .legend-has-appointments {
         background-color: #28a745;
         /* Green */
+        background-color: #f59e0b;
+        /* Amber */
     }
 
     .legend-full {
         background-color: #dc3545;
+        /* Red */
+        background-color: #ef4444;
         /* Red */
     }
 </style>
@@ -661,6 +665,16 @@ if (isset($_SESSION['admin_id'])) {
                         </span>
                     </div>
                 </div>
+                <!-- Address -->
+                <div class="col-span-2">
+                    <label for="address" class="block text-xs font-semibold text-gray-600 mb-1">Address</label>
+                    <div class="relative">
+                        <input type="text" id="address" name="address" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#169976] text-sm" placeholder="Enter your full address" required>
+                        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i class="fa fa-map-marker-alt"></i>
+                        </span>
+                    </div>
+                </div>
                 <!-- Password -->
                 <div class="col-span-1">
                     <label for="password" class="block text-xs font-semibold text-gray-600 mb-1">Password</label>
@@ -736,7 +750,7 @@ if (isset($_SESSION['admin_id'])) {
                             </div>
                             <div>
                                 <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                                <input type="text" id="address" name="address" placeholder="Enter Address" required
+                                <input type="text" id="address" name="address" value="<?= htmlspecialchars($_SESSION['client_address'] ?? '') ?>" placeholder="Enter Address" required
                                     class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
                             </div>
                             <div>
@@ -791,6 +805,7 @@ if (isset($_SESSION['admin_id'])) {
                                 </div>
                             </div>
                         </div>
+
                         <div class="space-y-4">
                             <!-- Left: Calendar -->
                             <div class="flex flex-col justify-center">
@@ -800,9 +815,12 @@ if (isset($_SESSION['admin_id'])) {
                                     <div class="legend-item">
                                         <div class="legend-circle legend-has-appointments"></div>
                                         <span>Has Appointments</span>
+                                        <div class="legend-circle" style="background-color: #f59e0b;"></div>
+                                        <span>Partially Booked</span>
                                     </div>
                                     <div class="legend-item">
                                         <div class="legend-circle legend-full"></div>
+                                        <div class="legend-circle" style="background-color: #ef4444;"></div>
                                         <span>Fully Booked</span>
                                     </div>
                                 </div>
@@ -844,6 +862,8 @@ if (isset($_SESSION['admin_id'])) {
                                     class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]">
                             </div>
                         </div>
+                        <!-- CSRF Token -->
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                     </div>
                     <!-- Buttons -->
                     <div class="flex justify-end space-x-3 pt-4 border-t mt-4">
@@ -1063,17 +1083,13 @@ if (isset($_SESSION['admin_id'])) {
                         dayNumber.classList.add("day-number");
                         dayDiv.appendChild(dayNumber);
 
-                        const current = new Date(year, month, day);
-                        if (current < new Date().setHours(0, 0, 0, 0)) {
-                            dayDiv.classList.add("text-gray-400", "cursor-not-allowed");
-                        } else { // Only add click listener for valid days
-                            dayDiv.addEventListener("click", () => {
-                                selectedDate.value = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                                const days = document.querySelectorAll("#calendarDays div");
-                                days.forEach(d => d.classList.remove("bg-[#169976]", "text-white"));
-                                dayDiv.classList.add("bg-[#169976]", "text-white");
-                                loadTimeSlots();
-                            });
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const currentDay = new Date(year, month, day);
+
+                        if (currentDay < today) {
+                            dayDiv.classList.add("past-day", "bg-gray-100", "text-gray-400", "cursor-not-allowed");
+                            dayDiv.classList.remove("hover:bg-gray-200", "cursor-pointer");
                         }
                         calendarDays.appendChild(dayDiv);
                     }
@@ -1098,17 +1114,30 @@ if (isset($_SESSION['admin_id'])) {
                         const existingIndicator = dayEl.querySelector('.appointment-indicator');
                         if (existingIndicator) existingIndicator.remove();
 
-                        if (count > 0) {
+                        if (count > 0 && !dayEl.classList.contains('past-day')) {
                             const indicator = document.createElement('div');
                             indicator.className = 'appointment-indicator';
                             if (count >= 6) {
                                 dayEl.classList.add('full-day');
                                 indicator.style.backgroundColor = '#dc3545'; // Red
+                                indicator.style.backgroundColor = '#ef4444'; // Red
                             } else {
                                 dayEl.classList.add('has-appointments');
                                 indicator.style.backgroundColor = '#28a745'; // Green
+                                indicator.style.backgroundColor = '#f59e0b'; // Amber
                             }
                             dayEl.appendChild(indicator);
+                        }
+
+                        // Add click listener to all non-past and non-full days
+                        if (!dayEl.classList.contains('past-day') && !dayEl.classList.contains('full-day')) {
+                            dayEl.addEventListener("click", () => {
+                                selectedDate.value = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                                const days = calendarDays.querySelectorAll(".day-cell");
+                                days.forEach(d => d.classList.remove("bg-[#169976]", "text-white"));
+                                dayEl.classList.add("bg-[#169976]", "text-white");
+                                loadTimeSlots();
+                            });
                         }
                     });
                 }
@@ -1139,76 +1168,116 @@ if (isset($_SESSION['admin_id'])) {
                 });
             }
             // Load time slots for selected date
+            // === REPLACE ENTIRE loadTimeSlots + submit handler ===
+            const POSSIBLE_SLOTS = ["08:00", "09:30", "11:00", "12:30", "14:00", "15:30"];
+
             function loadTimeSlots() {
-                const selectedDate = document.getElementById("selectedDate").value;
-                const timeSlotsContainer = document.getElementById("timeSlotsContainer");
-                const dayFullMessage = document.getElementById("dayFullMessage");
-                const selectedTime = document.getElementById("selectedTime");
-                const submitButton = document.getElementById("submitButton");
-                timeSlotsContainer.innerHTML = "";
-                dayFullMessage.classList.add("hidden");
-                selectedTime.value = "";
-                submitButton.disabled = true;
-                submitButton.classList.add("bg-gray-400", "cursor-not-allowed");
-                submitButton.classList.remove("bg-[#169976]", "hover:bg-[#18b98e]");
-                if (!selectedDate) return;
-                // Define fixed 90-min slots (6 max, non-overlapping, within 8 AM - 6 PM)
-                const possibleSlots = [
-                    "08:00", "09:30", "11:00", "12:30", "14:00", "15:30"
-                ];
-                // Fetch existing appointments
-                fetch(`./functions/get-appointments.php?start=${selectedDate}&end=${selectedDate}`)
-                    .then(response => {
-                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                        return response.json();
-                    })
+                const date = document.getElementById("selectedDate").value;
+                const container = document.getElementById("timeSlotsContainer");
+                const fullMsg = document.getElementById("dayFullMessage");
+                const timeInput = document.getElementById("selectedTime");
+                const submitBtn = document.getElementById("submitButton");
+
+                if (!date) return;
+
+                container.innerHTML = "";
+                fullMsg.classList.add("hidden");
+                timeInput.value = "";
+                submitBtn.disabled = true;
+                submitBtn.classList.add("bg-gray-400", "cursor-not-allowed");
+                submitBtn.classList.remove("bg-[#169976]", "hover:bg-[#18b98e]");
+
+                fetch(`./functions/get-appointments.php?start=${date}&end=${date}&t=${Date.now()}`)
+                    .then(r => r.json())
                     .then(events => {
-                        const takenSlots = new Set();
-                        events.forEach(event => {
-                            const eventStart = new Date(event.start);
-                            const startTime = eventStart.toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false
-                            });
-                            takenSlots.add(startTime);
+                        const taken = new Set();
+                        events.forEach(e => {
+                            const time = e.start.split('T')[1].substring(0, 5);
+                            taken.add(time);
                         });
-                        if (takenSlots.size >= 6) {
-                            dayFullMessage.classList.remove("hidden");
+
+                        if (taken.size >= 6) {
+                            fullMsg.classList.remove("hidden");
                             return;
                         }
-                        // Generate buttons for available slots
-                        possibleSlots.forEach(slot => {
-                            if (!takenSlots.has(slot)) {
-                                const button = document.createElement("button");
-                                button.type = "button";
-                                button.textContent = `${slot} (${formatAMPM(slot)})`;
-                                button.classList.add("p-2", "text-sm", "bg-gray-200", "rounded", "hover:bg-gray-300", "transition");
-                                button.addEventListener("click", () => {
-                                    selectedTime.value = slot;
-                                    const buttons = timeSlotsContainer.querySelectorAll("button");
-                                    buttons.forEach(btn => btn.classList.remove("bg-[#169976]", "text-white"));
-                                    button.classList.add("bg-[#169976]", "text-white");
-                                    submitButton.disabled = false;
-                                    submitButton.classList.remove("bg-gray-400", "cursor-not-allowed");
-                                    submitButton.classList.add("bg-[#169976]", "hover:bg-[#18b98e]");
-                                });
-                                timeSlotsContainer.appendChild(button);
+
+                        POSSIBLE_SLOTS.forEach(slot => {
+                            if (!taken.has(slot)) {
+                                const btn = document.createElement("button");
+                                btn.type = "button";
+                                btn.textContent = `${slot} (${formatAMPM(slot)})`;
+                                btn.className = "p-2 text-sm bg-gray-200 rounded hover:bg-gray-300 transition";
+                                btn.onclick = () => {
+                                    timeInput.value = slot;
+                                    container.querySelectorAll("button").forEach(b =>
+                                        b.classList.remove("bg-[#169976]", "text-white")
+                                    );
+                                    btn.classList.add("bg-[#169976]", "text-white");
+                                    submitBtn.disabled = false;
+                                    submitBtn.classList.remove("bg-gray-400", "cursor-not-allowed");
+                                    submitBtn.classList.add("bg-[#169976]", "hover:bg-[#18b98e]");
+                                };
+                                container.appendChild(btn);
                             }
                         });
                     })
-                    .catch(error => {
-                        console.error("Error loading time slots:", error);
-                        timeSlotsContainer.innerHTML = "<p class='text-red-500 text-sm'>Error loading slots. Please try again.</p>";
+                    .catch(() => {
+                        container.innerHTML = "<p class='text-red-500 text-xs'>Error loading slots.</p>";
                     });
             }
-            // Helper to format time as AM/PM
+
+            // Prevent double booking on submit
+            document.getElementById("appointmentForm").addEventListener("submit", function(e) {
+                e.preventDefault();
+                const date = document.getElementById("selectedDate").value;
+                const time = document.getElementById("selectedTime").value;
+                if (!date || !time) {
+                    alert("Please select date and time.");
+                    return;
+                }
+
+                fetch(`./functions/get-appointments.php?start=${date}&end=${date}&t=${Date.now()}`)
+                    .then(r => r.json())
+                    .then(events => {
+                        const taken = events.map(ev => ev.start.split('T')[1].substring(0, 5));
+                        if (taken.includes(time)) {
+                            alert("This time slot was just booked by someone else. Please choose another.");
+                            loadTimeSlots(); // refresh slots
+                        } else {
+                            this.submit(); // real submit
+                        }
+                    })
+                    .catch(() => alert("Connection error. Please try again."));
+            });
+
+            // SweetAlert for success/error messages from appointment booking
+            <?php if (isset($_SESSION['success'])): ?>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '<?php echo htmlspecialchars($_SESSION['success']); ?>',
+                    confirmButtonColor: '#169976'
+                });
+                <?php unset($_SESSION['success']); ?>
+            <?php elseif (isset($_SESSION['error'])): ?>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: '<?php echo htmlspecialchars($_SESSION['error']); ?>',
+                    confirmButtonColor: '#dc3545'
+                });
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+
+
+
             function formatAMPM(time) {
-                const [hours, minutes] = time.split(":").map(Number);
-                const ampm = hours >= 12 ? "PM" : "AM";
-                const formattedHours = hours % 12 || 12;
-                return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+                const [h, m] = time.split(":").map(Number);
+                const ampm = h >= 12 ? "PM" : "AM";
+                const hh = h % 12 || 12;
+                return `${hh}:${m.toString().padStart(2, '0')} ${ampm}`;
             }
+            // === END REPLACEMENT ===
         });
 
         window.addEventListener("scroll", () => {

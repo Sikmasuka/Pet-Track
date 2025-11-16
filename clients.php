@@ -24,12 +24,21 @@ if (empty($uniqueConditions)) {
 $sort = isset($_GET['sort']) ? strtolower(trim($_GET['sort'])) : 'asc';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 // Always fetch ALL active clients (no filtering here - done client-side)
-$table = 'Client'; // correct table name
-$column = 'client_name'; // correct column name
-$query = "SELECT * FROM $table WHERE status = 1 ORDER BY $column " . ($sort === 'desc' ? 'DESC' : 'ASC');
+$query = "
+    SELECT c.*, 
+           (SELECT COUNT(*) 
+            FROM appointments a 
+            WHERE a.contact_number = c.client_contact_number
+              AND a.status = 'Scheduled' 
+              AND a.appointment_date = CURDATE()) > 0 AS has_new_appointment
+    FROM Client c
+    WHERE c.status = 1
+    ORDER BY c.client_name " . ($sort === 'desc' ? 'DESC' : 'ASC');
+
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $clients = $stmt->fetchAll();
+
 ob_end_flush();
 ?>
 <!DOCTYPE html>
@@ -447,7 +456,15 @@ ob_end_flush();
                         <tbody class="bg-white divide-y divide-slate-200">
                             <?php foreach ($clients as $client): ?>
                                 <tr class="hover:bg-gray-50 transition-colors" data-name="<?= htmlspecialchars(strtolower($client['client_name'])) ?>" data-address="<?= htmlspecialchars(strtolower($client['client_address'])) ?>" data-contact="<?= htmlspecialchars(strtolower($client['client_contact_number'])) ?>">
-                                    <td class="px-4 py-2 text-sm text-gray-700"><?= htmlspecialchars($client['client_name']) ?></td>
+                                    <td class="px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <?= htmlspecialchars($client['client_name']) ?>
+                                        <?php if (isset($client['created_at']) && strtotime($client['created_at']) > strtotime('-24 hours')): ?>
+                                            <span class="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">New</span>
+                                        <?php endif; ?>
+                                        <?php if ($client['has_new_appointment']): ?>
+                                            <span class="ml-2 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">New Appointment</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($client['client_address']) ?></td>
                                     <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($client['client_contact_number']) ?></td>
                                     <td class="px-4 py-2 text-sm">
@@ -604,6 +621,7 @@ ob_end_flush();
             </form>
         </div>
     </div>
+
     <!-- Alternative Neat Card-Style Client Modal -->
     <div id="clientViewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4">
         <div class="bg-white w-full max-w-xl rounded-lg shadow-xl overflow-hidden flex flex-col">

@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $pdo->beginTransaction();
                     // Insert Client
-                    $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number, status) VALUES (?, ?, ?, 1)");
+                    $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number, status, created_at) VALUES (?, ?, ?, 1, NOW())");
                     $stmt->execute([$client_name, $client_address, $client_contact]);
                     $client_id = $pdo->lastInsertId();
 

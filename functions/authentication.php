@@ -126,13 +126,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         } else {
             // Client login
             // Fetch client_name and contact for session from the `Client` table
-            $stmt2 = $pdo->prepare("SELECT client_name, client_contact_number FROM Client WHERE client_id = :id AND status = 1");
+            $stmt2 = $pdo->prepare("SELECT client_name, client_contact_number, client_address FROM Client WHERE client_id = :id AND status = 1");
             $stmt2->execute(['id' => $user['id']]);
             $client = $stmt2->fetch(PDO::FETCH_ASSOC);
 
             $_SESSION['client_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['client_name'] = $client['client_name'] ?? '';
+            $_SESSION['client_address'] = $client['client_address'] ?? '';
             $_SESSION['client_contact'] = $client['client_contact_number'] ?? '';
             $_SESSION['role'] = 'client';
 

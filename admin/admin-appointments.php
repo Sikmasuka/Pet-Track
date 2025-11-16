@@ -76,12 +76,34 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointments - PetTrack</title>
     <link rel="stylesheet" href="../Assets/FontAwsome/css/all.min.css">
-    <link rel="icon" href="image/MainIcon.png" type="image/x-icon">
+    <link rel="icon" href="../image/logoWhite.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css' rel='stylesheet' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            /* Lighter track */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            /* Emerald green */
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #059669;
+            /* Darker emerald on hover */
+        }
+
         .hidden {
             display: none !important;
         }
@@ -211,23 +233,25 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
     </button>
 
     <!-- Sidebar -->
-    <aside id="sidebar"
+    <aside id="sidebar" style="height: 100vh;"
         class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-emerald-900">
 
         <!-- Header -->
-        <div class="flex items-center justify-between">
-            <h2 class="text-xl lg:text-2xl font-semibold flex items-center gap-2">
-                <img src="../image/MainIconWhite.png" alt="Dashboard" class="w-6 lg:w-8">
-                <span class="md:inline">Dashboard</span>
-            </h2>
-            <button id="closeSidebarBtn"
-                class="lg:hidden text-gray-300 hover:text-white duration-200">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+        <div class="flex flex-col items-center">
+            <img src="../image/logoWhite.png" alt="Balingasag Dog and Cat Clinic Logo"
+                class="h-16 w-auto object-contain drop-shadow-lg">
+            <div class="text-center leading-tight mt-2">
+                <h2 class="text-xl font-extrabold tracking-wide text-white">
+                    Balingasag
+                </h2>
+                <p class="text-base font-medium text-gray-200">
+                    Dog & Cat Clinic
+                </p>
+            </div>
         </div>
 
         <!-- Navigation -->
-        <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5">
+        <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5 overflow-y-auto" style="height: calc(100% - 150px);">
             <a href="admin-dashboard.php"
                 class="block text-sm text-white hover:bg-emerald-700 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
@@ -277,10 +301,9 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
                 </div>
             </div>
 
-
             <!-- Active Link Example -->
             <a href="./admin-appointments.php"
-                class="block text-sm text-white bg-teal-800 hover:bg-emerald-700 px-4 py-2 rounded-md">
+                class="block text-sm text-white hover:bg-emerald-700 bg-teal-800 px-4 py-2 rounded-md">
                 <i class="fas fa-calendar-days mr-2"></i> Appointments
             </a>
 

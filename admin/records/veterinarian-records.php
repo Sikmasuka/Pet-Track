@@ -58,38 +58,48 @@ requireAdmin();
         }
 
         ::-webkit-scrollbar-track {
-            background: #1e293b;
+            background: #e2e8f0;
+            /* Lighter track */
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #334155;
+            background: #10b981;
+            /* Emerald green */
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+            background: #059669;
+            /* Darker emerald on hover */
         }
     </style>
 </head>
 
 <body class="bg-slate-100 min-h-screen text-gray-800">
     <!-- Mobile Menu Button -->
-    <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 bg-slate-700 text-white p-3 rounded-md shadow-lg hover:bg-slate-600 transition-colors">
+    <button id="mobileMenuBtn"
+        class="lg:hidden fixed top-4 left-4 z-50 bg-slate-700 text-white p-3 rounded-md shadow-lg hover:bg-slate-600 transition-colors">
         <i class="fas fa-bars"></i>
     </button>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 w-[200px] bg-slate-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-slate-600">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl lg:text-2xl font-semibold flex items-center gap-2">
-                <img src="/image/MainIconWhite.png" alt="Dashboard" class="w-6 lg:w-8">
-                <span class="md:inline">Dashboard</span>
-            </h2>
-            <button id="closeSidebarBtn" class="lg:hidden absolute top-4 right-4 text-gray-300 hover:text-white duration-200">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+    <aside id="sidebar" style="height: 100vh;"
+        class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-emerald-900">
+
+        <!-- Header -->
+        <div class="flex flex-col items-center">
+            <img src="../../image/logoWhite.png" alt="Balingasag Dog and Cat Clinic Logo"
+                class="h-16 w-auto object-contain drop-shadow-lg">
+            <div class="text-center leading-tight mt-2">
+                <h2 class="text-xl font-extrabold tracking-wide text-white">
+                    Balingasag
+                </h2>
+                <p class="text-base font-medium text-gray-200">
+                    Dog & Cat Clinic
+                </p>
+            </div>
         </div>
-        <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5">
+        <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5 overflow-y-auto" style="height: calc(100% - 150px);">
             <a href="../admin-dashboard.php" class="block text-sm text-gray-300 hover:bg-slate-600 px-4 py-2 rounded-md hover:text-white transition-colors">
                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
             </a>
@@ -100,26 +110,35 @@ requireAdmin();
             <!-- Records Dropdown -->
             <div class="space-y-0.5">
                 <button id="recordsBtn"
-                    class="w-full flex items-center justify-between text-sm text-white hover:bg-slate-600 px-4 py-2 rounded-md hover:bg-slate-500 transition-colors">
+                    class="w-full flex items-center justify-start gap-2 text-sm text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors">
                     <span><i class="fa-solid fa-file-lines mr-2"></i> Records</span>
-                    <svg id="recordsArrow" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg id="recordsArrow" class="w-4 h-4 ml-1 transition-transform duration-200" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
 
                 <!-- Submenu -->
                 <div id="recordsMenu" class="max-h-0 overflow-hidden opacity-0 transition-all duration-200 ease-in-out pl-8 space-y-1">
-                    <a href="./pet-records.php" class="block text-sm text-gray-300 hover:bg-slate-600 px-2 py-1 rounded-md hover:text-white transition-colors">
-                        Pets
+
+                    <a href="../records/pet-records.php"
+                        class="flex items-center text-sm text-gray-200 hover:bg-emerald-600 px-3 py-2 rounded-md hover:text-white transition-colors">
+                        <i class="fas fa-paw mr-2"></i> Pets
                     </a>
-                    <a href="records-clients.php" class="block text-sm text-gray-300 hover:bg-slate-600 px-3 py-2 rounded-md hover:text-white transition-colors">
-                        Clients
+
+                    <a href="../records/client-records.php"
+                        class="flex items-center text-sm text-gray-200 hover:bg-emerald-600 px-3 py-2 rounded-md hover:text-white transition-colors">
+                        <i class="fas fa-user mr-2"></i> Clients
                     </a>
-                    <a href="./medical-records.php" class="block text-sm text-gray-300 hover:bg-slate-600 px-3 py-2 rounded-md hover:text-white transition-colors">
-                        Medical Records
+
+                    <a href="../records/medical-records.php"
+                        class="flex items-center text-sm text-gray-200 hover:bg-emerald-600 px-3 py-2 rounded-md hover:text-white transition-colors">
+                        <i class="fas fa-file-medical mr-2"></i>
+                        <span class="whitespace-normal leading-snug">Medical Records</span>
                     </a>
-                    <a href="./veterinarian-records.php" class="block text-sm text-gray-300 bg-slate-600 px-3 py-2 rounded-md hover:text-white transition-colors">
-                        Veterinarians
+                    <a href="../records/admin-payments.php"
+                        class="flex items-center text-sm text-gray-200 hover:bg-emerald-600 px-3 py-2 rounded-md hover:text-white transition-colors">
+                        <i class="fas fa-credit-card mr-2"></i> Payments Records
                     </a>
                 </div>
             </div>

@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $fullname = trim($_POST['fullname']);
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
-    $address = trim($_POST['address'] ?? ''); // Address not in form, set empty
+    $address = trim($_POST['address'] ?? '');
     $contact = trim($_POST['contact']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
@@ -72,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             }
 
             // Step 2: Create the client record with personal info
-            $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number) VALUES (?, ?, ?)");
-            $stmt->execute([$fullname, $address, $contact]);
+            $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number, status, created_at) VALUES (?, ?, ?, 1, NOW())");
+            $stmt->execute([$fullname, $address, $contact,]);
             $client_id = $pdo->lastInsertId();
 
             // Hash password
@@ -88,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             $_SESSION['username'] = $username;
             $_SESSION['client_name'] = $fullname;
             $_SESSION['client_contact'] = $contact;
+            $_SESSION['client_address'] = $address;
             require_once 'logs.php';
             logAction($pdo, $client_id, 'Registration', $fullname . ' registered and logged in', 'Client');
 

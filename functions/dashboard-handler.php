@@ -30,7 +30,7 @@ if (!$vetName) {
 }
 
 // Fetch the counts: Get total number of clients, pets, medical records, and today's appointments
-$stmtClients = $pdo->prepare("SELECT COUNT(*) FROM Client");
+$stmtClients = $pdo->prepare("SELECT COUNT(*) FROM Client WHERE status = 1");
 $stmtClients->execute();
 $clientCount = $stmtClients->fetchColumn();
 

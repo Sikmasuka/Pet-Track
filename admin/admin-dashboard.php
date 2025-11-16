@@ -39,11 +39,32 @@ ob_end_flush();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="icon" href="../image/MainIcon.png" type="image/x-icon">
+    <link rel="icon" href="../image/logoWhite.png" type="image/x-icon">
     <script src="../Assets/chart.js"></script>
     <link rel="stylesheet" href="../Assets/FontAwsome/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            /* Lighter track */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            /* Emerald green */
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #059669;
+            /* Darker emerald on hover */
+        }
+
         .chart-container {
             position: relative;
             height: 300px;
@@ -72,24 +93,6 @@ ob_end_flush();
             width: 80vw;
             max-width: 260px;
         }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
     </style>
 </head>
 
@@ -102,8 +105,8 @@ ob_end_flush();
     </button>
 
     <!-- Sidebar -->
-    <aside id="sidebar"
-        class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-emerald-900">
+    <aside id="sidebar" style="height: 100vh;"
+        class="fixed inset-y-0 left-0 w-[200px] bg-gradient-to-b from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r border-emerald-900">
 
         <!-- Header -->
         <div class="flex flex-col items-center">
@@ -120,7 +123,7 @@ ob_end_flush();
         </div>
 
         <!-- Navigation -->
-        <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5 overflow-y-auto">
+        <nav class="flex-grow mt-8 lg:mt-12 space-y-0.5 overflow-y-auto" style="height: calc(100% - 150px);">
             <a href="admin-dashboard.php"
                 class="block text-sm text-white bg-teal-800 hover:bg-emerald-700 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
@@ -198,11 +201,6 @@ ob_end_flush();
 
     <!-- Main Content -->
     <div class="relative ml-0 lg:ml-52 p-4 pt-16 lg:pt-4 min-h-screen">
-
-        <div id="loadingScreen" class="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 z-50 hidden">
-            <img src="../image/MainIcon.png" alt="Loading Icon" class="w-20 h-20 animate-pulse">
-            <p class="mt-4 text-teal-700 font-semibold text-lg">Loading...</p>
-        </div>
 
         <!-- Header with Welcome and Metrics -->
         <header class="bg-white shadow-lg rounded-lg text-gray-800 py-4 mb-8 p-4 lg:p-6 border border-slate-200">
@@ -369,40 +367,72 @@ ob_end_flush();
 
         <!-- Graph Section -->
         <main class="bg-white p-4 lg:p-6 rounded-lg shadow-lg border border-slate-200">
+            <!-- Loader Overlay -->
+            <div id="loader" class="fixed inset-0 flex flex-col items-center justify-center bg-white z-[9999] hidden">
+                <img src="image/MainIcon.png" alt="Loading Icon" class="w-20 h-20 animate-pulse">
+                <p class="mt-4 text-teal-700 font-semibold text-lg">Loading...</p>
+            </div>
+
             <h2 class="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800 mb-6">Analytics Overview</h2>
             <div class="flex flex-col lg:flex-row gap-8">
-                <div class="flex-1 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
-                    <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Monthly Income</h3>
-                    <div class="chart-container">
-                        <canvas id="incomeChart"></canvas>
-                    </div>
-                </div>
-                <div class="flex-0.5 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
-                    <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Most Common Medical Conditions</h3>
-                    <div class="chart-container">
-                        <canvas id="conditionChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </main>
+                <!-- === RECENT ACTIVITIES === -->
+                <!-- Recent Activities -->
+                <div class="w-full lg:w-3/5 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
+                    <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Recent Activities</h3>
 
-        <div class="mt-8 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
-            <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Recent Activities</h3>
-            <div class="table-container overflow-x-scroll lg:overflow-x-hidden">
-                <table class="min-w-full divide-y divide-slate-200">
-                    <thead class="bg-gray-300">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs text-gray-700 uppercase tracking-wider">#</th>
-                            <th class="px-4 py-3 text-left text-xs text-gray-700 uppercase tracking-wider">Name</th>
-                            <th class="px-4 py-3 text-left text-xs text-gray-700 uppercase tracking-wider">Description</th>
-                            <th class="px-4 py-3 text-left text-xs text-gray-700 uppercase tracking-wider">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="activities-body" class="bg-white divide-y divide-slate-200">
-                    </tbody>
-                </table>
+                    <!-- Scrollable Table Container -->
+                    <div class="w-full overflow-x-auto rounded-lg border border-slate-200">
+                        <div class="max-h-96 overflow-y-auto">
+                            <table class="min-w-full divide-y divide-slate-200">
+                                <!-- Sticky Header -->
+                                <thead class="bg-gray-300 sticky top-0 z-10">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider" style="min-width: 50px;">
+                                            #
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider" style="min-width: 120px;">
+                                            Name
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider" style="min-width: 200px;">
+                                            Description
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider" style="min-width: 140px;">
+                                            Date
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activities-body" class="bg-white divide-y divide-slate-200">
+                                    <!-- Loaded via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div id="pagination" class="mt-3 flex flex-wrap justify-center gap-1"></div>
+                </div>
+
+                <!-- Most common medical condition -->
+                <div class="lg:w-1/3 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
+                    <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">
+                        Most Common Medical Conditions
+                    </h3>
+
+                    <!-- Fixed-size chart container -->
+                    <div class="chart-container flex justify-center items-center">
+                        <canvas id="conditionChart" width="250" height="250"></canvas>
+                    </div>
+                </div>
+
             </div>
-        </div>
+
+            <div class="mt-8 bg-white border border-slate-200 rounded-lg p-4 shadow-lg hover:border-indigo-400 transition-colors">
+                <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Monthly Income</h3>
+                <div class="chart-container">
+                    <canvas id="incomeChart"></canvas>
+                </div>
+            </div>
+    </div>
     </div>
 
     <!-- Chart.js Scripts -->
@@ -499,15 +529,6 @@ ob_end_flush();
                 }
             }
         });
-
-        function toggleModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.toggle('hidden');
-            } else {
-                console.error("Modal not found:", modalId);
-            }
-        }
 
         // AJAX polling for Recent Activities
         let currentPage = 1;
