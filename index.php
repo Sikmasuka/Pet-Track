@@ -604,7 +604,7 @@ if (isset($_SESSION['admin_id'])) {
     </div>
     <!-- 🐾 REGISTER MODAL -->
     <div id="registerModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl h-[85vh] overflow-y-auto p-6 relative">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden px-6 py-2 relative">
             <!-- ❌ Close Button -->
             <button onclick="closeModal('registerModal')" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
                 <i class="fa fa-times text-lg"></i>
@@ -656,15 +656,21 @@ if (isset($_SESSION['admin_id'])) {
                 <!-- Contact Number -->
                 <div class="col-span-1">
                     <label for="contact" class="block text-xs font-semibold text-gray-600 mb-1">Contact Number</label>
-                    <div class="relative">
+                    <div class="flex items-center border rounded-md px-2 py-1 focus-within:ring-2 focus-within:ring-[#169976]">
+
+                        <!-- Static +63 Box -->
+                        <span class="px-2 text-gray-600 text-sm font-semibold border-r border-gray-400">+63</span>
+
+                        <!-- User Input: only 9 digits -->
                         <input type="text" id="contact" name="contact"
-                            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#169976] text-sm"
-                            placeholder="Enter your contact number" required>
-                        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                            <i class="fa fa-phone"></i>
-                        </span>
+                            class="flex-1 px-2 py-1 focus:outline-none text-sm"
+                            placeholder="9123456789"
+                            maxlength="10"
+                            pattern="^9\d{9}$"
+                            required>
                     </div>
                 </div>
+
                 <!-- Address -->
                 <div class="col-span-2">
                     <label for="address" class="block text-xs font-semibold text-gray-600 mb-1">Address</label>

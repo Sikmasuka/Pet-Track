@@ -122,7 +122,7 @@ ob_end_flush();
     <?php include('./includes/edit-profile.php'); ?>
 
     <!-- Mobile Menu Button -->
-    <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 bg-teal-700 text-white p-3 rounded-md shadow-lg hover:bg-teal-600 transition-colors">
+    <button id="sidebar-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-teal-700 text-white p-3 rounded-md shadow-lg hover:bg-teal-600 transition-colors">
         <i class="fas fa-bars"></i>
     </button>
 
@@ -144,7 +144,7 @@ ob_end_flush();
             <a href="dashboard.php" class="block text-sm text-white px-4 py-2 rounded-md hover:bg-teal-900 transition-colors">
                 <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
             </a>
-            <a href="clients.php" class="block text-sm text-white hover:bg-teal-800 bg-teal-800 px-4 py-2 rounded-md transition-colors">
+            <a href="clients.php" class="block text-sm text-white hover:bg-teal-800 px-4 py-2 rounded-md transition-colors">
                 <i class="fas fa-user mr-2"></i> Clients
             </a>
             <a href="pets.php" class="block text-sm text-white hover:bg-teal-800 bg-teal-800 px-4 py-2 rounded-md transition-colors">

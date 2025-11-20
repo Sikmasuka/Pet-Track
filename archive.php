@@ -49,7 +49,7 @@ $username = $user ? htmlspecialchars($user['vet_username']) : "Unknown";
     <?php include('./includes/edit-profile.php'); ?>
 
     <!-- Mobile Menu Button -->
-    <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 bg-teal-700 text-white p-3 rounded-md shadow-lg hover:bg-teal-600 transition-colors">
+    <button id="sidebar-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-teal-700 text-white p-3 rounded-md shadow-lg hover:bg-teal-600 transition-colors">
         <i class="fas fa-bars"></i>
     </button>
 

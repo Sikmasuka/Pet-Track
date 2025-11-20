@@ -139,7 +139,7 @@ try {
         } else {
             $stmt = $pdo->prepare(
                 "INSERT INTO Client (client_name, client_address, client_contact_number, status, created_at)
-                 VALUES (?, ?, ?, 1, NOW())"
+                 VALUES (?, ?, ?, ?, NOW())"
             );
             $stmt->execute([$owner_name, $address, $contact_number]);
             $client_id = $pdo->lastInsertId();
@@ -162,7 +162,7 @@ try {
     } else {
         $stmt = $pdo->prepare(
             "INSERT INTO Pet
-             (client_id, pet_name, pet_species, pet_sex, pet_breed, pet_weight, pet_birth_date, status)
+             (client_id, pet_name, pet_species, pet_sex, pet_breed, pet_weight, pet_birth_date, status,)
              VALUES (?, ?, ?, ?, ?, ?, ?, 1)"
         );
         $stmt->execute([
@@ -172,7 +172,7 @@ try {
             $pet_sex,
             $pet_breed,
             $pet_weight,
-            $pet_birth_date ?: null
+            $pet_birth_date ?: null,
         ]);
         $pet_id = $pdo->lastInsertId();
         if (!$pet_id) {

@@ -29,33 +29,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $address = trim($_POST['address'] ?? '');
-    $contact = trim($_POST['contact']);
+    $contact_raw = trim($_POST['contact']); // user types 9 digits
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Validation
     $errors = [];
 
+    // Basic validations
     if (empty($fullname) || strlen($fullname) < 2) {
         $errors[] = "Full name must be at least 2 characters.";
     }
-
     if (empty($username) || strlen($username) < 3) {
         $errors[] = "Username must be at least 3 characters.";
     }
-
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format.";
     }
-
-    if (!preg_match('/^09\d{9}$/', $contact)) {
-        $errors[] = "Contact number must start with 09 and be 11 digits.";
+    // Validate 10 digits starting with 9
+    if (!preg_match('/^9\d{9}$/', $contact_raw)) {
+        $errors[] = "Contact number must start with 9 and be 10 digits.";
     }
-
     if (strlen($password) < 8) {
         $errors[] = "Password must be at least 8 characters.";
     }
-
     if ($password !== $confirm_password) {
         $errors[] = "Passwords do not match.";
     }
@@ -64,52 +60,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
         try {
             $pdo->beginTransaction();
 
-            // Step 1: Check if username or email already exists in the new accounts table
+            // Check if username or email already exists
             $stmt = $pdo->prepare("SELECT account_id FROM client_accounts WHERE username = ? OR email = ?");
             $stmt->execute([$username, $email]);
             if ($stmt->fetch()) {
                 throw new Exception("Username or email already exists.");
             }
 
-            // Step 2: Create the client record with personal info
+            // Prepend +63 for storage
+            $contact = '+63' . $contact_raw;
+
+            // Insert into Client table
             $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number, status, created_at) VALUES (?, ?, ?, 1, NOW())");
-            $stmt->execute([$fullname, $address, $contact,]);
+            $stmt->execute([$fullname, $address, $contact]);
             $client_id = $pdo->lastInsertId();
 
             // Hash password
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Step 3: Create the client account record with login info
+            // Insert into client_accounts table
             $stmt = $pdo->prepare("INSERT INTO client_accounts (client_id, username, email, password) VALUES (?, ?, ?, ?)");
             $stmt->execute([$client_id, $username, $email, $hashed_password]);
 
-            // Auto-login the new client
+            // Auto-login
             $_SESSION['client_id'] = $client_id;
             $_SESSION['username'] = $username;
             $_SESSION['client_name'] = $fullname;
             $_SESSION['client_contact'] = $contact;
             $_SESSION['client_address'] = $address;
+
             require_once 'logs.php';
             logAction($pdo, $client_id, 'Registration', $fullname . ' registered and logged in', 'Client');
 
             $pdo->commit();
-            // Redirect to index.php (now logged in, profile dropdown will show)
+
             header('Location: ../index.php?message=Registration successful. You are now logged in.');
             exit;
         } catch (PDOException $e) {
             $pdo->rollBack();
             $errors[] = "Registration failed due to a database error: " . $e->getMessage();
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            $errors[] = $e->getMessage();
         }
     }
 
-    // If there are errors, redirect back with errors
     if (!empty($errors)) {
         $error_message = implode('<br>', $errors);
         header('Location: ../index.php?error=' . urlencode($error_message));
         exit;
     }
 } else {
-    // Invalid request
     header('Location: ../index.php');
     exit;
 }
