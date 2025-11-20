@@ -15,16 +15,16 @@ try {
     $itemsPerPage = 10;
     $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
     $offset = ($currentPage - 1) * $itemsPerPage;
-    $totalStmt = $pdo->query("SELECT COUNT(*) FROM Logs WHERE Table_Affected IN ('veterinarian', 'Guest', 'admin')");
+    $totalStmt = $pdo->query("SELECT COUNT(*) FROM Logs WHERE Table_Affected IN ('Veterinarian', 'Guest', 'Admin')");
     $totalLogs = $totalStmt->fetchColumn();
     $totalPages = ceil($totalLogs / $itemsPerPage);
     $logQuery = "
-        SELECT 
+        SELECT
             Description,
             Timestamp,
             'Admin' AS name
         FROM Logs
-        WHERE Table_Affected IN ('veterinarian', 'Guest', 'admin')
+        WHERE Table_Affected IN ('Veterinarian', 'Guest', 'Admin')
         ORDER BY Timestamp DESC
         LIMIT :limit OFFSET :offset
     ";

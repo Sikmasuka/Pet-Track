@@ -1,232 +1,166 @@
 <?php
-// Start session and include database connection
 session_start();
 require_once 'db.php';
 require_once 'functions/archive-handler.php';
 require_once './functions/logs.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['vet_id'])) {
     header('Location: index.php');
     exit;
 }
 
-// Fetch vet name for greeting
-$stmt = $pdo->prepare("SELECT vet_name FROM Veterinarian WHERE vet_id=?");
+$stmt = $pdo->prepare("SELECT vet_name FROM Veterinarian WHERE vet_id = ?");
 $stmt->execute([$_SESSION['vet_id']]);
-$user = $stmt->fetch();
-$vetName = $user ? htmlspecialchars($user['vet_name']) : "Veterinarian not found";
+$vetName = $stmt->fetchColumn() ? htmlspecialchars($stmt->fetchColumn()) : "Veterinarian";
 
-/**
- * Input validation function
- */
 function validateInput($data)
 {
     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
-/**
- * Handle adding and updating clients via POST requests
- */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Clients
-    $client_name = validateInput($_POST['client_name'] ?? '');
-    $client_address = validateInput($_POST['client_address'] ?? '');
-    $client_contact = validateInput($_POST['client_contact_number'] ?? '');
 
-    // Pets
-    $pet_name = validateInput($_POST['pet_name'] ?? '');
-    $pet_sex = $_POST['pet_sex'] ?? '';
-    $pet_weight = $_POST['pet_weight'] ?? '';
-    $pet_breed = validateInput($_POST['pet_breed'] ?? '');
-    $pet_birth_date = $_POST['pet_birth_date'] ?? '';
-    $pet_species = $_POST['pet_species'] ?? '';
+    // === CLIENT DATA ===
+    $client_name        = validateInput($_POST['client_name'] ?? '');
+    $client_address     = validateInput($_POST['client_address'] ?? '');
+    $client_contact_raw = trim($_POST['client_contact_number'] ?? '');
 
-    // Medical Records
+    // === NORMALIZE CONTACT NUMBER (09... → 639...) ===
+    $digits = preg_replace('/\D/', '', $client_contact_raw);
+
+    if (strlen($digits) === 11 && str_starts_with($digits, '09')) {
+        $client_contact = '63' . substr($digits, 1);
+    } elseif (strlen($digits) === 12 && str_starts_with($digits, '63')) {
+        $client_contact = $digits;
+    } elseif (strlen($digits) === 13 && str_starts_with($digits, '+63')) {
+        $client_contact = substr($digits, 1);
+    } else {
+        $_SESSION['error'] = "Invalid contact number. Please enter 11 digits starting with 09 (e.g. 09171234567)";
+        header('Location: clients.php');
+        exit;
+    }
+
+    if (empty($client_name) || empty($client_address)) {
+        $_SESSION['error'] = "Client name and address are required.";
+        header('Location: clients.php');
+        exit;
+    }
+
+    // === PET & MEDICAL DATA ===
+    $pet_name        = validateInput($_POST['pet_name'] ?? '');
+    $pet_sex         = $_POST['pet_sex'] ?? '';
+    $pet_weight      = $_POST['pet_weight'] ?? '';
+    $pet_breed       = validateInput($_POST['pet_breed'] ?? '');
+    $pet_birth_date  = $_POST['pet_birth_date'] ?? '';
+    $pet_species     = $_POST['pet_species'] ?? '';
+
     $medical_condition = validateInput($_POST['medical_condition'] ?? '');
     $medical_diagnosis = validateInput($_POST['medical_diagnosis'] ?? '');
-    $medical_symptoms = validateInput($_POST['medical_symptoms'] ?? '');
+    $medical_symptoms  = validateInput($_POST['medical_symptoms'] ?? '');
     $medical_treatment = validateInput($_POST['medical_treatment'] ?? '');
 
-    // Basic validation for client fields
-    if (empty($client_name) || empty($client_address) || empty($client_contact)) {
-        $error = "All client fields are required";
-    } elseif (!preg_match('/^[0-9]{11}$/', $client_contact)) {
-        $error = "Contact number must be exactly 11 digits";
-    } else {
-        try {
-            if (isset($_POST['add_client'])) {
-                $hasPetData = !empty($pet_name) || !empty($pet_sex) || !empty($pet_weight) || !empty($pet_breed) || !empty($pet_birth_date) || !empty($pet_species);
-                $hasMedicalData = !empty($medical_condition) || !empty($medical_diagnosis) || !empty($medical_symptoms) || !empty($medical_treatment);
+    try {
+        $pdo->beginTransaction();
 
-                if ($hasPetData && (empty($pet_name) || empty($pet_sex) || empty($pet_weight) || empty($pet_breed) || empty($pet_birth_date) || empty($pet_species))) {
-                    $error = "All pet fields are required if any pet field is provided.";
-                } elseif ($hasMedicalData && (empty($medical_condition) || empty($medical_diagnosis) || empty($medical_symptoms) || empty($medical_treatment))) {
-                    // Medical fields are only required if pet data is also present and medical data is provided
-                    if (!$hasPetData) {
-                        $error = "Cannot add medical record without pet information.";
-                    }
-                    $error = "All medical record fields are required for adding a client";
-                } else {
-                    $pdo->beginTransaction();
-                    // Insert Client
-                    $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number, status, created_at) VALUES (?, ?, ?, 1, NOW())");
-                    $stmt->execute([$client_name, $client_address, $client_contact]);
-                    $client_id = $pdo->lastInsertId();
+        // ==================== ADD NEW CLIENT ====================
+        if (isset($_POST['add_client'])) {
 
-                    $description = $_SESSION['username'] . " added a new client '$client_name'";
+            $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number, status, created_at) VALUES (?, ?, ?, 1, NOW())");
+            $stmt->execute([$client_name, $client_address, $client_contact]);
+            $client_id = $pdo->lastInsertId();
 
-                    if ($hasPetData) {
-                        // Insert Pet
-                        $stmt = $pdo->prepare("INSERT INTO Pet (pet_name, pet_sex, pet_weight, pet_breed, pet_birth_date, pet_species, client_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                        $stmt->execute([$pet_name, $pet_sex, $pet_weight, $pet_breed, $pet_birth_date, $pet_species, $client_id]);
-                        $pet_id = $pdo->lastInsertId();
-                        $description .= ", pet '$pet_name'";
-                        if ($hasMedicalData) {
-                            // Insert Medical Record
-                            $stmt = $pdo->prepare("INSERT INTO Medical_Records (pet_id, date, medical_condition, medical_diagnosis, medical_symptoms, medical_treatment, status, record_date) VALUES (?, CURDATE(), ?, ?, ?, ?, ?, CURDATE())");
-                            $stmt->execute([$pet_id, $medical_condition, $medical_diagnosis, $medical_symptoms, $medical_treatment, 1]);
-                            $description .= ", and medical record";
-                        }
-                    }
+            $logDesc = "added new client '$client_name'";
 
-                    // Log action
-                    logAction($pdo, $_SESSION['vet_id'], 'add', $description, 'Admin');
-                    $pdo->commit();
-                    header('Location: clients.php?message=Client, pet, and medical record added successfully');
-                    exit;
-                }
-            } elseif (isset($_POST['update_client'])) {
-                $pdo->beginTransaction();
-                $client_id = (int)$_POST['client_id'];
-                $pet_id = !empty($_POST['pet_id']) ? (int)$_POST['pet_id'] : null;
-                $record_id = !empty($_POST['record_id']) ? (int)$_POST['record_id'] : null;
+            // Add pet if all required fields are filled
+            if (!empty($pet_name) && !empty($pet_sex) && !empty($pet_species)) {
+                $stmt = $pdo->prepare("INSERT INTO Pet (client_id, pet_name, pet_species, pet_sex, pet_breed, pet_weight, pet_birth_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$client_id, $pet_name, $pet_species, $pet_sex, $pet_breed, $pet_weight ?: null, $pet_birth_date ?: null]);
+                $pet_id = $pdo->lastInsertId();
+                $logDesc .= ", pet '$pet_name'";
 
-                // Debugging: Log received data
-                error_log("Updating client_id: $client_id, pet_id: $pet_id, record_id: $record_id");
-                error_log("Pet fields: " . json_encode([
-                    'pet_name' => $pet_name,
-                    'pet_sex' => $pet_sex,
-                    'pet_weight' => $pet_weight,
-                    'pet_breed' => $pet_breed,
-                    'pet_birth_date' => $pet_birth_date,
-                    'pet_species' => $pet_species
-                ]));
-
-                // Update client
-                $stmt = $pdo->prepare("UPDATE Client SET client_name=?, client_address=?, client_contact_number=? WHERE client_id=?");
-                $stmt->execute([$client_name, $client_address, $client_contact, $client_id]);
-
-                // Initialize log description
-                $description = $_SESSION['username'] . " updated client '$client_name' (ID: $client_id)";
-                $changeMade = false;
-
-                // Check if pet fields are provided
-                $pet_fields_provided = !empty($pet_name) || !empty($pet_sex) || !empty($pet_weight) || !empty($pet_breed) || !empty($pet_birth_date) || !empty($pet_species);
-                if ($pet_fields_provided) {
-                    // Validate pet fields only if all are provided
-                    $all_pet_fields_filled = !empty($pet_name) && !empty($pet_sex) && !empty($pet_weight) && !empty($pet_breed) && !empty($pet_birth_date) && !empty($pet_species);
-                    if ($all_pet_fields_filled) {
-                        // Validate pet_sex and pet_species
-                        $valid_species = ['Dog', 'Cat'];
-                        $valid_sex = ['Male', 'Female'];
-                        if (!in_array($pet_species, $valid_species)) {
-                            $pdo->rollBack();
-                            $error = "Invalid pet species selected.";
-                            header('Location: clients.php?error=' . urlencode($error));
-                            exit;
-                        }
-                        if (!in_array($pet_sex, $valid_sex)) {
-                            $pdo->rollBack();
-                            $error = "Invalid pet sex selected.";
-                            header('Location: clients.php?error=' . urlencode($error));
-                            exit;
-                        }
-
-                        // Check if pet exists
-                        $stmt = $pdo->prepare("SELECT pet_id FROM Pet WHERE pet_id = ? AND client_id = ? AND status = 1");
-                        $stmt->execute([$pet_id, $client_id]);
-                        $existing_pet = $stmt->fetch(PDO::FETCH_ASSOC);
-                        error_log("Pet exists check: " . json_encode($existing_pet));
-
-                        if ($existing_pet) {
-                            // Update existing pet
-                            $stmt = $pdo->prepare("UPDATE Pet SET pet_name=?, pet_sex=?, pet_weight=?, pet_breed=?, pet_birth_date=?, pet_species=? WHERE pet_id=? AND client_id=?");
-                            $stmt->execute([$pet_name, $pet_sex, $pet_weight, $pet_breed, $pet_birth_date, $pet_species, $pet_id, $client_id]);
-                            $changeMade = true;
-                            error_log("Updated pet with pet_id: $pet_id");
-                        } else {
-                            // Insert new pet
-                            $stmt = $pdo->prepare("INSERT INTO Pet (pet_name, pet_sex, pet_weight, pet_breed, pet_birth_date, pet_species, client_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                            $stmt->execute([$pet_name, $pet_sex, $pet_weight, $pet_breed, $pet_birth_date, $pet_species, $client_id]);
-                            $pet_id = $pdo->lastInsertId();
-                            error_log("Inserted new pet with pet_id: $pet_id");
-                            $changeMade = true;
-                        }
-                        // Only append to description if a pet was actually added/updated
-                        $description .= " and pet '$pet_name'";
-                    } else {
-                        $pdo->rollBack();
-                        $error = "All pet fields are required if any pet field is provided.";
-                        header('Location: clients.php?error=' . urlencode($error));
-                        exit;
-                    }
-                }
-
-                // Check if medical fields are provided
-                $medical_fields_provided = !empty($medical_condition) || !empty($medical_diagnosis) || !empty($medical_symptoms) || !empty($medical_treatment);
-                if ($pet_id && $medical_fields_provided) {
-                    $all_medical_fields_filled = !empty($medical_condition) && !empty($medical_diagnosis) && !empty($medical_symptoms) && !empty($medical_treatment);
-                    if (!$all_medical_fields_filled) {
-                        $pdo->rollBack();
-                        $error = "All medical record fields are required if any medical field is provided.";
-                        header('Location: clients.php?error=' . urlencode($error));
-                        exit;
-                    }
-                    if ($record_id) {
-                        // Update existing medical record
-                        $stmt = $pdo->prepare("UPDATE Medical_Records SET date=CURDATE(), medical_condition=?, medical_diagnosis=?, medical_symptoms=?, medical_treatment=?, status=1, updated_at=NOW() WHERE record_id=? AND pet_id=?");
-                        $stmt->execute([$medical_condition, $medical_diagnosis, $medical_symptoms, $medical_treatment, $record_id, $pet_id]);
-                        $changeMade = true;
-                        error_log("Updated medical record with record_id: $record_id");
-                    } else {
-                        // Insert new medical record
-                        $stmt = $pdo->prepare("INSERT INTO Medical_Records (pet_id, date, medical_condition, medical_diagnosis, medical_symptoms, medical_treatment, status, record_date) VALUES (?, CURDATE(), ?, ?, ?, ?, ?, CURDATE())");
-                        $stmt->execute([$pet_id, $medical_condition, $medical_diagnosis, $medical_symptoms, $medical_treatment, 1]);
-                        $changeMade = true;
-                        error_log("Inserted new medical record for pet_id: $pet_id");
-                    }
-                    $description .= " and updated/added a medical record";
-                } elseif ($medical_fields_provided && !$pet_id) {
-                    $pdo->rollBack();
-                    $error = "Cannot add or update medical record without a valid pet";
-                    header('Location: clients.php?error=' . urlencode($error));
-                    exit;
-                }
-
-                if (!isset($error) && $changeMade) {
-                    // Log action
-                    // Only log if an actual change was made beyond just client details
-                    // (client details update is implicitly logged by the client update query)
-                    logAction($pdo, $_SESSION['vet_id'], 'update', $description, 'Admin');
-                    $pdo->commit();
-                    header('Location: clients.php?message=Client' . ($pet_fields_provided ? " and pet" : "") . ($medical_fields_provided ? " and medical record" : "") . ' updated successfully');
-                    exit;
-                } else {
-                    $pdo->rollBack();
-                    header('Location: clients.php?error=' . urlencode($error));
-                    exit;
+                // Add medical record if provided
+                if (!empty($medical_condition) && !empty($medical_diagnosis)) {
+                    $stmt = $pdo->prepare("INSERT INTO Medical_Records (pet_id, medical_condition, medical_diagnosis, medical_symptoms, medical_treatment, date, record_date, status) VALUES (?, ?, ?, ?, ?, CURDATE(), CURDATE(), 1)");
+                    $stmt->execute([$pet_id, $medical_condition, $medical_diagnosis, $medical_symptoms, $medical_treatment]);
+                    $logDesc .= " and medical record";
                 }
             }
-        } catch (PDOException $e) {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
-            $error = "Database error: " . $e->getMessage();
-            error_log("Database error: " . $e->getMessage());
-            header('Location: clients.php?error=' . urlencode($error));
+
+            logAction($pdo, $_SESSION['vet_id'], 'add', $logDesc, 'Admin');
+            $pdo->commit();
+            $_SESSION['message'] = "Client added successfully!";
+            header('Location: clients.php');
             exit;
         }
+
+        // ==================== UPDATE CLIENT ====================
+        elseif (isset($_POST['update_client'])) {
+            $client_id = (int)$_POST['client_id'];
+            $pet_id    = !empty($_POST['pet_id']) ? (int)$_POST['pet_id'] : null;
+            $record_id = !empty($_POST['record_id']) ? (int)$_POST['record_id'] : null;
+
+            // Update client info
+            $stmt = $pdo->prepare("UPDATE Client SET client_name = ?, client_address = ?, client_contact_number = ? WHERE client_id = ?");
+            $stmt->execute([$client_name, $client_address, $client_contact, $client_id]);
+
+            $logDesc = "updated client '$client_name' (ID: $client_id)";
+            $changeMade = true;
+
+            // Update or add pet
+            if (!empty($pet_name) && !empty($pet_sex) && !empty($pet_species)) {
+
+                if ($pet_id) {
+                    // Check if this pet belongs to this client
+                    $checkStmt = $pdo->prepare("SELECT 1 FROM Pet WHERE pet_id = ? AND client_id = ? AND status = 1");
+                    $checkStmt->execute([$pet_id, $client_id]);
+                    $petExists = $checkStmt->fetchColumn(); // returns 1 or false
+                } else {
+                    $petExists = false;
+                }
+
+                if ($petExists) {
+                    // UPDATE existing pet
+                    $stmt = $pdo->prepare("UPDATE Pet 
+                               SET pet_name = ?, pet_sex = ?, pet_species = ?, 
+                                   pet_breed = ?, pet_weight = ?, pet_birth_date = ? 
+                               WHERE pet_id = ?");
+                    $stmt->execute([$pet_name, $pet_sex, $pet_species, $pet_breed, $pet_weight ?: null, $pet_birth_date ?: null, $pet_id]);
+                } else {
+                    // INSERT new pet
+                    $stmt = $pdo->prepare("INSERT INTO Pet 
+                               (client_id, pet_name, pet_species, pet_sex, pet_breed, pet_weight, pet_birth_date) 
+                               VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$client_id, $pet_name, $pet_species, $pet_sex, $pet_breed, $pet_weight ?: null, $pet_birth_date ?: null]);
+                    $pet_id = $pdo->lastInsertId();
+                }
+
+                $logDesc .= ", pet '$pet_name'";
+            }
+
+            // Update or add medical record
+            if ($pet_id && !empty($medical_condition) && !empty($medical_diagnosis)) {
+                if ($record_id) {
+                    $stmt = $pdo->prepare("UPDATE Medical_Records SET medical_condition=?, medical_diagnosis=?, medical_symptoms=?, medical_treatment=?, date=CURDATE() WHERE record_id=? AND pet_id=?");
+                    $stmt->execute([$medical_condition, $medical_diagnosis, $medical_symptoms, $medical_treatment, $record_id, $pet_id]);
+                } else {
+                    $stmt = $pdo->prepare("INSERT INTO Medical_Records (pet_id, medical_condition, medical_diagnosis, medical_symptoms, medical_treatment, date, record_date, status) VALUES (?, ?, ?, ?, ?, CURDATE(), CURDATE(), 1)");
+                    $stmt->execute([$pet_id, $medical_condition, $medical_diagnosis, $medical_symptoms, $medical_treatment]);
+                }
+                $logDesc .= " and medical record";
+            }
+
+            logAction($pdo, $_SESSION['vet_id'], 'update', $logDesc, 'Admin');
+            $pdo->commit();
+            $_SESSION['message'] = "Client updated successfully!";
+            header('Location: clients.php');
+            exit;
+        }
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        error_log("Client handler error: " . $e->getMessage());
+        $_SESSION['error'] = "Operation failed. Please try again.";
+        header('Location: clients.php');
+        exit;
     }
 }
 

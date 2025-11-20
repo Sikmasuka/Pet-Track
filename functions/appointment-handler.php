@@ -160,11 +160,11 @@ try {
     if ($row) {
         $pet_id = $row['pet_id'];
     } else {
-        $stmt = $pdo->prepare(
-            "INSERT INTO Pet
-             (client_id, pet_name, pet_species, pet_sex, pet_breed, pet_weight, pet_birth_date, status,)
-             VALUES (?, ?, ?, ?, ?, ?, ?, 1)"
-        );
+        $stmt = $pdo->prepare("
+        INSERT INTO Pet 
+        (client_id, pet_name, pet_species, pet_sex, pet_breed, pet_weight, pet_birth_date, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+    ");
         $stmt->execute([
             $client_id,
             $pet_name,
@@ -175,6 +175,7 @@ try {
             $pet_birth_date ?: null,
         ]);
         $pet_id = $pdo->lastInsertId();
+
         if (!$pet_id) {
             $pdo->rollBack();
             sendError('Failed to create pet record.');

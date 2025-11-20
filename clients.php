@@ -512,7 +512,15 @@ ob_end_flush();
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Contact Number</label>
-                            <input type="tel" name="client_contact_number" id="clientContactNumber" class="w-full p-2 border border-slate-300 rounded-md text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" pattern="[0-9]{10,}" required>
+                            <input type="tel"
+                                name="client_contact_number"
+                                id="clientContactNumber"
+                                class="w-full p-2 border border-slate-300 rounded-md text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                placeholder="09171234567"
+                                minlength="11"
+                                maxlength="11"
+                                title="Enter 11 digits starting with 09 (e.g. 09171234567)"
+                                required>
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-xs text-gray-500 mb-1">Address</label>
@@ -1140,7 +1148,12 @@ ob_end_flush();
                 document.getElementById('client_id').value = <?= json_encode($clientToEdit['client_id'] ?? '') ?>;
                 document.getElementById('clientName').value = <?= json_encode($clientToEdit['client_name'] ?? '') ?>;
                 document.getElementById('clientAddress').value = <?= json_encode($clientToEdit['client_address'] ?? '') ?>;
-                document.getElementById('clientContactNumber').value = <?= json_encode($clientToEdit['client_contact_number'] ?? '') ?>;
+                // Convert 639... → 09... when editing
+                let contactNumber = <?= json_encode($clientToEdit['client_contact_number'] ?? '') ?>;
+                if (contactNumber && contactNumber.startsWith('63') && contactNumber.length === 12) {
+                    contactNumber = '0' + contactNumber.substring(2);
+                }
+                document.getElementById('clientContactNumber').value = contactNumber;
                 // Set pet values if exists
                 <?php if ($petToEdit): ?>
                     document.getElementById('pet_id').value = <?= json_encode($petToEdit['pet_id'] ?? '') ?>;

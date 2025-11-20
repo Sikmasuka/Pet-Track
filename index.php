@@ -761,12 +761,14 @@ if (isset($_SESSION['admin_id'])) {
                             </div>
                             <div>
                                 <label for="contact" class="block text-sm font-medium text-gray-700">Contact Number</label>
-                                <input type="text" id="contact" name="contact_number" required
+                                <input type="text"
+                                    id="contact"
+                                    name="contact_number"
+                                    required
                                     pattern="^09\d{9}$"
                                     maxlength="11"
-                                    placeholder="e.g. 09171234567"
+                                    placeholder="09171234567"
                                     value="<?= htmlspecialchars($_SESSION['client_contact'] ?? '') ?>"
-                                    title="Enter a valid Philippine number starting with 09 and 11 digits long"
                                     class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
                             </div>
                         </div>

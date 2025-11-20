@@ -67,12 +67,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
                 throw new Exception("Username or email already exists.");
             }
 
-            // Prepend +63 for storage
-            $contact = '+63' . $contact_raw;
+            // Store as 639xxxxxxxxx in database (best for SMS APIs)
+            // Display as 09xxxxxxxxx in forms (best for users)
+            $contact_db = '63' . $contact_raw;           // → 639171234567 (no + sign)
+            $contact_display = '0' . $contact_raw;       // → 09171234567
 
             // Insert into Client table
             $stmt = $pdo->prepare("INSERT INTO Client (client_name, client_address, client_contact_number, status, created_at) VALUES (?, ?, ?, 1, NOW())");
-            $stmt->execute([$fullname, $address, $contact]);
+            $stmt->execute([$fullname, $address, $contact_db]);  // ← changed from $contact to $contact_db
             $client_id = $pdo->lastInsertId();
 
             // Hash password
@@ -86,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             $_SESSION['client_id'] = $client_id;
             $_SESSION['username'] = $username;
             $_SESSION['client_name'] = $fullname;
-            $_SESSION['client_contact'] = $contact;
+            $_SESSION['client_contact'] = $contact_display;
             $_SESSION['client_address'] = $address;
 
             require_once 'logs.php';
