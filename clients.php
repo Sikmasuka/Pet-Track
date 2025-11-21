@@ -27,10 +27,10 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $query = "
     SELECT c.*, 
            (SELECT COUNT(*) 
-            FROM appointments a 
-            WHERE a.contact_number = c.client_contact_number
-              AND a.status = 'Scheduled' 
-              AND a.appointment_date = CURDATE()) > 0 AS has_new_appointment
+            FROM appointments a
+            WHERE a.client_id = c.client_id
+              AND a.status = 'Scheduled'
+              AND a.created_at >= NOW() - INTERVAL 1 HOUR) > 0 AS has_new_appointment
     FROM Client c
     WHERE c.status = 1
     ORDER BY c.client_name " . ($sort === 'desc' ? 'DESC' : 'ASC');
@@ -53,6 +53,33 @@ ob_end_flush();
     <link rel="icon" href="image/logo.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Beautiful Custom Scrollbar inside SweetAlert */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .swal-wide {
+            padding: 20px;
+        }
+
+        .swal-wide .swal2-html-container {
+            padding: 0 !important;
+        }
+
         .az-btn {
             @apply inline-block border border-gray-300 px-3 py-1 rounded text-sm text-gray-700 bg-gray-100 hover:bg-red-500 hover:text-white transition;
         }
@@ -707,6 +734,46 @@ ob_end_flush();
             </div>
         </div>
     </div>
+
+    <!-- Full Medical Record Modal – 100% Matches Add/Edit Modal Style -->
+    <div id="fullRecordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50 p-4 overflow-auto">
+        <div class="bg-white rounded-lg shadow-lg w-11/12 max-w-5xl max-h-none overflow-visible flex flex-col border border-teal-800">
+
+            <!-- Header – IDENTICAL to Add/Edit Modal -->
+            <div class="w-full bg-gradient-to-r from-emerald-600 to-teal-700 rounded-t-lg text-white border-b border-teal-800">
+                <div class="flex justify-between items-center px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-file-medical text-2xl"></i>
+                        <div>
+                            <h3 class="text-lg font-bold" id="recordModalTitle">Medical Record</h3>
+                            <p class="text-sm opacity-90" id="recordModalSubtitle">Loading...</p>
+                        </div>
+                    </div>
+                    <button onclick="closeFullRecordModal()" class="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Body – full height, no scrolling -->
+            <div class="p-6 overflow-visible space-y-6" id="fullRecordContent">
+                <div class="text-center py-20">
+                    <i class="fas fa-spinner fa-spin text-6xl text-emerald-600"></i>
+                    <p class="mt-4 text-lg text-gray-600">Loading medical record...</p>
+                </div>
+            </div>
+
+            <!-- Footer – Same as Add/Edit -->
+            <div class="flex justify-end p-4 bg-gray-50 border-t border-slate-200">
+                <button onclick="closeFullRecordModal()"
+                    class="bg-emerald-600 text-white px-6 py-2.5 rounded-md hover:bg-emerald-700 transition font-medium">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         function showClientModal(action) {
             const modal = document.getElementById('clientModal');
@@ -879,7 +946,8 @@ ob_end_flush();
                             pet_name: pet.pet_name,
                             condition: record.medical_condition,
                             type: 'medical',
-                            date: record.record_date || record.date
+                            date: record.record_date || record.date,
+                            record_id: record.record_id // THIS WAS MISSING!
                         });
                     });
                     const consultations = (pet.consultations || []);
@@ -929,7 +997,7 @@ ob_end_flush();
                                     </div>
                                     <div class="flex justify-between items-center">
                                         <p class="flex-1"><strong class="font-medium text-gray-500">Condition:</strong> ${escapeHtml(item.condition || '-')}</p>
-                                        <button onclick="showFullRecord(${item.record_id})" class="text-green-500 hover:text-green-700 ml-2 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500">
+                                        <button onclick="showFullRecord(${item.record_id || ''})" class="text-green-500 hover:text-green-700 ml-2 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
@@ -1047,30 +1115,114 @@ ob_end_flush();
         }
 
         function showFullRecord(recordId) {
-            fetch(`?get_client_details=&record_id=${recordId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error || !data.record) {
-                        Swal.fire('Error', data.error || 'Could not find record details.', 'error');
-                        return;
+            const modal = document.getElementById('fullRecordModal');
+            const content = document.getElementById('fullRecordContent');
+            const title = document.getElementById('recordModalTitle');
+            const subtitle = document.getElementById('recordModalSubtitle');
+
+            // Show loading state
+            title.textContent = "Medical Record";
+            subtitle.textContent = "Loading...";
+            content.innerHTML = `<div class="text-center py-20"><i class="fas fa-spinner fa-spin text-6xl text-emerald-600"></i></div>`;
+            modal.classList.remove('hidden');
+
+            fetch(`?get_medical_record_details=${recordId}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
-                    const record = data.record;
-                    const pet = data.pet;
-                    Swal.fire({
-                        title: `Medical Record for ${escapeHtml(pet.pet_name)}`,
-                        html: `
-                            <div class="text-left text-sm space-y-2">
-                                <p><strong>Date:</strong> ${new Date(record.date).toLocaleDateString()}</p>
-                                <p><strong>Condition:</strong> ${escapeHtml(record.medical_condition)}</p>
-                                <p><strong>Symptoms:</strong> ${escapeHtml(record.medical_symptoms)}</p>
-                                <p><strong>Diagnosis:</strong> ${escapeHtml(record.medical_diagnosis)}</p>
-                                <p><strong>Treatment:</strong> ${escapeHtml(record.medical_treatment)}</p>
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) throw new Error(data.error);
+
+                    const r = data.record;
+                    const p = data.pet;
+                    const c = data.client;
+                    const vet = data.vet_name ? `Dr. ${escapeHtml(data.vet_name)}` : 'Veterinarian';
+
+                    // Update header
+                    title.textContent = `${escapeHtml(p.pet_name)}'s Medical Record`;
+                    subtitle.textContent = r.record_date ?
+                        new Date(r.record_date).toLocaleDateString('en-PH', {
+                            dateStyle: 'long'
+                        }) :
+                        'Date not recorded';
+
+                    // Fill content – same layout
+                    content.innerHTML = `
+                        <!-- Client & Pet Summary -->
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <span class="block text-xs text-gray-500">Owner</span>
+                                    <span class="font-semibold text-gray-800">${escapeHtml(c.client_name)}</span>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-gray-500">Contact</span>
+                                    <span class="text-gray-700">${escapeHtml(c.client_contact_number || '—')}</span>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-gray-500">Pet</span>
+                                    <span class="font-semibold text-emerald-700">${escapeHtml(p.pet_name)}</span>
+                                    <span class="text-gray-600 text-xs"> (${escapeHtml(p.pet_species)} • ${escapeHtml(p.pet_breed || 'N/A')})</span>
+                                </div>
                             </div>
-                        `,
-                        confirmButtonText: 'Close'
-                    });
-                }).catch(err => Swal.fire('Error', 'Could not fetch record details.', 'error'));
+                        </div>
+
+                        <!-- Medical Details in 2 Columns -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                            <!-- Left Column -->
+                            <div class="space-y-4">
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+                                    <h4 class="text-sm font-semibold text-emerald-600 mb-2 flex items-center gap-2"><i class="fas fa-stethoscope"></i> Conditions</h4>
+                                    ${r.medical_condition ? `
+                                        <div class="flex flex-wrap gap-1">
+                                            ${r.medical_condition.split(',').map(cond => `<span class="condition-tag text-xs">${escapeHtml(cond.trim())}</span>`).join('')}
+                                        </div>
+                                    ` : '<p class="text-gray-400 italic text-xs">No conditions recorded</p>'}
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-red-200 border-l-4 border-l-red-500">
+                                    <h4 class="font-semibold text-red-700 mb-2 flex items-center gap-2 text-sm"><i class="fas fa-thermometer-half"></i> Symptoms</h4>
+                                    <p class="text-gray-700 text-xs leading-relaxed whitespace-pre-wrap">${escapeHtml(r.medical_symptoms || 'Not recorded')}</p>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="space-y-4">
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-blue-200 border-l-4 border-l-blue-500">
+                                    <h4 class="font-semibold text-blue-700 mb-2 flex items-center gap-2 text-sm"><i class="fas fa-diagnoses"></i> Diagnosis</h4>
+                                    <p class="text-gray-700 text-xs leading-relaxed whitespace-pre-wrap">${escapeHtml(r.medical_diagnosis || 'Not recorded')}</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-teal-200 border-l-4 border-l-teal-500">
+                                    <h4 class="font-semibold text-teal-700 mb-2 flex items-center gap-2 text-sm"><i class="fas fa-prescription-bottle-alt"></i> Treatment Plan</h4>
+                                    <p class="text-gray-700 text-xs leading-relaxed whitespace-pre-wrap">${escapeHtml(r.medical_treatment || 'Not recorded')}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Info -->
+                        <div class="text-center pt-4 mt-4 border-t border-slate-200 text-xs text-gray-500">
+                            <p><strong>Veterinarian:</strong> ${vet}</p>
+                            <p class="text-emerald-600 font-medium mt-1">Balingasag Dog & Cat Clinic • Record ID: ${recordId}</p>
+                        </div>
+                    `;
+                })
+                .catch(err => {
+                    content.innerHTML = `
+            <div class="text-center py-16 text-red-600">
+                <i class="fas fa-exclamation-triangle text-6xl"></i>
+                <p class="mt-4 text-lg font-semibold">Failed to Load Record</p>
+                <p class="text-sm text-gray-600">${escapeHtml(err.message)}</p>
+            </div>
+        `;
+                });
         }
+
+        function closeFullRecordModal() {
+            document.getElementById('fullRecordModal').classList.add('hidden');
+        }
+
+
         // Handle URL parameters on page load
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);

@@ -419,16 +419,19 @@ if (isset($_GET['get_medical_record_details']) && is_numeric($_GET['get_medical_
             $vet_name = $vet['vet_name'] ?? $vet_name;
         }
 
-        // Fetch clinic details
-        $stmt = $pdo->query("SELECT name, address, phone FROM Clinic_Details WHERE id = 1");
-        $clinic = $stmt->fetch(PDO::FETCH_ASSOC);
+        // No clinic table? Just send clinic name directly
+        $clinicName = "Balingasag Dog & Cat Clinic";
+        $clinicPhone = "(088) 123-4567"; // or fetch from config later
 
         echo json_encode([
             'record' => $record,
             'pet' => $pet,
             'client' => $client,
             'vet_name' => $vet_name,
-            'clinic' => $clinic ?: ['name' => 'PetTrack Clinic', 'address' => '123 Clinic Street, Animal City', 'phone' => '(123) 456-7890']
+            'clinic' => [
+                'name' => $clinicName,
+                'phone' => $clinicPhone
+            ]
         ]);
     } catch (PDOException $e) {
         echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
