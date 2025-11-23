@@ -1046,34 +1046,109 @@ ob_end_flush();
             }
         }
         // Function to show error in view modal
-        function showViewModalError(errorMessage) {
-            document.getElementById('viewClientName').textContent = 'Error loading data';
-            document.getElementById('viewClientContact').textContent = '-';
-            document.getElementById('viewClientAddress').textContent = '-';
-            const petInfoList = document.getElementById('petInfoList');
-            const medicalInfoList = document.getElementById('medicalInfoList');
-            const medicalHistoryList = document.getElementById('medicalHistoryList');
-            const noPetInfo = document.getElementById('noPetInfo');
-            const noMedicalInfo = document.getElementById('noMedicalInfo');
-            const noMedicalHistory = document.getElementById('noMedicalHistory');
-            if (noPetInfo) noPetInfo.style.display = 'none';
-            if (noMedicalInfo) noMedicalInfo.style.display = 'none';
-            if (noMedicalHistory) noMedicalHistory.style.display = 'none';
-            if (petInfoList) {
-                petInfoList.innerHTML = `<div class="text-center text-red-500 text-sm py-2">
-                <i class="fas fa-exclamation-triangle mr-1"></i>Error loading pets: ${escapeHtml(errorMessage)}
-            </div>`;
+        function showViewModal(clientId, focusPetId = null) {
+            console.log('Opening client view:', {
+                clientId,
+                focusPetId
+            });
+
+            // If called from URL (e.g. from appointments.php)
+            if (!focusPetId) {
+                const urlParams = new URLSearchParams(window.location.search);
+                focusPetId = urlParams.get('focus_pet');
             }
-            if (medicalInfoList) {
-                medicalInfoList.innerHTML = `<div class="text-center text-red-500 text-sm py-2">
-                <i class="fas fa-exclamation-triangle mr-1"></i>Error loading medical info: ${escapeHtml(errorMessage)}
-            </div>`;
-            }
-            if (medicalHistoryList) {
-                medicalHistoryList.innerHTML = `<div class="text-center text-red-500 text-sm py-2">
-                <i class="fas fa-exclamation-triangle mr-1"></i>Error loading medical history: ${escapeHtml(errorMessage)}
-            </div>`;
-            }
+
+            const modal = document.getElementById('clientViewModal');
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+
+            // Loading state
+            document.getElementById('viewClientName').textContent = 'Loading...';
+            document.getElementById('viewClientContact').textContent = 'Loading...';
+            document.getElementById('viewClientAddress').textContent = 'Loading...';
+
+            ['petInfoList', 'medicalInfoList', 'medicalHistoryList'].forEach(id => {
+                document.getElementById(id).innerHTML = '';
+            });
+            ['noPetInfo', 'noMedicalInfo', 'noMedicalHistory'].forEach(id => {
+                document.getElementById(id).style.display = 'block';
+            });
+
+            fetch(`?get_client_details=${clientId}`)
+                .then(r => r.ok ? r.json() : Promise.reject('Failed to load'))
+                .then(data => {
+                    if (data.error) throw new Error(data.error);
+
+                    // Client Info
+                    document.getElementById('viewClientName').textContent = data.client.client_name || '-';
+                    document.getElementById('viewClientContact').textContent = data.client.display_contact || 'Not provided';
+                    document.getElementById('viewClientAddress').textContent = data.client.client_address || 'Not provided';
+
+                    // Filter pets and records if focusPetId is set
+                    let petsToShow = data.pets;
+                    let recordsToShow = data.medicalRecords || [];
+
+                    if (focusPetId) {
+                        focusPetId = parseInt(focusPetId);
+                        petsToShow = data.pets.filter(p => p.pet_id === focusPetId);
+                        recordsToShow = data.medicalRecords.filter(r => parseInt(r.pet_id) === focusPetId);
+                    }
+
+                    // === PET INFO ===
+                    const petList = document.getElementById('petInfoList');
+                    const noPet = document.getElementById('noPetInfo');
+                    if (petsToShow.length > 0) {
+                        noPet.style.display = 'none';
+                        petList.innerHTML = petsToShow.map(pet => `
+                    <div class="bg-white rounded-lg border border-emerald-200 p-4 shadow-sm">
+                        <h5 class="font-semibold text-emerald-700 flex items-center gap-2 mb-3">
+                            <i class="fas fa-paw"></i> ${escapeHtml(pet.pet_name)}
+                            ${focusPetId ? '<span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">Today\'s Patient</span>' : ''}
+                        </h5>
+                        <div class="grid grid-cols-2 gap-3 text-sm text-gray-700">
+                            <div><strong>Species:</strong> ${escapeHtml(pet.pet_species)}</div>
+                            <div><strong>Breed:</strong> ${escapeHtml(pet.pet_breed || 'N/A')}</div>
+                            <div><strong>Sex:</strong> ${escapeHtml(pet.pet_sex)}</div>
+                            <div><strong>Age:</strong> ${calculateAge(pet.pet_birth_date)}</div>
+                            <div><strong>Weight:</strong> ${pet.pet_weight ? pet.pet_weight + ' kg' : '-'}</div>
+                        </div>
+                    </div>
+                `).join('');
+                    }
+
+                    // === MEDICAL INFO & HISTORY (only for focused pet) ===
+                    const medicalList = document.getElementById('medicalInfoList');
+                    const noMedical = document.getElementById('noMedicalInfo');
+                    const historyList = document.getElementById('medicalHistoryList');
+                    const noHistory = document.getElementById('noMedicalHistory');
+
+                    if (recordsToShow.length > 0) {
+                        noMedical.style.display = 'none';
+                        noHistory.style.display = 'none';
+
+                        const recordsHtml = recordsToShow.map(r => `
+                    <div class="bg-white rounded-lg border p-4 shadow-sm text-sm mb-3">
+                        <div class="flex justify-between items-start mb-2">
+                            <strong class="text-emerald-700">Visit on ${new Date(r.record_date || r.date).toLocaleDateString()}</strong>
+                            <button onclick="showFullRecord(${r.record_id})" class="text-green-600 hover:underline text-xs">
+                                View Full Record
+                            </button>
+                        </div>
+                        ${r.medical_condition ? `<p><strong>Condition:</strong> ${escapeHtml(r.medical_condition)}</p>` : ''}
+                        <p><strong>Symptoms:</strong> ${escapeHtml(r.medical_symptoms || '—')}</p>
+                        <p><strong>Diagnosis:</strong> ${escapeHtml(r.medical_diagnosis || '—')}</p>
+                        <p><strong>Treatment:</strong> ${escapeHtml(r.medical_treatment || '—')}</p>
+                    </div>
+                `).join('');
+
+                        medicalList.innerHTML = recordsHtml;
+                        historyList.innerHTML = recordsHtml; // Same content
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    Swal.fire('Error', 'Failed to load client data', 'error');
+                });
         }
         // Function to hide view modal
         function hideViewModal() {
@@ -1610,6 +1685,53 @@ ob_end_flush();
             }
             // Apply initial sort and filter on page load
             applySortAndFilter();
+        });
+
+        // Auto-open Edit Modal + Focus Pet when coming from Appointments "Add Record"
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            const editClientId = params.get('edit_client_id');
+            const autoOpenRecord = params.get('auto_open_record');
+            const petIdFromUrl = params.get('pet_id');
+
+            if (editClientId && autoOpenRecord === '1') {
+                // Small delay to ensure page is ready
+                setTimeout(() => {
+                    showClientModal('edit');
+
+                    // If pet_id is passed, pre-select that pet
+                    if (petIdFromUrl) {
+                        // We'll fetch client data and auto-fill the correct pet
+                        fetch(`?get_client_details=${editClientId}`)
+                            .then(r => r.json())
+                            .then(data => {
+                                const pet = data.pets.find(p => p.pet_id == petIdFromUrl);
+                                if (pet) {
+                                    document.getElementById('pet_id').value = pet.pet_id;
+                                    document.getElementById('petName').value = pet.pet_name;
+                                    document.getElementById('petSpecies').value = pet.pet_species;
+                                    document.getElementById('petSex').value = pet.pet_sex;
+                                    document.getElementById('petBreed').value = pet.pet_breed || '';
+                                    document.getElementById('petWeight').value = pet.pet_weight || '';
+                                    document.getElementById('petBirthDate').value = pet.pet_birth_date || '';
+
+                                    // Make pet fields required
+                                    ['petName', 'petSpecies', 'petSex', 'petBreed', 'petWeight', 'petBirthDate'].forEach(id => {
+                                        const el = document.getElementById(id);
+                                        if (el) el.setAttribute('required', '');
+                                    });
+
+                                    // Focus on medical symptoms for quick typing
+                                    setTimeout(() => {
+                                        const symptoms = document.getElementById('medicalSymptoms');
+                                        if (symptoms) symptoms.focus();
+                                    }, 300);
+                                }
+                            })
+                            .catch(() => console.error('Failed to load pet data'));
+                    }
+                }, 300);
+            }
         });
     </script>
     <!-- scripts -->

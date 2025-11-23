@@ -65,16 +65,45 @@ $stmt->execute([$_SESSION['vet_id']]);
 $my_name_data = $stmt->fetch(PDO::FETCH_ASSOC);
 $my_name = $my_name_data ? $my_name_data['vet_name'] : "Unknown Vet";
 
-// Fetch ALL appointments for this month (without LIMIT for combining with logs)
+// Fetch appointments with client_id and pet_id
 $stmt = $pdo->prepare("
-    SELECT id, owner_name, contact_number, appointment_date, appointment_time, reason, status, duration
-    FROM appointments
-    WHERE appointment_date BETWEEN :start_date AND :end_date
-    AND status = 'Scheduled'
-    ORDER BY appointment_date DESC, appointment_time DESC
+    SELECT 
+        a.id,
+        a.owner_name,
+        a.contact_number,
+        a.appointment_date,
+        a.appointment_time,
+        a.reason,
+        a.status,
+        a.duration,
+        a.pet_id,
+        a.client_id
+    FROM appointments a
+    WHERE a.appointment_date BETWEEN :start_date AND :end_date
+      AND a.status = 'Scheduled'
+    ORDER BY a.appointment_date DESC, a.appointment_time DESC
 ");
-$stmt->execute(['start_date' => $start_date, 'end_date' => $end_date]);
+$stmt->execute([
+    'start_date' => $start_date,
+    'end_date' => $end_date
+]);
 $appoint_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Temporary fix: Update old appointments to have client_id if missing
+if ($appoint_list) {
+    foreach ($appoint_list as $appt) {
+        if (empty($appt['client_id']) && !empty($appt['pet_id'])) {
+            // Try to get client_id from pets table
+            $fix = $pdo->prepare("SELECT client_id FROM pets WHERE pet_id = ?");
+            $fix->execute([$appt['pet_id']]);
+            $client = $fix->fetch();
+            if ($client) {
+                $update = $pdo->prepare("UPDATE appointments SET client_id = ? WHERE id = ?");
+                $update->execute([$client['client_id'], $appt['id']]);
+            }
+        }
+    }
+}
 
 // Set up pagination for appointments only
 $items_per_page = 10;
@@ -449,6 +478,7 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
                             <th class="py-2 px-4 border-b text-left text-sm font-semibold text-gray-600">Duration</th>
                             <th class="py-2 px-4 border-b text-left text-sm font-semibold text-gray-600">Date</th>
                             <th class="py-2 px-4 border-b text-left text-sm font-semibold text-gray-600">Time</th>
+                            <th class="py-2 px-4 border-b text-left text-sm font-semibold text-gray-600">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -467,7 +497,14 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
                                 $duration = htmlspecialchars($appointment['duration']);
                                 $date = htmlspecialchars($appointment['appointment_date']);
                                 // Convert time to 12-hour format (e.g., 2:30 PM)
+                                $pet_id = $appointment['pet_id'] ?? null;
+                                $client_id  = $appointment['client_id'] ?? null;
                                 $time = date('h:i A', strtotime($appointment['appointment_time']));
+
+                                // Safety: If client_id is missing (old data), skip or log
+                                if (!$client_id || !$pet_id) {
+                                    continue; // or show a warning
+                                }
                                 ?>
                                 <tr class="hover:bg-gray-50">
                                     <td class="py-2 px-4 border-b text-sm"><?= $serial ?></td>
@@ -477,6 +514,27 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
                                     <td class="py-2 px-4 border-b text-sm"><?= $duration ?> min</td>
                                     <td class="py-2 px-4 border-b text-sm"><?= $date ?></td>
                                     <td class="py-2 px-4 border-b text-sm"><?= $time ?></td>
+                                    <td class="py-2 px-4 border-b text-sm">
+                                        <div class="flex items-center gap-5 text-xs sm:text-sm">
+
+                                            <!-- VIEW: Show only this pet -->
+                                            <a href="clients.php?view_client_id=<?= $client_id ?>&focus_pet=<?= $pet_id ?>"
+                                                class="text-green-600 hover:text-green-800 font-medium flex items-center gap-1"
+                                                title="View Client & This Pet">
+                                                <i class="fas fa-eye"></i>
+                                                <span class="hidden sm:inline">View</span>
+                                            </a>
+
+                                            <!-- ADD RECORD: Open edit modal + pre-fill pet -->
+                                            <a href="clients.php?edit_client_id=<?= $client_id ?>&auto_open_record=1&pet_id=<?= $pet_id ?>"
+                                                class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
+                                                title="Add Medical Record for This Visit">
+                                                <i class="fas fa-file-medical"></i>
+                                                <span class="hidden sm:inline">Add Record</span>
+                                            </a>
+
+                                        </div>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
