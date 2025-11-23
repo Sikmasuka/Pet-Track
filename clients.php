@@ -1,9 +1,13 @@
 <?php
 require_once __DIR__ . '/functions/clients-handler.php';
+
+
 // Fetch vet data for modal
 $stmt = $pdo->prepare("SELECT * FROM veterinarian WHERE vet_id = ?");
 $stmt->execute([$_SESSION['vet_id']]);
 $vet = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
 // Fetch unique medical conditions for autocomplete suggestions
 $stmtConditions = $pdo->prepare("SELECT medical_condition FROM Medical_Records WHERE medical_condition IS NOT NULL AND medical_condition != ''");
 $stmtConditions->execute();
@@ -17,6 +21,19 @@ foreach ($allConditions as $cond) {
 }
 $uniqueConditions = array_keys($uniqueConditions);
 sort($uniqueConditions);
+
+function format_ph_mobile($number)
+{
+    $number = preg_replace('/\D/', '', $number); // remove everything except digits
+    if (strlen($number) === 12 && str_starts_with($number, '63')) {
+        return '0' . substr($number, 2); // 639171234567 → 09171234567
+    }
+    if (strlen($number) === 11 && str_starts_with($number, '0')) {
+        return $number; // already in 09... format
+    }
+    return $number; // fallback
+}
+
 // Optional: Add defaults if DB is empty
 if (empty($uniqueConditions)) {
     $uniqueConditions = ['runny nose', 'sneezing', 'coughing', 'ear infection']; // Add more as needed
@@ -493,7 +510,7 @@ ob_end_flush();
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($client['client_address']) ?></td>
-                                    <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($client['client_contact_number']) ?></td>
+                                    <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars(format_ph_mobile($client['client_contact_number'])) ?></td>
                                     <td class="px-4 py-2 text-sm">
                                         <button onclick="showViewModal(<?= (int)$client['client_id'] ?>)" class="text-green-500 hover:text-green-400 hover:underline">
                                             <i class="fas fa-eye"></i>
@@ -899,7 +916,8 @@ ob_end_flush();
             try {
                 // Client Information
                 document.getElementById('viewClientName').textContent = data.client.client_name || '-';
-                document.getElementById('viewClientContact').textContent = data.client.client_contact_number || 'Not provided';
+                document.getElementById('viewClientContact').textContent =
+                    data.client.display_contact || 'Not provided';
                 document.getElementById('viewClientAddress').textContent = data.client.client_address || 'Not provided';
                 // Pet Information (only basic info)
                 const petInfoList = document.getElementById('petInfoList');

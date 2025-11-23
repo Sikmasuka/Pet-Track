@@ -761,15 +761,20 @@ if (isset($_SESSION['admin_id'])) {
                             </div>
                             <div>
                                 <label for="contact" class="block text-sm font-medium text-gray-700">Contact Number</label>
-                                <input type="text"
-                                    id="contact"
-                                    name="contact_number"
-                                    required
-                                    pattern="^09\d{9}$"
-                                    maxlength="11"
-                                    placeholder="09171234567"
-                                    value="<?= htmlspecialchars($_SESSION['client_contact'] ?? '') ?>"
-                                    class="mt-1 p-2 text-sm block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#169976] focus:border-[#169976]" />
+                                <div class="flex rounded-md shadow-sm">
+                                    <span class="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md text-sm">+63</span>
+                                    <input type="text"
+                                        id="contact"
+                                        name="contact_number"
+                                        required
+                                        pattern="9\d{9,10}"
+                                        maxlength="11"
+                                        placeholder="9171234567"
+                                        title="Enter 10-11 digits starting with 09 or 9"
+                                        value="<?= htmlspecialchars(preg_replace('/^63|^0/', '', $_SESSION['client_contact'] ?? '')) ?>"
+                                        class="flex-1 block w-full rounded-r-md border border-gray-300 px-3 py-2 text-sm focus:ring-[#169976] focus:border-[#169976]" />
+                                </div>
+                                <small class="text-gray-500">Enter 09171234567 or 9171234567</small>
                             </div>
                         </div>
                         <!-- Pet Information -->
