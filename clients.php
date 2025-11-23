@@ -40,17 +40,39 @@ if (empty($uniqueConditions)) {
 }
 $sort = isset($_GET['sort']) ? strtolower(trim($_GET['sort'])) : 'asc';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
 // Always fetch ALL active clients (no filtering here - done client-side)
 $query = "
-    SELECT c.*, 
-           (SELECT COUNT(*) 
-            FROM appointments a
-            WHERE a.client_id = c.client_id
-              AND a.status = 'Scheduled'
-              AND a.created_at >= NOW() - INTERVAL 1 HOUR) > 0 AS has_new_appointment
-    FROM Client c
-    WHERE c.status = 1
-    ORDER BY c.client_name " . ($sort === 'desc' ? 'DESC' : 'ASC');
+    SELECT 
+    c.client_id,
+    c.client_name,
+    c.client_address,
+    c.client_contact_number,
+    c.created_at,
+    p.pet_id,
+    p.pet_name,
+    p.pet_species,
+    a.id AS appointment_id,
+    a.appointment_date,
+    a.appointment_time,
+    a.reason,
+    a.status AS appointment_status,
+    (
+        SELECT COUNT(*) 
+        FROM appointments a2 
+        WHERE a2.client_id = c.client_id 
+        AND a2.status = 'Scheduled'
+        AND a2.created_at >= NOW() - INTERVAL 1 HOUR
+    ) > 0 AS has_new_appointment
+FROM Client c
+LEFT JOIN pet p ON c.client_id = p.client_id
+LEFT JOIN appointments a ON p.pet_id = a.pet_id AND a.status = 'Scheduled'
+WHERE c.status = 1
+ORDER BY 
+    COALESCE(a.appointment_date, '9999-12-31') DESC,
+    COALESCE(a.appointment_time, '23:59') DESC,
+    c.client_name 
+    " . ($sort === 'desc' ? 'DESC' : 'ASC');
 
 $stmt = $pdo->prepare($query);
 $stmt->execute();
@@ -498,32 +520,75 @@ ob_end_flush();
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-200">
-                            <?php foreach ($clients as $client): ?>
-                                <tr class="hover:bg-gray-50 transition-colors" data-name="<?= htmlspecialchars(strtolower($client['client_name'])) ?>" data-address="<?= htmlspecialchars(strtolower($client['client_address'])) ?>" data-contact="<?= htmlspecialchars(strtolower($client['client_contact_number'])) ?>">
-                                    <td class="px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
-                                        <?= htmlspecialchars($client['client_name']) ?>
-                                        <?php if (isset($client['created_at']) && strtotime($client['created_at']) > strtotime('-24 hours')): ?>
-                                            <span class="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">New</span>
-                                        <?php endif; ?>
-                                        <?php if ($client['has_new_appointment']): ?>
-                                            <span class="ml-2 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">New Appointment</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($client['client_address']) ?></td>
-                                    <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars(format_ph_mobile($client['client_contact_number'])) ?></td>
-                                    <td class="px-4 py-2 text-sm">
-                                        <button onclick="showViewModal(<?= (int)$client['client_id'] ?>)" class="text-green-500 hover:text-green-400 hover:underline">
-                                            <i class="fas fa-eye"></i>
-                                        </button> |
-                                        <a href="?edit_client_id=<?= (int)$client['client_id'] ?>" class="text-indigo-500 hover:text-indigo-400 hover:underline">
-                                            <i class="fas fa-edit"></i>
-                                        </a> |
-                                        <a href="#" onclick="confirmDelete(<?= (int)$client['client_id'] ?>)" class="text-red-500 hover:text-red-400 hover:underline">
-                                            <i class="fa-solid fa-box-archive"></i>
-                                        </a>
+                            <?php if (empty($clients)): ?>
+                                <tr>
+                                    <td colspan="4" class="text-center py-8 text-gray-500">
+                                        No clients found
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php else: ?>
+                                <?php foreach ($clients as $row): ?>
+                                    <tr class="hover:bg-gray-50 transition-colors"
+                                        data-name="<?= htmlspecialchars(strtolower($row['client_name'])) ?>"
+                                        data-address="<?= htmlspecialchars(strtolower($row['client_address'])) ?>"
+                                        data-contact="<?= htmlspecialchars(strtolower($row['client_contact_number'])) ?>">
+
+                                        <td class="px-4 py-3 text-sm text-gray-700">
+                                            <div class="font-medium">
+                                                <?= htmlspecialchars($row['client_name']) ?>
+                                                <?php if (isset($row['created_at']) && strtotime($row['created_at']) > strtotime('-24 hours')): ?>
+                                                    <span class="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">New</span>
+                                                <?php endif; ?>
+                                                <?php if ($row['has_new_appointment']): ?>
+                                                    <span class="ml-2 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">New Appt</span>
+                                                <?php endif; ?>
+                                            </div>
+
+                                            <?php if ($row['pet_name']): ?>
+                                                <div class="text-xs font-semibold text-emerald-700 mt-1">
+                                                    <i class="fas fa-paw mr-1"></i>
+                                                    <?= htmlspecialchars($row['pet_name']) ?>
+                                                    <span class="text-gray-500">(<?= htmlspecialchars($row['pet_species']) ?>)</span>
+                                                </div>
+                                                <?php if ($row['appointment_date']): ?>
+                                                    <div class="text-xs text-gray-600 mt-1">
+                                                        Next visit: <?= date('M d, Y', strtotime($row['appointment_date'])) ?>
+                                                        at <?= date('h:i A', strtotime($row['appointment_time'])) ?>
+                                                        <?php if ($row['reason']): ?> – <?= htmlspecialchars($row['reason']) ?><?php endif; ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <div class="text-xs text-gray-500 italic mt-1">
+                                                    No pet registered yet
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
+
+                                        <td class="px-4 py-3 text-sm text-gray-600">
+                                            <?= htmlspecialchars($row['client_address']) ?>
+                                        </td>
+
+                                        <td class="px-4 py-3 text-sm text-gray-600">
+                                            <?= htmlspecialchars(format_ph_mobile($row['client_contact_number'])) ?>
+                                        </td>
+
+                                        <td class="px-4 py-3 text-sm">
+                                            <button onclick="showViewModal(<?= (int)$row['client_id'] ?><?php if ($row['pet_id']): ?>, <?= (int)$row['pet_id'] ?><?php endif; ?>)"
+                                                class="text-green-500 hover:text-green-400 hover:underline">
+                                                <i class="fas fa-eye"></i>
+                                            </button> |
+                                            <a href="?edit_client_id=<?= (int)$row['client_id'] ?><?php if ($row['pet_id']): ?>&auto_open_record=1&pet_id=<?= (int)$row['pet_id'] ?><?php endif; ?>"
+                                                class="text-indigo-500 hover:text-indigo-400 hover:underline">
+                                                <i class="fas fa-edit"></i>
+                                            </a> |
+                                            <a href="#" onclick="confirmDelete(<?= (int)$row['client_id'] ?>)"
+                                                class="text-red-500 hover:text-red-400 hover:underline">
+                                                <i class="fa-solid fa-box-archive"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

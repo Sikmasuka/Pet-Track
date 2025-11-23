@@ -396,15 +396,15 @@ ob_end_flush();
                                         <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($record['medical_symptoms']) ?></td>
                                         <td class="px-4 py-2 text-sm text-gray-600"><?= htmlspecialchars($record['medical_treatment']) ?></td>
                                         <td class="px-4 py-2 text-sm text-gray-600">
-                                            <?php
-                                            $printData = htmlspecialchars(json_encode([
-                                                'record' => $record,
-                                                'clinic' => $clinic,
-                                                'vet_name' => $vetName
-                                            ]), ENT_QUOTES, 'UTF-8');
-                                            ?>
-                                            <button onclick="printMedicalRecord(this)" data-print='<?= $printData ?>' class="text-indigo-500 hover:text-indigo-700 hover:underline" title="Print Medical Record">
-                                                <i class="fas fa-print"></i>
+                                            <button onclick="printMedicalRecord(this)"
+                                                data-print='<?= htmlspecialchars(json_encode([
+                                                                "record" => $record,
+                                                                "clinic" => $clinic,
+                                                                "vet_name" => $vetName
+                                                            ]), ENT_QUOTES) ?>'
+                                                class="text-emerald-600 hover:text-emerald-800 transition mr-3"
+                                                title="Print Official Medical Record">
+                                                <i class="fas fa-print text-lg"></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -581,80 +581,198 @@ ob_end_flush();
 
         function printMedicalRecord(buttonElement) {
             try {
-                const printDataString = buttonElement.getAttribute('data-print');
-                const {
-                    record,
-                    clinic,
-                    vet_name
-                } = JSON.parse(printDataString);
-                const formattedDate = new Date(record.date).toLocaleDateString('en-US', {
+                const data = JSON.parse(buttonElement.getAttribute('data-print'));
+                const r = data.record;
+                const c = data.clinic;
+                const vet = data.vet_name;
+
+                const visitDate = new Date(r.date).toLocaleDateString('en-PH', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 });
 
                 const printHTML = `
-                <html>
-                <head>
-                    <title>Medical Record for ${record.pet_name}</title>
-                    <style>
-                        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 25px; color: #333; }
-                        .header { text-align: center; border-bottom: 2px solid #4CAF50; padding-bottom: 15px; margin-bottom: 25px; }
-                        .clinic-name { font-size: 24px; font-weight: bold; color: #2E8B57; }
-                        .clinic-details { font-size: 12px; color: #555; }
-                        .section { margin-bottom: 20px; }
-                        .section-title { font-size: 16px; font-weight: bold; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px; }
-                        .details-table { width: 100%; border-collapse: collapse; }
-                        .details-table td { padding: 8px; border-bottom: 1px solid #f0f0f0; }
-                        .details-table td:first-child { font-weight: 600; color: #555; width: 120px; }
-                        .footer { text-align: center; margin-top: 40px; font-size: 12px; color: #777; }
-                        .signature-line { border-top: 1px solid #555; width: 250px; margin: 40px auto 5px auto; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <div class="clinic-name">${clinic.name || 'PetTrack Clinic'}</div>
-                        <div class="clinic-details">${clinic.address || ''} | ${clinic.phone || ''}</div>
-                    </div>
-                    <h2 style="text-align: center; margin-bottom: 20px;">Official Medical Record</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Record - ${r.pet_name}</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            margin: 0;
+            padding: 40px 60px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #000;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid #000;
+            padding: 40px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .clinic-name {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .clinic-subtitle {
+            font-size: 16px;
+            margin: 8px 0 0;
+            font-weight: normal;
+        }
+        .clinic-address {
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 30px 0;
+            text-decoration: underline;
+        }
+        .section {
+            margin-bottom: 28px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-table td {
+            { padding: 8px 0; vertical-align: top; }
+        .info-table td:first-child     { width: 180px; font-weight: bold; }
+        .info-table td:last-child      { padding-left: 15px; }
+        .content-box {
+            border: 1px solid #000;
+            padding: 15px;
+            min-height: 80px;
+            margin-top: 8px;
+            background: #fff;
+        }
+        .signature {
+            margin-top: 60px;
+            text-align: center;
+        }
+        .signature-line {
+            border-top: 1px solid #000;
+            width: 300px;
+            margin: 20px auto 8px auto;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 1px solid #000;
+            padding-top: 15px;
+        }
+        @media print {
+            body { padding: 20px; }
+            .container { border: 2px solid #000; }
+        }
+    </style>
+</head>
+<body>
 
-                    <div class="section">
-                        <div class="section-title">Record Details</div>
-                        <table class="details-table">
-                            <tr><td>Pet Name:</td><td>${record.pet_name || '-'}</td></tr>
-                            <tr><td>Date:</td><td>${formattedDate}</td></tr>
-                            <tr><td>Condition(s):</td><td>${record.medical_condition || '-'}</td></tr>
-                            <tr><td>Symptoms:</td><td>${record.medical_symptoms || '-'}</td></tr>
-                            <tr><td>Diagnosis:</td><td>${record.medical_diagnosis || '-'}</td></tr>
-                            <tr><td>Treatment:</td><td>${record.medical_treatment || '-'}</td></tr>
-                        </table>
-                    </div>
+<div class="container">
 
-                    <div class="footer">
-                        <div class="signature-line"></div>
-                        <div>${vet_name || 'Veterinarian Signature'}</div>
-                        <p>This document is a true and accurate record of the pet's medical history at our clinic.</p>
-                    </div>
-                </body>
-                </html>
-            `;
+    <div class="header">
+        <h1 class="clinic-name">${c.name || 'BALINGASAG DOG & CAT CLINIC'}</h1>
+        <p class="clinic-subtitle">Veterinary Medical Services</p>
+        <div class="clinic-address">
+            ${c.address || 'Balingasag, Misamis Oriental'}<br>
+            ${c.phone ? 'Tel: ' + c.phone : ''}
+        </div>
+    </div>
+
+    <h2 class="title">VETERINARY MEDICAL RECORD</h2>
+
+    <div class="section">
+        <div class="section-title">Patient Information</div>
+        <table class="info-table">
+            <tr>
+                <td>Pet Name</td>
+                <td>: <strong>${r.pet_name || '-'}</strong></td>
+            </tr>
+            <tr>
+                <td>Date of Consultation</td>
+                <td>: ${visitDate}</td>
+            </tr>
+            <tr>
+                <td>Attending Veterinarian</td>
+                <td>: ${vet || 'Veterinarian'}</td>
+            </tr>
+        </table>
+    </div>
+
+    ${r.medical_condition ? `
+    <div class="section">
+        <div class="section-title">Presenting Complaint / Medical Condition</div>
+        <div class="content-box">${r.medical_condition.replace(/\n/g, '<br>')}</div>
+    </div>` : ''}
+
+    <div class="section">
+        <div class="section-title">Clinical Findings / Symptoms</div>
+        <div class="content-box">${(r.medical_symptoms || 'Not recorded').replace(/\n/g, '<br>')}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Diagnosis</div>
+        <div class="content-box">${(r.medical_diagnosis || 'Not recorded').replace(/\n/g, '<br>')}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Treatment / Medication / Recommendations</div>
+        <div class="content-box">${(r.medical_treatment || 'Not recorded').replace(/\n/g, '<br>')}</div>
+    </div>
+
+    <div class="signature">
+        <p><strong>VETERINARIAN'S SIGNATURE</strong></p>
+        <div class="signature-line"></div>
+        <p>${vet || 'Licensed Veterinarian'}<br>
+        Professional Regulation Commission No. ________</p>
+    </div>
+
+    <div class="footer">
+        Medical Record ID: MR-${String(r.record_id).padStart(6, '0')} 
+        • Printed on: ${new Date().toLocaleString('en-PH')}
+        <br>This is an official document of Balingasag Dog & Cat Clinic
+    </div>
+
+</div>
+
+</body>
+</html>`;
 
                 const frame = document.getElementById('printFrame');
                 frame.contentDocument.open();
                 frame.contentDocument.write(printHTML);
                 frame.contentDocument.close();
+
                 setTimeout(() => {
                     frame.contentWindow.focus();
                     frame.contentWindow.print();
-                }, 250);
+                }, 400);
 
-            } catch (error) {
-                console.error('Error preparing print data:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Printing Error',
-                    text: 'Could not prepare the medical record for printing. Please try again.',
-                });
+            } catch (e) {
+                console.error(e);
+                alert('Error generating medical record for printing.');
             }
         }
     </script>
