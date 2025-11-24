@@ -81,11 +81,11 @@ $stmt = $pdo->prepare("
     FROM appointments a
     WHERE a.appointment_date BETWEEN :start_date AND :end_date
       AND a.status = 'Scheduled'
-    ORDER BY a.appointment_date DESC, a.appointment_time DESC
+    ORDER BY a.appointment_date DESC, a.appointment_time DESC, a.id DESC
 ");
 $stmt->execute([
     'start_date' => $start_date,
-    'end_date' => $end_date
+    'end_date'   => $end_date
 ]);
 $appoint_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -111,6 +111,17 @@ $page_num = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, (int)$_GE
 $total_items = count($appoint_list);
 $total_pages = ceil($total_items / $items_per_page);
 $start_point = ($page_num - 1) * $items_per_page;
+
+usort($appoint_list, function ($a, $b) {
+    if ($a['appointment_date'] === $b['appointment_date']) {
+        if ($a['appointment_time'] === $b['appointment_time']) {
+            return $b['id'] - $a['id']; // latest ID first
+        }
+        return strcmp($b['appointment_time'], $a['appointment_time']);
+    }
+    return strcmp($b['appointment_date'], $a['appointment_date']);
+});
+
 $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
 ?>
 
@@ -128,6 +139,20 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        /* HIDE INDICATORS ON PAST DATES - FULLCALENDAR */
+        .fc-day-past .appointment-indicator {
+            display: none !important;
+        }
+
+        .fc-day-past.has-appointments,
+        .fc-day-past.full-day {
+            background: transparent !important;
+        }
+
+        .fc-day-past .fc-daygrid-day-number {
+            opacity: 0.5;
+        }
+
         .chart-container {
             height: 300px;
             width: 100%;
@@ -158,10 +183,6 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
             cursor: pointer;
             position: relative;
             z-index: 1;
-        }
-
-        .fc-daygrid-day.fc-day-other {
-            display: none;
         }
 
         .fc-daygrid-day {
@@ -584,106 +605,168 @@ $paginated_data = array_slice($appoint_list, $start_point, $items_per_page);
     </div>
 
     <script>
-        let calendar;
-        let appointmentCounts = {};
-        let allEvents = {};
+        let calendar; // GLOBAL VARIABLE — KINAHANGLAN NI PARA SA updateDayIndicators()
+
+        function openModal() {
+            document.getElementById('appointmentModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('appointmentModal').classList.add('hidden');
+            document.getElementById('appointmentDetails').innerHTML = '';
+        }
+
+        // FULLY WORKING INDICATOR FUNCTION
+        function updateDayIndicators() {
+            if (!calendar) return; // safety
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            document.querySelectorAll('.fc-daygrid-day').forEach(dayEl => {
+                const dateStr = dayEl.getAttribute('data-date');
+                if (!dateStr) return;
+
+                const cellDate = new Date(dateStr);
+                cellDate.setHours(0, 0, 0, 0);
+
+                // Clear old indicators
+                dayEl.classList.remove('has-appointments', 'full-day');
+                dayEl.querySelector('.appointment-indicator')?.remove();
+
+                // Past dates = no dot
+                if (cellDate < today) return;
+
+                // Find event for this date
+                const event = calendar.getEvents().find(e =>
+                    e.start && e.start.toISOString().slice(0, 10) === dateStr
+                );
+
+                if (event && event.extendedProps?.count > 0) {
+                    const count = event.extendedProps.count;
+
+                    if (count >= 6) {
+                        dayEl.classList.add('full-day');
+                    } else {
+                        dayEl.classList.add('has-appointments');
+                    }
+
+                    const dot = document.createElement('div');
+                    dot.className = `appointment-indicator ${count >= 6 ? 'full-day' : 'has-appointments'}`;
+                    const topEl = dayEl.querySelector('.fc-daygrid-day-top');
+                    if (topEl) topEl.appendChild(dot);
+                }
+            });
+        }
+
+        function handleDateClick(info) {
+            const dateStr = info.dateStr;
+
+            fetch(`./functions/get-appointments.php?start=${dateStr}&end=${dateStr}&t=${Date.now()}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network error');
+                    return response.json();
+                })
+                .then(data => {
+                    const appointments = data[0]?.extendedProps?.appointments || [];
+                    const count = appointments.length;
+
+                    document.getElementById('modalDate').textContent =
+                        new Date(dateStr).toLocaleDateString('en-PH', {
+                            weekday: 'long',
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
+
+                    document.getElementById('appointmentCount').textContent =
+                        `${count} appointment${count !== 1 ? 's' : ''}`;
+
+                    const container = document.getElementById('appointmentDetails');
+                    container.innerHTML = '';
+
+                    if (count === 0) {
+                        container.innerHTML = '<p class="text-center text-gray-500 py-10 text-lg">No appointments scheduled for this day.</p>';
+                    } else {
+                        appointments.forEach(appt => {
+                            const time12 = new Date('2025-01-01 ' + appt.appointment_time)
+                                .toLocaleTimeString('en-US', {
+                                    hour: 'numeric',
+                                    minute: '2-digit',
+                                    hour12: true
+                                });
+
+                            container.innerHTML += `
+                            <div class="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-2xl p-6 border-2 border-teal-200 shadow-lg mb-5">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-teal-900">${appt.owner_name}</h3>
+                                        <div class="mt-3 space-y-2 text-gray-700">
+                                            <p><i class="fas fa-clock text-teal-600"></i> <strong>${time12}</strong></p>
+                                            <p><i class="fas fa-paw text-teal-600"></i> ${appt.reason || 'Check-up'}</p>
+                                            <p><i class="fas fa-phone text-teal-600"></i> ${appt.contact_number}</p>
+                                        </div>
+                                    </div>
+                                    <a href="clients.php?view_client_id=${appt.client_id}&focus_pet=${appt.pet_id}"
+                                       class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition transform hover:scale-105">
+                                       View Client
+                                    </a>
+                                </div>
+                            </div>`;
+                        });
+                    }
+
+                    openModal();
+                })
+                .catch(err => {
+                    console.error('Fetch error:', err);
+                    Swal.fire('Error', 'Failed to load appointments. Please try again.', 'error');
+                });
+        }
 
         document.addEventListener("DOMContentLoaded", function() {
-            var calendarEl = document.getElementById("calendar");
+            const calendarEl = document.getElementById('calendar');
+
             calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: "dayGridMonth",
-                initialDate: "<?= $start_date ?>", // Use PHP-generated start date
+                initialView: 'dayGridMonth',
+                initialDate: '<?= $start_date ?>',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: ''
                 },
-                events: function(fetchInfo, successCallback, failureCallback) {
-                    const start = fetchInfo.startStr.split('T')[0]; // Extract date part
-                    const end = fetchInfo.endStr.split('T')[0]; // Extract date part
-                    console.log('Fetching events for:', {
-                        start,
-                        end
-                    });
-                    fetch(`./functions/get-appointments.php?start=${start}&end=${end}`)
-                        .then((response) => {
-                            console.log('Fetch response status:', response.status);
-                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                            return response.text();
-                        })
-                        .then((text) => {
-                            console.log('Raw response from get-appointments.php:', text);
-                            let events;
-                            try {
-                                events = JSON.parse(text);
-                                console.log('Parsed events:', events);
-                                if (events.error) {
-                                    throw new Error(events.error);
-                                }
-                            } catch (e) {
-                                console.error("JSON parse error:", e, "Response:", text);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'Failed to load appointments: Invalid data format.',
-                                    confirmButtonColor: '#dc3545'
-                                });
-                                events = [];
-                            }
-                            processEvents(events, successCallback);
-                        })
-                        .catch((error) => {
-                            console.error("Fetch error:", error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: `Failed to load appointments: ${error.message}`,
-                                confirmButtonColor: '#dc3545'
-                            });
-                            processEvents([], successCallback);
-                        });
+                events: './functions/get-appointments.php',
+                dateClick: handleDateClick,
+                eventDidMount: info => info.el.style.display = 'none',
+                dayCellDidMount: function(info) {
+                    // Run after events are loaded
+                    setTimeout(updateDayIndicators, 600);
                 },
-                dateClick: function(info) {
-                    handleDateClick(info);
-                },
-                eventDidMount: function(info) {
-                    info.el.style.display = "none";
-                },
-                eventsSet: function(events) {
-                    console.log('Events set, updating calendar appearance');
-                    updateCalendarAppearance();
-                },
-                dayMaxEvents: false,
-                showNonCurrentDates: false,
                 timeZone: 'Asia/Manila'
             });
+
             calendar.render();
 
-            // Force refresh to ensure latest data
-            calendar.refetchEvents();
+            // Re-apply indicators when events or month changes
+            calendar.on('eventsSet', updateDayIndicators);
+            calendar.on('datesSet', updateDayIndicators);
 
-            // Check for session messages
+            // Close modal when clicking outside
+            document.getElementById('appointmentModal').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+
+            // Session messages
             <?php if (isset($_SESSION['success'])): ?>
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: '<?php echo $_SESSION['success']; ?>',
-                    confirmButtonColor: '#28a745'
-                });
+                Swal.fire('Success!', '<?= addslashes($_SESSION['success']) ?>', 'success');
                 <?php unset($_SESSION['success']); ?>
             <?php elseif (isset($_SESSION['error'])): ?>
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: '<?php echo $_SESSION['error']; ?>',
-                    confirmButtonColor: '#dc3545'
-                });
+                Swal.fire('Error', '<?= addslashes($_SESSION['error']) ?>', 'error');
                 <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
         });
     </script>
 
-    <script src="./js/appointment-handler.js"></script>
     <script src="./js/dashboard.js"></script>
     <script src="./js/sidebarHandler.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

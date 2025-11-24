@@ -1,58 +1,64 @@
 <?php
-// functions/get-appointments.php
-require_once __DIR__ . '/../db.php';
-date_default_timezone_set('Asia/Manila');
+session_start();
+require_once __DIR__ . "/../db.php"; // Adjust path if needed
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-header('Pragma: no-cache');
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
-
-/* ------------------------------------------------------------------
-   Parameters – start & end dates (YYYY-MM-DD)
------------------------------------------------------------------- */
-$start = $_GET['start'] ?? date('Y-m-01');
-$end   = $_GET['end']   ?? date('Y-m-t');
-
-$start = substr($start, 0, 10);
-$end   = substr($end,   0, 10);
-
-if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $start) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $end)) {
-    echo json_encode([]);
-    exit;
-}
+$start = $_GET['start'] ?? date('Y-m-d');
+$end = $_GET['end'] ?? $start;
 
 try {
     $stmt = $pdo->prepare("
-        SELECT appointment_date, appointment_time
-        FROM appointments
-        WHERE appointment_date BETWEEN ? AND ?
-          AND status = 'Scheduled'
+        SELECT 
+            a.appointment_date,
+            a.appointment_time,
+            a.owner_name,
+            a.contact_number,
+            a.reason,
+            a.pet_id,
+            a.client_id
+        FROM appointments a
+        WHERE a.appointment_date BETWEEN ? AND ?
+          AND a.status = 'Scheduled'
+        ORDER BY a.appointment_date, a.appointment_time
     ");
     $stmt->execute([$start, $end]);
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Group by date
     $events = [];
-    foreach ($rows as $row) {
-        $time = substr($row['appointment_time'], 0, 5);
-        $start_dt = $row['appointment_date'] . 'T' . $time . ':00';
-        $end_dt   = date('Y-m-d\TH:i:s', strtotime($start_dt . ' +90 minutes'));
-
-        $events[] = [
-            'start' => $start_dt,
-            'end'   => $end_dt,
-            'title' => 'Booked'
+    foreach ($appointments as $appt) {
+        $date = $appt['appointment_date'];
+        if (!isset($events[$date])) {
+            $events[$date] = [
+                'start' => $date,
+                'title' => '',
+                'extendedProps' => [
+                    'count' => 0,
+                    'appointments' => []
+                ]
+            ];
+        }
+        $events[$date]['extendedProps']['count']++;
+        $events[$date]['extendedProps']['appointments'][] = [
+            'owner_name' => $appt['owner_name'],
+            'contact_number' => $appt['contact_number'],
+            'appointment_time' => $appt['appointment_time'],
+            'reason' => $appt['reason'] ?? 'Check-up',
+            'pet_id' => $appt['pet_id'],
+            'client_id' => $appt['client_id']
         ];
     }
 
-    echo json_encode($events);
+    // Convert to indexed array for FullCalendar
+    $result = array_values($events);
+
+    // Debug: Remove this line after testing
+    // error_log("get-appointments.php called for $start to $end → " . count($result) . " dates with appointments");
+
+    echo json_encode($result);
 } catch (Exception $e) {
+    error_log("get-appointments.php error: " . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => 'Server error']);
-    error_log('get-appointments error: ' . $e->getMessage());
+    echo json_encode([]);
 }
