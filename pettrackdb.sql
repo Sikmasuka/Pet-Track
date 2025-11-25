@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2025 at 12:17 PM
+-- Generation Time: Nov 24, 2025 at 02:23 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -17,15 +17,21 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+--
 -- Database: `pettrackdb`
+--
+
 -- --------------------------------------------------------
+
+--
 -- Table structure for table `admin`
+--
+
 CREATE TABLE `admin` (
-  `admin_id` int(11) NOT NULL AUTO_INCREMENT,
+  `admin_id` int(11) NOT NULL,
   `admin_username` varchar(50) NOT NULL,
   `admin_name` varchar(100) DEFAULT NULL,
-  `admin_password` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`admin_id`)
+  `admin_password` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -45,6 +51,8 @@ INSERT INTO `admin` (`admin_id`, `admin_username`, `admin_name`, `admin_password
 
 CREATE TABLE `appointments` (
   `id` int(11) NOT NULL,
+  `client_id` int(11) DEFAULT NULL,
+  `pet_id` int(11) DEFAULT NULL,
   `owner_name` varchar(100) NOT NULL,
   `contact_number` varchar(20) NOT NULL,
   `appointment_date` date DEFAULT NULL,
@@ -60,20 +68,8 @@ CREATE TABLE `appointments` (
 -- Dumping data for table `appointments`
 --
 
-INSERT INTO `appointments` (`id`, `owner_name`, `contact_number`, `appointment_date`, `appointment_time`, `reason`, `status`, `created_at`, `updated_at`, `duration`) VALUES
-(46, 'tikoy', '091230123', '2025-08-30', '13:00:00', 'Checkup', 'Scheduled', '2025-08-24 05:37:52', NULL, 90),
-(47, 'tikay', '1231242131', '2025-08-30', '15:00:00', 'Surgery', 'Scheduled', '2025-08-24 05:40:33', NULL, 90),
-(48, 'James Lee', '09372841234', '2025-09-10', '14:30:00', 'Checkup', 'Scheduled', '2025-08-27 14:57:40', NULL, 90),
-(49, 'Mikaykay Abecia', '532324223123', '2025-09-10', '09:30:00', 'Grooming', 'Scheduled', '2025-08-27 15:01:44', NULL, 90),
-(50, 'Seongji Yeok', '093925166643', '2025-08-28', '14:30:00', 'Vaccination', 'Scheduled', '2025-08-27 15:37:48', NULL, 90),
-(51, 'Sheryl Lozano', '21312421312', '2025-09-18', '14:30:00', 'Grooming', 'Scheduled', '2025-09-08 01:57:16', NULL, 90),
-(52, 'Danreb Salvacion', '01234567891', '2025-09-18', '16:30:00', 'Grooming', 'Scheduled', '2025-09-11 03:58:26', NULL, 90),
-(53, 'tokneneng', '09392516664', '2025-09-18', '09:30:00', 'Vaccination', 'Scheduled', '2025-09-11 13:48:20', NULL, 90),
-(54, 'Mario Santos', '12345678901', '2025-10-08', '09:00:00', 'Grooming', 'Scheduled', '2025-10-01 13:33:21', NULL, 90),
-(55, 'Danreb Salvacionss', 'Dongkits', '2025-10-09', '14:30:00', 'Checkup', 'Scheduled', '2025-10-02 05:26:30', NULL, 90),
-(56, 'Maricar T. Bahala', '12345678910', '2025-10-10', '14:30:00', 'Checkup', 'Scheduled', '2025-10-04 14:07:00', NULL, 90),
-(57, 'Bulilit Dela Cera', '09392516664', '2025-10-10', '09:30:00', 'Checkup', 'Scheduled', '2025-10-06 13:35:57', NULL, 90),
-(58, 'Maris Awitin', '012345678901', '2025-10-11', '14:30:00', 'Vaccination', 'Scheduled', '2025-10-06 14:28:35', NULL, 90);
+INSERT INTO `appointments` (`id`, `client_id`, `pet_id`, `owner_name`, `contact_number`, `appointment_date`, `appointment_time`, `reason`, `status`, `created_at`, `updated_at`, `duration`) VALUES
+(98, 77, 89, 'Jan Paul Michael M. Dela Cera', '639392516664', '2025-11-24', '08:00:00', 'Vaccination', 'Scheduled', '2025-11-24 06:00:11', NULL, 90);
 
 -- --------------------------------------------------------
 
@@ -89,22 +85,6 @@ CREATE TABLE `archive` (
   `deleted_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `archive`
---
-
-INSERT INTO `archive` (`id`, `original_table`, `original_id`, `data`, `deleted_at`) VALUES
-(1, 'Pet', 15, '{\"pet_id\":15,\"pet_name\":\"tigon\",\"pet_sex\":\"Female\",\"pet_weight\":\"5.00\",\"pet_breed\":\"bulldog\",\"pet_birth_date\":\"2345-11-12\",\"client_id\":16}', '2025-07-19 00:06:14'),
-(8, 'Client', 16, '{\"client_id\":16,\"client_name\":\"kogang\",\"client_address\":\"maniso\",\"client_contact_number\":\"29384956758\"}', '2025-07-20 16:18:29'),
-(10, 'Client', 25, '{\"client_id\":25,\"client_name\":\"kangkong\",\"client_address\":\"barangay 6\",\"client_contact_number\":\"9828383829\"}', '2025-07-20 18:20:16'),
-(12, 'Client', 24, '{\"client_id\":24,\"client_name\":\"kangkong\",\"client_address\":\"barangay 6\",\"client_contact_number\":\"9828383829\"}', '2025-07-20 18:20:19'),
-(14, 'Client', 23, '{\"client_id\":23,\"client_name\":\"kangkong\",\"client_address\":\"barangay 6\",\"client_contact_number\":\"9828383829\"}', '2025-07-20 18:20:22'),
-(16, 'Client', 22, '{\"client_id\":22,\"client_name\":\"kangkong\",\"client_address\":\"barangay 6\",\"client_contact_number\":\"9828383829\"}', '2025-07-20 18:20:25'),
-(18, 'Client', 20, '{\"client_id\":20,\"client_name\":\"kangkong\",\"client_address\":\"barangay 6\",\"client_contact_number\":\"9828383829\"}', '2025-07-20 18:20:30'),
-(20, 'Client', 21, '{\"client_id\":21,\"client_name\":\"kangkong\",\"client_address\":\"barangay 6\",\"client_contact_number\":\"9828383829\"}', '2025-07-20 18:20:32'),
-(21, 'Pet', 18, '{\"pet_id\":18,\"pet_name\":\"tigok\",\"pet_sex\":\"Male\",\"pet_weight\":\"8.00\",\"pet_breed\":\"bulldog\",\"pet_birth_date\":\"2123-12-31\",\"client_id\":19}', '2025-07-20 18:59:05'),
-(22, 'Client', 19, '{\"client_id\":19,\"client_name\":\"kangkong\",\"client_address\":\"barangay 6\",\"client_contact_number\":\"9828383829\"}', '2025-07-20 18:59:05');
-
 -- --------------------------------------------------------
 
 --
@@ -117,18 +97,59 @@ CREATE TABLE `client` (
   `client_address` text DEFAULT NULL,
   `client_contact_number` varchar(15) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `client`
 --
 
-INSERT INTO `client` (`client_id`, `client_name`, `client_address`, `client_contact_number`, `status`, `updated_at`) VALUES
-(42, 'Roselyn Villanueva', 'Purok 2, Barangay Cogon, Balingasag, Misamis Oriental', '09176543210', 1, '2025-09-11 04:03:02'),
-(44, 'Roberto Lagbas', 'Brgy. Mandangoa, Balingasag, Misamis Oriental', '09281234567', 1, NULL),
-(47, 'Boknoy Esmaels', 'Barangay 3, Balingasag, Misamis Oriental', '09392516664', 1, NULL),
-(48, 'Maria Teresa Dela Cruz', 'Poblacion, Balingasag, Misamis Oriental', '09123456789', 1, NULL);
+INSERT INTO `client` (`client_id`, `client_name`, `client_address`, `client_contact_number`, `status`, `updated_at`, `created_at`) VALUES
+(75, 'Eadrian Basadre', 'barangay 2, Balingasag, Misamis Oriental', '639392516664', 1, NULL, '2025-11-22 23:40:03'),
+(76, 'Maria Santos', 'Blk 12 Lot 7, Riverside Subdivision, Gusa, Cagayan de Oro City', '639982345671', 1, NULL, '2025-11-23 21:52:15'),
+(77, 'Jan Paul Michael M. Dela Cera', 'barangay 6, Balingasag, Misamis Oriental', '639392516664', 1, NULL, '2025-11-23 23:05:54');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `client_accounts`
+--
+
+CREATE TABLE `client_accounts` (
+  `account_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `client_accounts`
+--
+
+INSERT INTO `client_accounts` (`account_id`, `client_id`, `username`, `email`, `password`, `created_at`, `updated_at`) VALUES
+(7, 75, 'eadrian', 'eadrian_basadre@gmail.com', '$2y$10$Mxn/QjPQ7hc3/z0Rtp48X.LjvD.JFrbmk5dLtPZNIWYdoP0i5wOxC', '2025-11-22 15:40:03', '2025-11-22 15:40:03'),
+(8, 77, 'Jan Paul', 'delacerajanpaul22@gmail.com', '$2y$10$nh2qNegLcMpibqX9k0o3YORrwnaTg/muArJV4aLxRxqs9sazGdyLK', '2025-11-23 15:05:54', '2025-11-23 15:05:54');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `consultations`
+--
+
+CREATE TABLE `consultations` (
+  `consultation_id` int(11) NOT NULL,
+  `pet_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `vet_name` varchar(100) DEFAULT NULL,
+  `consultation_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `notes` text DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -151,327 +172,320 @@ CREATE TABLE `logs` (
 --
 
 INSERT INTO `logs` (`Log_ID`, `User_ID`, `Role`, `Action_Type`, `Table_Affected`, `Description`, `Timestamp`) VALUES
-(111, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-15 21:16:25'),
-(112, 1, NULL, 'update', 'Admin', 'janpaul updated client \'janpaul2\' with pet \'chokoy\'', '2025-08-15 21:30:14'),
-(113, 1, NULL, 'update', 'Admin', 'janpaul updated client \'janpaul3\' with pet \'chokoy\'', '2025-08-15 21:30:27'),
-(114, 1, NULL, 'update', 'Admin', 'janpaul updated client \'janpaul2\'', '2025-08-15 22:30:22'),
-(115, 1, NULL, 'update', 'Admin', 'janpaul updated client \'janpaul3\'', '2025-08-15 22:30:30'),
-(116, 1, NULL, 'Login', 'Admin', 'admin Successfully Logged in', '2025-08-15 22:30:37'),
-(117, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-16 21:03:49'),
-(118, 1, NULL, 'Login', 'Admin', 'admin Successfully Logged in', '2025-08-16 21:03:57'),
-(119, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-16 22:05:35'),
-(120, 1, NULL, 'Login', 'Admin', 'admin Successfully Logged in', '2025-08-16 22:06:12'),
-(121, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-16 22:08:41'),
-(122, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-16 22:58:24'),
-(123, 1, NULL, 'Login', 'Admin', 'admin Successfully Logged in', '2025-08-16 23:02:13'),
-(124, 1, NULL, 'Login', 'Admin', 'admin Successfully Logged in', '2025-08-16 23:05:13'),
-(125, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-16 23:24:46'),
-(126, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-17 18:36:09'),
-(127, 0, NULL, 'Appointment', 'Guest', 'Guest Test User2 booked an appointment', '2025-08-17 19:14:30'),
-(128, 0, NULL, 'Appointment', 'Guest', 'Guest janpaul25 booked an appointment on September 11, 2025 at 3:55 PM', '2025-08-17 20:21:08'),
-(129, 1, NULL, 'Login', 'Admin', 'admin Successfully Logged in', '2025-08-17 20:21:29'),
-(130, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-17 20:52:44'),
-(131, 0, NULL, 'Appointment', 'Guest', 'Guest Test User234 booked an appointment on September 10, 2025 at 2:45 PM', '2025-08-17 20:55:09'),
-(132, 0, NULL, 'Appointment', 'Guest', 'Guest Test User6 booked an appointment on August 20, 2025 at 2:41 PM', '2025-08-17 21:27:11'),
-(133, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-17 22:16:17'),
-(134, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-18 09:35:33'),
-(135, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-18 09:38:51'),
-(136, 1, NULL, 'Login', 'Admin', 'admin Successfully Logged in', '2025-08-18 09:40:16'),
-(137, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-18 09:57:05'),
-(138, 1, NULL, 'Login', 'Admin', 'admin Successfully Logged in', '2025-08-18 09:57:15'),
-(139, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-18 10:09:36'),
-(140, 1, NULL, 'Login', 'Admin', 'admin Successfully Logged in', '2025-08-18 10:28:33'),
-(141, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-18 10:33:37'),
-(142, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-18 10:34:07'),
-(143, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-18 11:38:13'),
-(144, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-18 11:39:22'),
-(145, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-18 11:40:08'),
-(146, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-18 11:42:47'),
-(147, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-18 11:44:00'),
-(148, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-18 11:44:10'),
-(149, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-19 21:48:06'),
-(150, 0, NULL, 'Appointment', 'Guest', 'Guest Samuel Seo booked an appointment on August 21, 2025 at 3:23 PM', '2025-08-19 21:50:19'),
-(151, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-19 22:10:46'),
-(152, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-20 11:01:33'),
-(153, 1, NULL, 'Login', 'Veterinarian', 'Jan Paul Michael M. Dela Cera Successfully Logged in', '2025-08-20 11:03:56'),
-(154, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-20 11:51:49'),
-(155, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-20 11:52:03'),
-(156, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-20 11:56:11'),
-(157, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-20 11:56:27'),
-(158, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-20 18:12:13'),
-(159, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-20 18:22:24'),
-(160, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-20 19:15:21'),
-(161, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-20 19:25:31'),
-(162, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-20 19:31:20'),
-(163, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-20 19:31:41'),
-(164, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-20 19:34:10'),
-(165, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-20 19:59:47'),
-(166, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-20 20:00:24'),
-(167, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-20 20:18:32'),
-(168, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-21 11:21:21'),
-(169, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-21 12:49:12'),
-(170, 0, NULL, 'Appointment', 'Guest', 'Guest Daniel Park booked an appointment on August 22, 2025 at 2:23 PM', '2025-08-21 12:49:46'),
-(171, 0, NULL, 'Appointment', 'Guest', 'Guest Shingen Yamazaki booked an appointment on August 23, 2025 at 3:21 PM', '2025-08-21 12:52:46'),
-(172, 4, NULL, 'delete', 'Admin', 'samuel archived client \'janpaul3\'', '2025-08-21 13:36:16'),
-(173, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-22 08:12:41'),
-(174, 4, NULL, 'update', 'Admin', 'samuel updated client \'janpaul4\'', '2025-08-22 08:13:14'),
-(175, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-22 08:13:50'),
-(176, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-22 08:46:25'),
-(177, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-22 09:55:06'),
-(178, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-24 10:25:16'),
-(179, 0, NULL, 'Appointment', 'Guest', 'Guest shikoy2 booked an appointment on August 30, 2025 at 2:12 PM', '2025-08-24 11:52:19'),
-(180, 0, NULL, 'Appointment', 'Guest', 'Guest tikoy booked an appointment on September 12, 2025 at 2:00 PM', '2025-08-24 12:20:51'),
-(181, 0, NULL, 'Appointment', 'Guest', 'Guest tikoy booked an appointment on September 20, 2025 at 1:30 PM', '2025-08-24 12:23:08'),
-(182, 0, NULL, 'Appointment', 'Guest', 'Guest tikoykoy booked an appointment on August 28, 2025 at 2:30 PM', '2025-08-24 13:12:20'),
-(183, 0, NULL, 'Appointment', 'Guest', 'Guest tikoy booked an appointment on August 30, 2025 at 1:00 PM', '2025-08-24 13:37:52'),
-(184, 0, NULL, 'Appointment', 'Guest', 'Guest tikay booked an appointment on August 30, 2025 at 3:00 PM', '2025-08-24 13:40:33'),
-(185, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-25 00:09:31'),
-(186, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-25 00:13:48'),
-(187, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-25 14:06:28'),
-(188, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-27 22:57:04'),
-(189, 0, NULL, 'Appointment', 'Guest', 'Guest James Lee booked an appointment on September 10, 2025 at 2:30 PM', '2025-08-27 22:57:40'),
-(190, 0, NULL, 'Appointment', 'Guest', 'Guest Mikaykay Abecia booked an appointment on September 10, 2025 at 9:30 AM', '2025-08-27 23:01:44'),
-(191, 0, NULL, 'Appointment', 'Guest', 'Guest Seongji Yeok booked an appointment on August 28, 2025 at 2:30 PM', '2025-08-27 23:37:48'),
-(192, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-28 22:53:34'),
-(193, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-29 07:13:42'),
-(194, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-29 07:14:05'),
-(195, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-29 07:19:23'),
-(196, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-29 10:03:39'),
-(197, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-29 20:53:50'),
-(198, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Maria Santos\', pet \'Buddy\', and medical record', '2025-08-29 22:24:08'),
-(199, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Maria Santos\'', '2025-08-29 23:01:59'),
-(200, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Odemil Uyan\'', '2025-08-29 23:02:44'),
-(201, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Odemil Uyan\'', '2025-08-29 23:08:42'),
-(202, 4, NULL, 'restore', 'Admin', 'samuel restored client \'Odemil Uyan\' and associated pets and medical records', '2025-08-29 23:22:02'),
-(203, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Odemil Uyan\'', '2025-08-29 23:22:10'),
-(204, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-30 23:50:22'),
-(205, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Odemil Uyan\' and associated pets and medical records', '2025-08-30 23:50:36'),
-(206, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Maria Santos\'', '2025-08-30 23:50:43'),
-(207, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Maria Santos\' and associated pets and medical records', '2025-08-30 23:50:47'),
-(208, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-31 09:35:37'),
-(209, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-31 13:15:27'),
-(210, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-31 20:56:51'),
-(211, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-31 21:19:51'),
-(212, 4, NULL, 'update', 'Admin', 'samuel updated medical record ID 23 for pet ID 35 (\'chokoy\')', '2025-08-31 21:20:28'),
-(213, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-08-31 21:27:07'),
-(214, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-31 22:15:05'),
-(215, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-08-31 22:48:19'),
-(216, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-01 16:02:45'),
-(217, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-01 16:03:46'),
-(218, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-01 16:16:09'),
-(219, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-01 16:19:42'),
-(220, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-01 16:47:20'),
-(221, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-01 21:15:56'),
-(222, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-01 21:16:29'),
-(223, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-01 21:18:24'),
-(224, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-01 21:18:47'),
-(225, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-01 21:19:07'),
-(226, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-01 21:20:05'),
-(227, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-01 21:44:25'),
-(228, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-01 21:45:14'),
-(229, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-01 21:53:45'),
-(230, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-02 22:25:37'),
-(231, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Maria Santos\', pet \'Buddy\', and medical record', '2025-09-02 22:28:21'),
-(232, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Maria Santos\'', '2025-09-02 22:28:26'),
-(233, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Maria Santos\' and associated pets and medical records', '2025-09-02 22:28:41'),
-(234, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-04 09:23:14'),
-(235, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-04 09:26:16'),
-(236, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-04 09:27:27'),
-(237, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-04 09:28:29'),
-(238, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-04 09:33:21'),
-(239, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-04 09:38:12'),
-(241, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-05 21:37:33'),
-(242, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-06 17:42:21'),
-(243, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-06 17:45:07'),
-(244, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-07 18:11:54'),
-(245, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-07 18:15:05'),
-(246, 4, NULL, 'delete', 'Admin', 'samuel archived client \'janpaul4\'', '2025-09-07 18:27:43'),
-(247, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'janpaul4\' and associated pets and medical records', '2025-09-07 18:27:52'),
-(248, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-07 21:58:54'),
-(249, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-07 22:01:03'),
-(250, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Boknoy\', pet \'wawang\', and medical record', '2025-09-07 22:05:02'),
-(251, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-07 22:45:55'),
-(252, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-07 22:49:37'),
-(253, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-07 22:49:59'),
-(254, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-07 22:51:20'),
-(255, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-07 22:52:41'),
-(256, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-07 22:52:49'),
-(257, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-07 23:03:15'),
-(258, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmael\' and updated a medical record', '2025-09-07 23:19:27'),
-(259, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmael\' and updated a medical record', '2025-09-07 23:27:53'),
-(260, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Boknoy Esmael\'', '2025-09-07 23:30:21'),
-(261, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Boknoy Esmael\' and associated pets and medical records', '2025-09-07 23:30:25'),
-(262, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmael\' and updated a medical record', '2025-09-07 23:36:28'),
-(263, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmael\' and updated a medical record', '2025-09-07 23:36:58'),
-(264, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmael\' and updated a medical record', '2025-09-07 23:37:43'),
-(265, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmael\' and updated/added a medical record', '2025-09-07 23:52:59'),
-(266, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmael\' and pet \'wawangloy\' and updated/added a medical record', '2025-09-08 00:14:10'),
-(267, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Boknoy Esmael\'', '2025-09-08 00:14:30'),
-(268, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Boknoy Esmael\' and associated pets and medical records', '2025-09-08 00:14:38'),
-(269, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-08 00:29:49'),
-(270, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-08 09:52:56'),
-(271, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmale\' and pet \'wawangloy\' and updated/added a medical record', '2025-09-08 09:53:46'),
-(272, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmale\' and pet \'wawangloy\' and updated/added a medical record', '2025-09-08 09:54:03'),
-(273, 0, NULL, 'Appointment', 'Guest', 'Guest Sheryl Lozano booked an appointment on September 18, 2025 at 2:30 PM', '2025-09-08 09:57:16'),
-(274, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-08 09:58:36'),
-(275, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-08 09:58:47'),
-(276, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-08 10:15:52'),
-(277, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Maria Lopez\', pet \'Max\', and medical record', '2025-09-08 10:19:07'),
-(278, 4, NULL, 'update', 'Admin', 'samuel updated client \'Maria Lopez\' and pet \'Max\' and updated/added a medical record', '2025-09-08 10:19:28'),
-(279, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmale\' and pet \'wawangloy\' and updated/added a medical record', '2025-09-08 10:19:51'),
-(280, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Boknoy Esmale\'', '2025-09-08 10:20:07'),
-(281, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Boknoy Esmale\' and associated pets and medical records', '2025-09-08 10:20:45'),
-(282, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-09 08:52:42'),
-(283, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-09 09:20:28'),
-(284, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-09 09:52:51'),
-(285, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-09 10:35:51'),
-(286, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-10 21:22:20'),
-(287, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-10 22:12:43'),
-(288, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-10 22:25:40'),
-(289, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-10 22:33:32'),
-(290, 5, NULL, 'Login', 'Veterinarian', 'Dr. Odemil Uyan Successfully Logged in', '2025-09-10 22:44:56'),
-(291, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-10 22:54:47'),
-(292, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-10 22:55:02'),
-(293, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-11 10:09:53'),
-(294, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-11 10:11:58'),
-(295, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-11 11:46:49'),
-(296, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-11 11:50:29'),
-(297, 5, NULL, 'Login', 'Veterinarian', 'Dr. Odemil Uyan Successfully Logged in', '2025-09-11 11:51:22'),
-(298, 5, NULL, 'add', 'Admin', 'uyan_vet added a new client \'Roselyn Villanueva\', pet \'Mingming\', and medical record', '2025-09-11 11:54:18'),
-(299, 0, NULL, 'Appointment', 'Guest', 'Guest Danreb Salvacion booked an appointment on September 18, 2025 at 4:30 PM', '2025-09-11 11:58:26'),
-(300, 5, NULL, 'delete', 'Admin', 'uyan_vet archived client \'Roselyn Villanueva\'', '2025-09-11 12:02:30'),
-(301, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Roselyn Villanueva\' and associated pets and medical records', '2025-09-11 12:03:02'),
-(302, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-11 12:18:23'),
-(303, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-11 21:38:08'),
-(304, 0, NULL, 'Appointment', 'Guest', 'Guest tokneneng booked an appointment on September 18, 2025 at 9:30 AM', '2025-09-11 21:48:20'),
-(305, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-11 22:22:12'),
-(306, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-12 09:10:14'),
-(307, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-12 10:26:01'),
-(308, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-12 10:26:29'),
-(309, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-12 21:41:32'),
-(310, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-12 21:41:46'),
-(311, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-13 21:33:47'),
-(312, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-13 22:07:48'),
-(313, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-13 22:11:14'),
-(314, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-13 22:13:37'),
-(315, 2, NULL, 'Login', 'Admin', 'vinjin Successfully Logged in', '2025-09-13 22:40:02'),
-(316, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo Successfully Logged in', '2025-09-13 22:43:03'),
-(317, 3, NULL, 'Login', 'Admin', 'admin1 logged in', '2025-09-14 20:45:14'),
-(318, 9, NULL, 'Login', 'Veterinarian', 'Dr. Test Vet logged in', '2025-09-14 20:45:31'),
-(319, 3, NULL, 'Login', 'Admin', 'admin1 logged in', '2025-09-14 20:48:09'),
-(320, 9, NULL, 'Login', 'Veterinarian', 'Dr. Test Vet logged in', '2025-09-14 20:50:38'),
-(321, 9, NULL, 'Login', 'Veterinarian', 'Dr. Test Vet logged in', '2025-09-14 20:56:06'),
-(322, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-14 21:21:29'),
-(323, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-15 21:45:44'),
-(324, 3, NULL, 'Login', 'Admin', 'admin1 logged in', '2025-09-15 21:48:34'),
-(325, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-09-15 22:07:47'),
-(326, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-09-15 22:59:08'),
-(327, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-09-16 00:48:25'),
-(328, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-09-16 11:54:02'),
-(329, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-09-16 14:03:47'),
-(330, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-16 14:05:06'),
-(331, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-09-16 14:22:50'),
-(332, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-16 14:30:30'),
-(333, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-16 15:10:26'),
-(334, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-09-16 16:34:20'),
-(335, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-26 02:39:44'),
-(336, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-26 02:52:30'),
-(337, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-26 02:52:53'),
-(338, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-09-26 02:53:08'),
-(339, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-26 02:56:50'),
-(340, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-26 03:42:33'),
-(341, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-28 18:59:45'),
-(342, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmale\' and pet \'wawangloy\' and updated/added a medical record', '2025-09-28 19:29:34'),
-(343, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmale\' and pet \'wawangloy\' and updated/added a medical record', '2025-09-28 20:56:48'),
-(344, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmales\' and pet \'wawangloy\' and updated/added a medical record', '2025-09-28 20:57:01'),
-(345, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmales\' and pet \'wawangloys\' and updated/added a medical record', '2025-09-28 20:57:11'),
-(346, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Boknoy Esmales\'', '2025-09-28 20:57:20'),
-(347, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Boknoy Esmales\' and associated pets and medical records', '2025-09-28 20:57:28'),
-(348, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-28 20:57:40'),
-(349, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-28 20:57:59'),
-(357, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-29 21:28:22'),
-(358, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-09-29 23:11:54'),
-(359, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Roberto Lagbas\', pet \'Bruno\', and medical record', '2025-09-30 22:21:02'),
-(360, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Roberto Lagbas\'', '2025-09-30 22:21:36'),
-(361, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Roberto Lagbas\' and associated pets and medical records', '2025-09-30 22:21:41'),
-(362, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Roberto Lagbas\'', '2025-09-30 22:21:48'),
-(363, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Roberto Lagbas\' and associated pets and medical records', '2025-09-30 22:21:53'),
-(364, 0, NULL, 'Appointment', 'Guest', 'Guest Mario Santos booked an appointment on October 8, 2025 at 9:00 AM', '2025-10-01 21:33:21'),
-(365, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-01 21:33:38'),
-(366, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Boknoy Esmales\'', '2025-10-01 22:24:54'),
-(367, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Boknoy Esmales\' and associated pets and medical records', '2025-10-01 22:25:15'),
-(368, 4, NULL, 'delete', 'Admin', 'samuel archived client \'janpaul4\'', '2025-10-01 22:25:26'),
-(369, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'janpaul4\' and associated pets and medical records', '2025-10-01 22:25:30'),
-(370, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-01 22:27:29'),
-(371, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-01 22:44:07'),
-(372, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Boknoy Esmales\'', '2025-10-01 22:44:16'),
-(373, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Boknoy Esmales\' and associated pets and medical records', '2025-10-01 22:44:21'),
-(374, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-01 22:44:32'),
-(375, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 10:21:05'),
-(376, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 10:22:36'),
-(377, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-02 10:34:45'),
-(378, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 10:47:41'),
-(379, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 11:06:35'),
-(380, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 11:06:59'),
-(381, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 11:07:39'),
-(382, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-02 11:10:01'),
-(383, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 11:13:15'),
-(384, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Roberto Lagbas\', pet \'Bruno\', and medical record', '2025-10-02 11:16:28'),
-(385, 4, NULL, 'update', 'Admin', 'samuel updated client \'Roberto Lagbas\' and pet \'Bruno\' and updated/added a medical record', '2025-10-02 11:18:00'),
-(386, 0, NULL, 'Appointment', 'Guest', 'Guest Danreb Salvacionss booked an appointment on October 9, 2025 at 2:30 PM', '2025-10-02 13:26:30'),
-(387, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 13:26:44'),
-(388, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 13:49:37'),
-(389, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-02 14:16:49'),
-(390, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 14:27:25'),
-(391, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-02 14:27:38'),
-(392, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 14:38:18'),
-(393, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-02 14:38:34'),
-(394, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-02 15:12:11'),
-(395, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-03 13:58:15'),
-(396, 4, NULL, 'add', 'Admin', 'samuel added a new client \'janpaul3\', pet \'tigon\', and medical record', '2025-10-03 14:13:56'),
-(397, 4, NULL, 'delete', 'Admin', 'samuel archived client \'janpaul3\'', '2025-10-03 14:14:21'),
-(398, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Maria Lopez\'', '2025-10-03 14:14:25'),
-(399, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Boknoy Esmales\'', '2025-10-03 14:14:29'),
-(400, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Boknoy Esmales\' and associated pets and medical records', '2025-10-03 14:15:41'),
-(401, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Maria Lopez\' and associated pets and medical records', '2025-10-03 14:15:42'),
-(402, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'janpaul3\' and associated pets and medical records', '2025-10-03 14:15:44'),
-(403, 4, NULL, 'add', 'Admin', 'samuel added a new client \'janpaul2\', pet \'tigok\', and medical record', '2025-10-03 14:16:23'),
-(404, 4, NULL, 'delete', 'Admin', 'samuel archived client \'janpaul2\'', '2025-10-03 14:40:00'),
-(405, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Odemil Uyan\'', '2025-10-03 14:40:22'),
-(406, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'janpaul2\' and associated pets and medical records', '2025-10-03 14:40:28'),
-(407, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Odemil Uyan\' and associated pets and medical records', '2025-10-03 14:40:29'),
-(408, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Boknoy Esmael\', pet \'tigok\', and medical record', '2025-10-03 14:41:23'),
-(409, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-03 21:20:46'),
-(410, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-03 23:53:41'),
-(411, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-04 20:43:27'),
-(412, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-04 20:46:12'),
-(413, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-04 22:04:37'),
-(414, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmaels\' and pet \'tigok\' and updated/added a medical record', '2025-10-04 22:04:55'),
-(415, 4, NULL, 'update', 'Admin', 'samuel updated client \'Boknoy Esmaels\' and pet \'tigok\' and updated/added a medical record', '2025-10-04 22:05:01'),
-(416, 0, NULL, 'Appointment', 'Guest', 'Guest Maricar T. Bahala booked an appointment on October 10, 2025 at 2:30 PM', '2025-10-04 22:07:00'),
-(417, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-04 22:24:55'),
-(418, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-04 22:44:00'),
-(419, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-04 23:09:55'),
-(420, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-04 23:10:20'),
-(421, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-05 00:02:27'),
-(422, 10, NULL, 'Login', 'Veterinarian', 'Maricar T. Bahala logged in', '2025-10-05 00:03:32'),
-(423, 10, NULL, 'Login', 'Veterinarian', 'Maricar T. Bahala logged in', '2025-10-05 00:04:04'),
-(424, 10, NULL, 'Login', 'Veterinarian', 'Maricar T. Bahala logged in', '2025-10-05 00:04:15'),
-(425, 10, NULL, 'Login', 'Veterinarian', 'Maricar T. Bahala logged in', '2025-10-05 00:05:18'),
-(426, 10, NULL, 'Login', 'Veterinarian', 'Maricar T. Bahala logged in', '2025-10-05 00:05:55'),
-(427, 10, NULL, 'Login', 'Veterinarian', 'Maricar T. Bahala logged in', '2025-10-05 00:06:08'),
-(428, 10, NULL, 'Login', 'Veterinarian', 'Maricar T. Bahala logged in', '2025-10-05 00:06:47'),
-(429, 0, NULL, 'Appointment', 'Guest', 'Guest Bulilit Dela Cera booked an appointment on October 10, 2025 at 9:30 AM', '2025-10-06 21:35:57'),
-(430, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-06 21:36:02'),
-(431, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-06 22:20:19'),
-(432, 0, NULL, 'Appointment', 'Guest', 'Guest Maris Awitin booked an appointment on October 11, 2025 at 2:30 PM', '2025-10-06 22:28:35'),
-(433, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-07 17:41:39'),
-(434, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Maria Teresa Dela Cruz\', pet \'Budoy\', and medical record', '2025-10-07 17:49:44'),
-(435, 4, NULL, 'update', 'Admin', 'samuel updated client \'Maria Teresa Dela Cruz\' and pet \'Budoy\' and updated/added a medical record', '2025-10-07 17:49:57'),
-(436, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-07 17:53:54'),
-(437, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-07 18:00:44'),
-(438, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-07 18:02:42'),
-(439, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-07 18:11:05');
+(455, 0, NULL, 'Appointment', 'Guest', 'Guest Jikoy Galindo booked an appointment on October 24, 2025 at 10:30 AM', '2025-10-23 00:17:56'),
+(456, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-23 00:18:02'),
+(457, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-23 00:29:27'),
+(458, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-23 00:31:14'),
+(459, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-23 21:24:15'),
+(460, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-23 21:38:04'),
+(461, 0, NULL, 'Appointment', 'Guest', 'Guest Orlando B. Dela Cera booked an appointment on October 30, 2025 at 2:30 PM', '2025-10-23 21:46:30'),
+(462, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-23 21:46:52'),
+(463, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-23 21:49:10'),
+(464, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-25 22:23:40'),
+(465, 4, NULL, 'add', 'Admin', 'samuel added a new client \'shieik\', pet \'12312312\', and medical record', '2025-10-25 23:41:38'),
+(466, 4, NULL, 'update', 'Admin', 'samuel updated client \'shieik23\' and pet \'12312312\' and updated/added a medical record', '2025-10-25 23:41:58'),
+(467, 4, NULL, 'delete', 'Admin', 'samuel archived client \'shieik23\'', '2025-10-25 23:42:03'),
+(468, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'shieik23\' and associated pets and medical records', '2025-10-25 23:42:13'),
+(469, 4, NULL, 'delete', 'Admin', 'samuel archived client \'shieik23\'', '2025-10-25 23:42:19'),
+(470, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'shieik23\' and associated pets and medical records', '2025-10-25 23:42:24'),
+(471, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-26 14:50:51'),
+(472, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Jerome A. Ladera\', pet \'Whiskers\', and medical record', '2025-10-26 15:52:46'),
+(473, 4, NULL, 'update', 'Admin', 'samuel updated client \'Jerome A. Laderas\' and pet \'Whiskers\' and updated/added a medical record', '2025-10-26 15:53:35'),
+(474, 4, NULL, 'update', 'Admin', 'samuel updated client \'Jerome A. Ladera\' and pet \'Whiskers\' and updated/added a medical record', '2025-10-26 15:53:49'),
+(475, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Jerome A. Ladera\'', '2025-10-26 15:54:08'),
+(476, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Jerome A. Ladera\' and associated pets and medical records', '2025-10-26 15:54:12'),
+(477, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Jerome A. Ladera\'', '2025-10-26 15:54:16'),
+(478, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Jerome A. Ladera\' and associated pets and medical records', '2025-10-26 15:54:20'),
+(479, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Jerome A. Ladera\', pet \'Whiskers\', and medical record', '2025-10-26 16:49:31'),
+(480, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-26 16:52:03'),
+(481, 0, NULL, 'Appointment', 'Guest', 'Guest Maricar T. Bahala booked an appointment on October 30, 2025 at 9:30 AM', '2025-10-26 16:53:30'),
+(482, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-26 17:32:46'),
+(483, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Jerome A. Ladera\'', '2025-10-26 17:41:39'),
+(484, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Jerome A. Ladera\' and associated pets and medical records', '2025-10-26 17:41:46'),
+(485, 4, NULL, 'add', 'Admin', 'samuel added a new client \'Jerome A. Ladera\', pet \'Whiskers\', and medical record', '2025-10-26 17:45:02'),
+(486, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-26 17:49:44'),
+(487, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-26 17:51:48'),
+(488, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-26 17:56:18'),
+(489, 11, NULL, 'Login', 'Veterinarian', 'Jake Kim logged in', '2025-10-26 17:57:04'),
+(490, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-26 21:09:34'),
+(491, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Jerome A. Ladera\'', '2025-10-26 21:10:05'),
+(492, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Jerome A. Ladera\' and associated pets and medical records', '2025-10-26 21:10:11'),
+(493, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-26 21:20:47'),
+(494, 12, NULL, 'Login', 'Veterinarian', 'Manuel Oclarit logged in', '2025-10-26 21:29:03'),
+(495, 12, NULL, 'add', 'Admin', 'manuel added a new client \'Jerome A. Ladera\', pet \'Whiskers\', and medical record', '2025-10-26 21:34:47'),
+(496, 12, NULL, 'update', 'Admin', 'manuel updated client \'Jerome A. Ladera\' and pet \'Whiskers\' and updated/added a medical record', '2025-10-26 21:36:32'),
+(497, 12, NULL, 'delete', 'Admin', 'manuel archived client \'Jerome A. Ladera\'', '2025-10-26 21:43:47'),
+(498, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Jerome A. Ladera\' and associated pets and medical records', '2025-10-26 21:44:04'),
+(499, 12, NULL, 'delete', 'Admin', 'manuel archived client \'Jerome A. Ladera\'', '2025-10-26 21:44:11'),
+(500, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Jerome A. Ladera\' and associated pets and medical records', '2025-10-26 21:44:16'),
+(501, 0, NULL, 'Appointment', 'Guest', 'Guest Sheryl Mae Clo booked an appointment on October 31, 2025 at 2:30 PM', '2025-10-26 21:46:54'),
+(502, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-26 22:07:37'),
+(503, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-26 23:03:35'),
+(504, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-27 11:25:30'),
+(505, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-27 12:04:04'),
+(506, 0, NULL, 'Appointment', 'Guest', 'Guest Kent Ralf Baccaro booked an appointment on November 2, 2025 at 3:30 PM', '2025-10-27 12:05:02'),
+(507, 12, NULL, 'Login', 'Veterinarian', 'Manuel Oclarit logged in', '2025-10-27 12:11:52'),
+(508, 12, NULL, 'delete', 'Admin', 'manuel archived client \'Boknoy Esmaels\'', '2025-10-27 12:12:04'),
+(509, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Boknoy Esmaels\' and associated pets and medical records', '2025-10-27 12:12:09'),
+(510, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-27 13:17:20'),
+(511, 13, NULL, 'Login', 'Veterinarian', 'Odemil A. Uyan logged in', '2025-10-27 13:20:01'),
+(512, 13, NULL, 'add', 'Admin', 'odemil added a new client \'John Michael Acut\', pet \'Max\', and medical record', '2025-10-27 13:22:20'),
+(513, 0, NULL, 'Appointment', 'Guest', 'Guest Manuel Oclarit booked an appointment on January 22, 2026 at 10:30 AM', '2025-10-27 13:26:38'),
+(514, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-10-27 13:42:46'),
+(515, 13, NULL, 'Login', 'Veterinarian', 'Odemil A. Uyan logged in', '2025-10-27 13:57:27'),
+(516, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-27 20:52:01'),
+(517, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-29 21:26:59'),
+(518, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 22:32:10'),
+(519, 55, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-10-29 22:32:10'),
+(520, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 22:32:51'),
+(521, 55, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-10-29 22:32:51'),
+(522, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 22:33:16'),
+(523, 55, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-10-29 22:33:16'),
+(524, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 22:33:46'),
+(525, 55, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-10-29 22:33:46'),
+(526, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 22:33:56'),
+(527, 55, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-10-29 22:33:56'),
+(528, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 22:35:02'),
+(529, 55, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-10-29 22:35:02'),
+(530, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 22:46:48'),
+(531, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 22:47:34'),
+(532, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 23:14:10'),
+(533, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-29 23:14:26'),
+(534, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-29 23:15:17'),
+(535, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-29 23:26:26'),
+(536, 55, NULL, 'Login', 'Client', ' logged in', '2025-10-30 21:11:46'),
+(537, 56, NULL, 'Login', 'Client', 'eadrian_basadre@gmail.com logged in', '2025-10-30 21:16:58'),
+(538, 58, NULL, 'Login', 'Client', 'eadrian_basadre@gmail.com logged in', '2025-10-30 21:38:20'),
+(539, 0, NULL, 'Appointment', 'Guest', 'Guest eadrian booked an appointment on October 31, 2025 at 8:00 AM', '2025-10-30 23:48:15'),
+(540, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-10-30 23:48:35'),
+(541, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-01 23:09:09'),
+(542, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-02 00:22:23'),
+(543, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-02 17:57:50'),
+(544, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-02 19:20:53'),
+(545, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-11-02 19:21:10'),
+(546, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-02 21:27:05'),
+(547, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-02 21:28:46'),
+(548, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-02 21:32:07'),
+(549, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-02 21:34:04'),
+(550, 59, NULL, 'Login', 'Client', 'JamesKhyl M. Dela Cera logged in', '2025-11-02 22:01:07'),
+(551, 60, NULL, 'Registration', 'Client', 'JamesKhyl M. Dela Cera registered and logged in', '2025-11-02 22:10:12'),
+(552, 60, NULL, 'Login', 'Client', 'JamesKhyl M. Dela Cera logged in', '2025-11-02 22:13:17'),
+(553, 60, NULL, 'Login', 'Client', 'JamesKhyl M. Dela Cera logged in', '2025-11-02 22:40:48'),
+(554, 0, NULL, 'Appointment', 'Guest', 'Guest kaykay booked an appointment on November 2, 2025 at 8:00 AM', '2025-11-02 22:57:09'),
+(555, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-03 08:46:52'),
+(556, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-03 08:47:26'),
+(557, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-03 11:41:51'),
+(558, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-03 15:32:49'),
+(559, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian Basadre\'', '2025-11-03 18:50:50'),
+(560, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-03 18:51:37'),
+(561, 0, NULL, 'Appointment', 'Guest', 'Guest eadrian booked an appointment on November 6, 2025 at 9:30 AM', '2025-11-03 18:52:55'),
+(562, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-03 18:54:02'),
+(563, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-03 18:54:18'),
+(564, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-05 22:03:44'),
+(565, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-06 17:34:09'),
+(566, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 17:53:28'),
+(567, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-06 18:03:47'),
+(568, 0, NULL, 'Appointment', 'Guest', 'Guest eadrian booked an appointment on November 6, 2025 at 11:00 AM', '2025-11-06 18:05:12'),
+(569, 0, NULL, 'Appointment', 'Guest', 'Guest eadrian booked an appointment on November 6, 2025 at 8:00 AM', '2025-11-06 18:09:07'),
+(570, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 18:09:21'),
+(571, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-06 18:24:12'),
+(572, 0, NULL, 'Appointment', 'Guest', 'Guest eadrian booked an appointment on November 6, 2025 at 8:00 AM', '2025-11-06 18:25:57'),
+(573, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 18:26:10'),
+(574, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-06 18:35:50'),
+(575, 58, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-06 18:43:02'),
+(576, 0, NULL, 'Appointment', 'Guest', 'Guest eadrian booked an appointment on November 10, 2025 at 8:00 AM', '2025-11-06 18:48:43'),
+(577, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 18:48:57'),
+(578, 4, NULL, 'delete', 'Admin', 'samuel archived client \'JamesKhyl M. Dela Cera\'', '2025-11-06 18:49:14'),
+(579, 4, NULL, 'update', 'Admin', 'samuel updated client \'eadrian\' (ID: 61) and pet \'dingdong\' and updated/added a medical record', '2025-11-06 18:49:40'),
+(580, 4, NULL, 'delete', 'Admin', 'samuel archived client \'eadrian\'', '2025-11-06 18:49:59'),
+(581, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Eadrian Basadre\' and associated pets and medical records', '2025-11-06 18:50:24'),
+(582, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'JamesKhyl M. Dela Cera\' and associated pets and medical records', '2025-11-06 18:50:27'),
+(583, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'eadrian\' and associated pets and medical records', '2025-11-06 18:50:29'),
+(584, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-11-06 18:52:28'),
+(585, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 19:19:34'),
+(586, 62, NULL, 'Registration', 'Client', 'Eadrian Basadre registered and logged in', '2025-11-06 19:20:12'),
+(587, 0, NULL, 'Appointment', 'Guest', 'Guest eadrian booked an appointment on November 10, 2025 at 9:30 AM', '2025-11-06 19:21:06'),
+(588, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 19:21:32'),
+(589, 64, NULL, 'Registration', 'Client', 'JamesKhyl M. Dela Cera registered and logged in', '2025-11-06 19:22:47'),
+(590, 0, NULL, 'Appointment', 'Guest', 'Guest Kaykay booked an appointment on November 10, 2025 at 3:30 PM', '2025-11-06 19:23:19'),
+(591, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 19:23:29'),
+(592, 4, NULL, 'delete', 'Admin', 'samuel archived client \'eadrian\'', '2025-11-06 19:23:41'),
+(593, 4, NULL, 'delete', 'Admin', 'samuel archived client \'eadrian\'', '2025-11-06 19:23:44'),
+(594, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'eadrian\' and associated pets and medical records', '2025-11-06 19:23:48'),
+(595, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'eadrian\' and associated pets and medical records', '2025-11-06 19:23:50'),
+(596, 64, NULL, 'Login', 'Client', 'JamesKhyl M. Dela Cera logged in', '2025-11-06 19:28:36'),
+(597, 0, NULL, 'Appointment', 'Guest', 'Guest Kaykay booked an appointment on November 10, 2025 at 11:00 AM', '2025-11-06 19:29:16'),
+(598, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 19:30:01'),
+(599, 4, NULL, 'delete', 'Admin', 'samuel archived client \'JamesKhyl M. Dela Cera\'', '2025-11-06 19:32:44'),
+(600, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'JamesKhyl M. Dela Cera\' and associated pets and medical records', '2025-11-06 19:32:49'),
+(601, 62, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-06 19:33:46'),
+(602, 62, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-06 19:34:18'),
+(603, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 19:34:38'),
+(604, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian Basadre\'', '2025-11-06 19:34:43'),
+(605, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted client \'Eadrian Basadre\' and associated pets and medical records', '2025-11-06 19:34:46'),
+(606, 66, NULL, 'Registration', 'Client', 'Eadrian Basadre registered and logged in', '2025-11-06 19:42:47'),
+(607, 0, NULL, 'Appointment', 'Guest', 'Guest Eadrian booked an appointment on November 10, 2025 at 2:00 PM', '2025-11-06 19:43:30'),
+(608, 66, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-06 19:43:41'),
+(609, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 19:43:51'),
+(610, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian Basadre\'', '2025-11-06 19:44:15'),
+(611, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Eadrian Basadre\' (ID: 66) and associated pets/records. Account preserved.', '2025-11-06 19:44:43'),
+(612, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian\'', '2025-11-06 19:44:46'),
+(613, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Eadrian\' and associated pets and medical records', '2025-11-06 19:44:56'),
+(614, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Deleted Client\' (ID: 66) and associated pets/records. Account preserved.', '2025-11-06 19:44:58'),
+(615, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Deleted Client\' (ID: 66) and associated pets/records. Account preserved.', '2025-11-06 19:45:01'),
+(616, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian\'', '2025-11-06 19:46:10'),
+(617, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Deleted Client\' and associated pets and medical records', '2025-11-06 19:46:16'),
+(618, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Eadrian\' (ID: 67) and associated pets/records. Account preserved.', '2025-11-06 19:46:20'),
+(619, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Deleted Client\' and associated pets and medical records', '2025-11-06 19:46:24'),
+(620, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Deleted Client\'', '2025-11-06 19:46:27'),
+(621, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Deleted Client\'', '2025-11-06 19:46:30'),
+(622, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Deleted Client\' (ID: 66) and associated pets/records. Account preserved.', '2025-11-06 19:46:37'),
+(623, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Deleted Client\' (ID: 67) and associated pets/records. Account preserved.', '2025-11-06 19:46:39'),
+(624, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Deleted Client\' (ID: 66) and associated pets/records. Account preserved.', '2025-11-06 19:49:48'),
+(625, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Deleted Client\' (ID: 67) and associated pets/records. Account preserved.', '2025-11-06 19:49:50'),
+(626, 66, NULL, 'Login', 'Client', 'Deleted Client logged in', '2025-11-06 19:50:04'),
+(627, 0, NULL, 'Appointment', 'Guest', 'Guest Eadrian booked an appointment on November 10, 2025 at 12:30 PM', '2025-11-06 19:50:47'),
+(628, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 19:51:13'),
+(629, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian\'', '2025-11-06 19:51:27'),
+(630, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Eadrian\' and associated pets and medical records', '2025-11-06 19:51:38'),
+(631, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-06 22:46:19'),
+(632, 66, NULL, 'Login', 'Client', 'Deleted Client logged in', '2025-11-08 12:26:51'),
+(633, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-08 12:27:02'),
+(634, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-11-08 12:30:15'),
+(635, 14, NULL, 'Login', 'Veterinarian', 'Febien M. Dela Cera logged in', '2025-11-08 12:44:03'),
+(636, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-08 15:36:31'),
+(637, 66, NULL, 'Login', 'Client', ' logged in', '2025-11-08 15:36:47'),
+(638, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-11-08 15:42:25'),
+(639, 14, NULL, 'Login', 'Veterinarian', 'Febien M. Dela Cera logged in', '2025-11-08 15:54:33'),
+(640, 14, NULL, 'delete', 'Admin', 'biano archived client \'Eadrian\'', '2025-11-08 15:56:19'),
+(641, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Eadrian\' (ID: 68) and associated pets/records. Account preserved.', '2025-11-08 15:56:28'),
+(642, 66, NULL, 'Login', 'Client', ' logged in', '2025-11-08 15:56:47'),
+(643, 0, NULL, 'Appointment', 'Guest', 'Guest Eadrian booked an appointment on November 12, 2025 at 8:00 AM', '2025-11-08 15:57:25'),
+(644, 14, NULL, 'Login', 'Veterinarian', 'Febien M. Dela Cera logged in', '2025-11-08 15:57:36'),
+(645, 66, NULL, 'Login', 'Client', ' logged in', '2025-11-08 16:05:49'),
+(646, 66, NULL, 'Login', 'Client', ' logged in', '2025-11-08 16:11:47'),
+(647, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-09 21:52:43'),
+(648, 14, NULL, 'Login', 'Veterinarian', 'Febien M. Dela Cera logged in', '2025-11-09 21:58:00'),
+(649, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-10 20:57:31'),
+(650, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-13 00:13:38'),
+(651, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-13 21:15:02'),
+(652, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-11-13 23:04:47'),
+(653, 9, NULL, 'Login', 'Admin', 'jonggun logged in', '2025-11-14 14:24:00'),
+(654, 66, NULL, 'Login', 'Client', ' logged in', '2025-11-14 18:33:44'),
+(655, 66, NULL, 'Login', 'Client', ' logged in', '2025-11-14 18:37:26'),
+(656, 66, NULL, 'Login', 'Client', ' logged in', '2025-11-14 18:45:14'),
+(657, 66, NULL, 'Login', 'Client', ' logged in', '2025-11-14 18:45:40'),
+(658, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-15 20:33:38'),
+(659, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian\'', '2025-11-15 20:56:42'),
+(660, 4, NULL, 'delete', 'Admin', 'samuel archived client \'John Michael Acut\'', '2025-11-15 20:56:46'),
+(661, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Kaykay\'', '2025-11-15 20:56:49'),
+(662, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Maria Teresa Dela Cruz\'', '2025-11-15 20:56:52'),
+(663, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Roberto Lagbas\'', '2025-11-15 20:56:55'),
+(664, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Roselyn Villanueva\'', '2025-11-15 20:56:58'),
+(665, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Roselyn Villanueva\' (ID: 42) and associated pets/records. Account preserved.', '2025-11-15 20:57:02'),
+(666, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Roberto Lagbas\' (ID: 44) and associated pets/records. Account preserved.', '2025-11-15 20:57:04'),
+(667, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Maria Teresa Dela Cruz\' (ID: 48) and associated pets/records. Account preserved.', '2025-11-15 20:57:05'),
+(668, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'John Michael Acut\' (ID: 54) and associated pets/records. Account preserved.', '2025-11-15 20:57:06'),
+(669, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Kaykay\' (ID: 65) and associated pets/records. Account preserved.', '2025-11-15 20:57:07'),
+(670, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Eadrian\' (ID: 69) and associated pets/records. Account preserved.', '2025-11-15 20:57:09'),
+(671, 70, NULL, 'Registration', 'Client', 'Eadrian Basadre registered and logged in', '2025-11-15 20:58:57'),
+(672, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-15 21:00:26'),
+(673, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian Basadre\'', '2025-11-15 21:15:33'),
+(674, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Eadrian Basadre\' (ID: 70) and associated pets/records. Account preserved.', '2025-11-15 21:15:39'),
+(675, 71, NULL, 'Registration', 'Client', 'Eadrian Basadre registered and logged in', '2025-11-15 21:25:12'),
+(676, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-15 21:27:30'),
+(677, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-15 21:33:46'),
+(678, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-15 21:35:04'),
+(679, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-15 21:48:45'),
+(680, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-15 21:49:26'),
+(681, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-15 22:17:45'),
+(682, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-15 22:18:12'),
+(683, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-15 22:29:23'),
+(684, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-15 22:29:54'),
+(685, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-15 23:58:17'),
+(686, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-15 23:58:46'),
+(687, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-15 23:58:54'),
+(688, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-15 23:58:56'),
+(689, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-16 00:08:53'),
+(690, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-16 00:09:56'),
+(691, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-16 00:10:42'),
+(692, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-16 12:21:02'),
+(693, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-16 12:21:41'),
+(694, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-16 13:23:42'),
+(695, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-16 14:43:25'),
+(696, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-16 14:57:16'),
+(697, 71, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-16 20:36:28'),
+(698, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-11-20 at 11:00 AM', '2025-11-16 21:03:55'),
+(699, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-11-20 at 8:00 AM', '2025-11-16 21:04:31'),
+(700, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-16 21:04:48'),
+(701, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian Basadre\'', '2025-11-16 21:10:08'),
+(702, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Eadrian Basadre\' (ID: 71) and associated pets/records. Account preserved.', '2025-11-16 21:10:12'),
+(703, 71, NULL, 'Login', 'Client', ' logged in', '2025-11-16 21:10:34'),
+(704, 71, NULL, 'Login', 'Client', ' logged in', '2025-11-16 21:11:58'),
+(705, 71, NULL, 'Login', 'Client', ' logged in', '2025-11-16 21:12:08'),
+(706, 71, NULL, 'Login', 'Client', ' logged in', '2025-11-16 21:14:24'),
+(707, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-17 23:02:30'),
+(708, 71, NULL, 'Login', 'Client', ' logged in', '2025-11-17 23:40:39'),
+(709, 72, NULL, 'Registration', 'Client', 'Eadrian Basadre registered and logged in', '2025-11-17 23:57:56'),
+(710, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-11-20 at 9:30 AM', '2025-11-18 00:01:57'),
+(711, 14, NULL, 'Login', 'Veterinarian', 'Febien M. Dela Cera logged in', '2025-11-18 00:02:21'),
+(712, 72, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-18 00:14:07'),
+(713, 72, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-18 00:15:00'),
+(714, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-11-20 at 2:00 PM', '2025-11-18 00:15:22'),
+(715, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-18 00:15:32'),
+(716, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-20 23:02:14'),
+(717, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian Basadre\'', '2025-11-20 23:02:24'),
+(718, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Eadrian Basadre\' (ID: 72) and associated pets/records. Account preserved.', '2025-11-20 23:02:32'),
+(719, 73, NULL, 'Registration', 'Client', 'Eadrian Basadre registered and logged in', '2025-11-20 23:41:33'),
+(720, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-20 23:42:01'),
+(721, 73, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-20 23:47:35'),
+(722, 73, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-21 00:04:03'),
+(723, 73, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-21 00:32:29'),
+(724, 74, NULL, 'Registration', 'Client', 'Eadrian Basadre registered and logged in', '2025-11-21 00:33:10'),
+(725, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-11-21 at 8:00 AM', '2025-11-21 00:40:36'),
+(726, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-21 00:40:52'),
+(727, 4, NULL, 'update', 'Admin', 'updated client \'Eadrian Basadre\' (ID: 74), pet \'chokoy\' and medical record', '2025-11-21 01:06:29'),
+(728, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-21 21:26:50'),
+(729, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-21 22:57:21'),
+(730, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian Basadre\'', '2025-11-21 22:57:27'),
+(731, NULL, NULL, 'restore', 'Admin', 'Unknown restored client \'Eadrian Basadre\' and associated pets and medical records', '2025-11-21 22:57:36'),
+(732, 74, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-22 22:21:00'),
+(733, 74, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-22 22:30:32'),
+(734, 74, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-22 22:30:36'),
+(735, 74, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-22 22:34:04'),
+(736, 74, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-22 22:38:35'),
+(737, 74, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-22 22:42:30'),
+(738, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-11-30 at 8:00 AM', '2025-11-22 22:47:46'),
+(739, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-22 22:48:06'),
+(740, 74, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-22 22:48:32'),
+(741, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-11-30 at 11:00 AM', '2025-11-22 22:49:35'),
+(742, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-22 22:49:45'),
+(743, 74, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-22 22:57:40'),
+(744, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-11-30 at 9:30 AM', '2025-11-22 22:58:40'),
+(745, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-22 22:58:49'),
+(746, 4, NULL, 'delete', 'Admin', 'samuel archived client \'Eadrian Basadre\'', '2025-11-22 23:38:28'),
+(747, NULL, NULL, 'delete', 'Admin', 'Unknown permanently deleted data for client \'Eadrian Basadre\' (ID: 74) and associated pets/records. Account preserved.', '2025-11-22 23:38:32'),
+(748, 74, NULL, 'Login', 'Client', ' logged in', '2025-11-22 23:38:45'),
+(749, 75, NULL, 'Registration', 'Client', 'Eadrian Basadre registered and logged in', '2025-11-22 23:40:03'),
+(750, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-11-30 at 12:30 PM', '2025-11-22 23:40:27'),
+(751, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-22 23:40:38'),
+(752, 75, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-23 20:12:22'),
+(753, 75, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-23 20:22:00'),
+(754, 75, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-23 20:22:07'),
+(755, 75, NULL, 'Login', 'Client', 'Eadrian Basadre logged in', '2025-11-23 20:24:52'),
+(756, 0, NULL, 'Booking', 'Guest', 'Eadrian Basadre booked an appointment on 2025-12-01 at 8:00 AM', '2025-11-23 20:28:10'),
+(757, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-23 20:28:30'),
+(758, 4, NULL, 'update', 'Admin', 'updated client \'Eadrian Basadre\' (ID: 75), pet \'chokoy\' and medical record', '2025-11-23 21:49:44'),
+(759, 4, NULL, 'add', 'Admin', 'added new client \'Maria Santos\', pet \'Whiskers\' and medical record', '2025-11-23 21:52:15'),
+(760, 77, NULL, 'Registration', 'Client', 'Jan Paul Michael M. Dela Cera registered and logged in', '2025-11-23 23:05:54'),
+(761, 0, NULL, 'sms_failed', 'System', 'SMS failed to 09392516664 (Appt #96)', '2025-11-23 23:06:44'),
+(762, 0, NULL, 'Booking', 'Guest', 'Jan Paul Michael M. Dela Cera booked an appointment on 2025-12-01 at 11:00 AM', '2025-11-23 23:06:44'),
+(763, 0, NULL, 'sms_failed', 'System', 'SMS failed to 09392516664 (Appt #97)', '2025-11-23 23:21:38'),
+(764, 0, NULL, 'Booking', 'Guest', 'Jan Paul Michael M. Dela Cera booked an appointment on 2025-12-02 at 8:00 AM', '2025-11-23 23:21:38'),
+(765, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-24 13:20:58'),
+(766, 77, NULL, 'Login', 'Client', 'Jan Paul Michael M. Dela Cera logged in', '2025-11-24 13:59:38'),
+(767, 0, NULL, 'Booking', 'Guest', 'Jan Paul Michael M. Dela Cera booked an appointment on 2025-11-24 at 8:00 AM', '2025-11-24 14:00:11'),
+(768, 4, NULL, 'Login', 'Veterinarian', 'Samuel Seo logged in', '2025-11-24 14:00:34');
 
 -- --------------------------------------------------------
 
@@ -482,6 +496,7 @@ INSERT INTO `logs` (`Log_ID`, `User_ID`, `Role`, `Action_Type`, `Table_Affected`
 CREATE TABLE `medical_records` (
   `record_id` int(11) NOT NULL,
   `pet_id` int(11) DEFAULT NULL,
+  `consultation_id` int(11) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `medical_condition` text DEFAULT NULL,
   `medical_diagnosis` text DEFAULT NULL,
@@ -496,11 +511,9 @@ CREATE TABLE `medical_records` (
 -- Dumping data for table `medical_records`
 --
 
-INSERT INTO `medical_records` (`record_id`, `pet_id`, `date`, `medical_condition`, `medical_diagnosis`, `medical_symptoms`, `medical_treatment`, `updated_at`, `status`, `record_date`) VALUES
-(29, 41, '2025-09-11', 'Eye discharge and sneezing', 'Upper respiratory infection (common in kittens)', 'Watery eyes, frequent sneezing, mild nasal discharge', 'Prescribed antibiotics, vitamin supplements, and advised warm, clean shelter', '2025-09-11 04:03:02', 1, '2025-09-11'),
-(31, 43, '2025-10-02', 'Runny noses', 'Problem', 'Vomiting, diarrhea, lethargy', 'IV fluids, antivirals, antibiotics', '2025-10-02 03:18:00', 1, '2025-10-02'),
-(34, 46, '2025-10-04', 'Runny Noses', '123123', '123123', '123123', '2025-10-04 14:05:01', 1, '2025-10-03'),
-(35, 47, '2025-10-07', 'Flea Allergy Dermatitis, Runny Noses', 'Skin irritation caused by flea infestation', 'Constant scratching, red patches on skin, mild hair loss', 'Flea shampoo, topical anti-itch cream, and monthly flea preventive drops', '2025-10-07 09:49:57', 1, '2025-10-07');
+INSERT INTO `medical_records` (`record_id`, `pet_id`, `consultation_id`, `date`, `medical_condition`, `medical_diagnosis`, `medical_symptoms`, `medical_treatment`, `updated_at`, `status`, `record_date`) VALUES
+(44, 85, NULL, '2025-11-23', 'Skin Allergy, Ear Infection', 'Dog exhibits dermatitis symptoms likely caused by food allergens. Redness and mild swelling in the ear canal detected.', 'Intense scratching, flaky skin patches, foul-smelling ear discharge, occasional head shaking.', 'Administer antihistamines daily for 7 days. Clean ears with prescribed otic solution every 12 hours. Switch to hypoallergenic diet.', NULL, 1, '2025-11-23'),
+(45, 86, NULL, '2025-11-23', 'Fleas, Eye Irritation', 'Presence of mild flea infestation and conjunctivitis. Cat displays watery left eye and occasional sneezing.', 'Frequent scratching, visible fleas, watery eye, slight redness around the eyelid.', 'Administer flea treatment once every 30 days. Apply antibiotic eye drops twice daily for 5 days. Maintain clean bedding.', NULL, 1, '2025-11-23');
 
 -- --------------------------------------------------------
 
@@ -510,6 +523,7 @@ INSERT INTO `medical_records` (`record_id`, `pet_id`, `date`, `medical_condition
 
 CREATE TABLE `payments` (
   `payment_id` int(11) NOT NULL,
+  `client_id` int(11) DEFAULT NULL,
   `client_name` varchar(100) NOT NULL,
   `method_id` int(11) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
@@ -521,12 +535,15 @@ CREATE TABLE `payments` (
 -- Dumping data for table `payments`
 --
 
-INSERT INTO `payments` (`payment_id`, `client_name`, `method_id`, `amount`, `description`, `date`) VALUES
-(4, 'Odemil Uyan', 1, 1300.00, 'For check ups', '2025-09-10 21:57:53'),
-(5, 'Odemil Uyan', 1, 1300.00, 'For check ups', '2025-09-10 21:58:33'),
-(6, 'Boknoy Esmale', 2, 1500.00, 'Payment for grooming', '2025-09-10 22:27:03'),
-(7, 'Roselyn Villanueva', 1, 1500.00, 'Payments for grooming.', '2025-09-11 11:55:38'),
-(8, 'janpaul4', 1, 500.00, 'payments for checkups.', '2025-09-14 21:50:55');
+INSERT INTO `payments` (`payment_id`, `client_id`, `client_name`, `method_id`, `amount`, `description`, `date`) VALUES
+(4, NULL, 'Odemil Uyan', 1, 1300.00, 'For check ups', '2025-09-10 21:57:53'),
+(5, NULL, 'Odemil Uyan', 1, 1300.00, 'For check ups', '2025-09-10 21:58:33'),
+(6, NULL, 'Boknoy Esmale', 2, 1500.00, 'Payment for grooming', '2025-09-10 22:27:03'),
+(7, NULL, 'Roselyn Villanueva', 1, 1500.00, 'Payments for grooming.', '2025-09-11 11:55:38'),
+(8, NULL, 'janpaul4', 1, 500.00, 'payments for checkups.', '2025-09-14 21:50:55'),
+(11, NULL, 'John Michael Acut', 1, 2500.00, 'Payments for checkups', '2025-10-27 13:24:15'),
+(13, NULL, 'john michael acut', 1, 150.00, 'Consultation fee', '2023-10-01 00:00:00'),
+(14, NULL, 'John Michael Acut', 1, 3000.00, 'payments for vaccination', '2025-10-27 22:12:42');
 
 -- --------------------------------------------------------
 
@@ -545,8 +562,7 @@ CREATE TABLE `payment_methods` (
 
 INSERT INTO `payment_methods` (`method_id`, `method_name`) VALUES
 (1, 'Cash'),
-(2, 'GCash'),
-(3, 'Credit Card');
+(2, 'GCash');
 
 -- --------------------------------------------------------
 
@@ -572,10 +588,11 @@ CREATE TABLE `pet` (
 --
 
 INSERT INTO `pet` (`pet_id`, `pet_name`, `pet_sex`, `pet_weight`, `pet_breed`, `pet_birth_date`, `client_id`, `status`, `pet_species`, `updated_at`) VALUES
-(41, 'Mingming', 'Female', 10.00, 'Puspin', '2023-11-12', 42, 1, 'Cat', '2025-09-11 04:03:02'),
-(43, 'Bruno', 'Male', 20.00, 'Labrador', '2024-12-11', 44, 1, 'Dog', NULL),
-(46, 'tigok', 'Male', 12.00, 'Labrador', '2222-02-22', 47, 1, 'Dog', NULL),
-(47, 'Budoy', 'Male', 12.00, 'Aspin', '2023-03-20', 48, 1, 'Dog', NULL);
+(85, 'chokoy', 'Male', 20.25, 'bulldog', '2023-02-01', 75, 1, 'Dog', NULL),
+(86, 'Whiskers', 'Female', 4.10, 'Persian Mix', '2022-03-22', 76, 1, 'Cat', NULL),
+(87, 'gigel', 'Male', 5.12, 'Sphynx cat', '2019-11-12', 77, 1, 'Cat', NULL),
+(88, 'jake', 'Male', 5.12, 'bulldog', '2018-08-12', 77, 1, 'Dog', NULL),
+(89, 'sipong', 'Male', 5.20, 'Sphynx cat', '2023-11-12', 77, 1, 'Cat', NULL);
 
 -- --------------------------------------------------------
 
@@ -617,7 +634,11 @@ INSERT INTO `veterinarian` (`vet_id`, `vet_name`, `vet_contact_number`, `vet_use
 (6, 'Liezel Rodrigo', '09182345678', 'liezel_vet', '$2y$10$Q/Z.YkzYXQzPxycs5buSneEPa3nRahMcTjrXfTL7XIV8Mq/I9ofXW'),
 (8, 'Default Veterinarian', '09123456789', 'default_vet', '$2y$10$Q/WHc6yEyuWFLIDGAEjKWO.CGVPKovo2s2l0l/.awIBOskRSbppYO'),
 (9, 'Dr. Test Vet', NULL, 'vet1', '$2y$10$7PuUiTzHvmUHG8gaR6QjY.fgi7H5.A09qiKP4hHqfzE2gUwKF9DCe'),
-(10, 'Maricar T. Bahala', '12345678890', 'Maricar', '$2y$10$81l0/56QI7vPfokuui0gH.dXPTGfUDzFD100YmvYD54Hc4Yk9vYq6');
+(10, 'Maricar T. Bahala', '12345678890', 'Maricar', '$2y$10$81l0/56QI7vPfokuui0gH.dXPTGfUDzFD100YmvYD54Hc4Yk9vYq6'),
+(11, 'Jake Kim', '09384521123', 'jakekim', '$2y$10$fQL/LRgba0zv335mucslj.c2zd2dTL8jDBiXIWKjrOwZ/cJNr9LNK'),
+(12, 'Manuel Oclarit', '09384521123', 'manuel', '$2y$10$ReFcaAW/4xwP0ayvkDYP.uGvlJW0ARU40/WvoQpig8d6sY/YdJ.zm'),
+(13, 'Odemil A. Uyan', '01234567890', 'odemil', '$2y$10$jPtmQ9Ut0FJ86bFBhbhEmejNPVLJN3Y8Ib2ph224ydwCMdUNZhl5i'),
+(14, 'Febien M. Dela Cera', '09392516672', 'biano', '$2y$10$6F04LYtETksu7.DZSaX43ujf/b3t4D6IEBUgGYvfHBvKKbaK7B0ki');
 
 --
 -- Indexes for dumped tables
@@ -634,7 +655,10 @@ ALTER TABLE `admin`
 -- Indexes for table `appointments`
 --
 ALTER TABLE `appointments`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `idx_unique_date_time` (`appointment_date`,`appointment_time`),
+  ADD KEY `idx_client_id` (`client_id`),
+  ADD KEY `idx_pet_id` (`pet_id`);
 
 --
 -- Indexes for table `archive`
@@ -649,6 +673,23 @@ ALTER TABLE `client`
   ADD PRIMARY KEY (`client_id`);
 
 --
+-- Indexes for table `client_accounts`
+--
+ALTER TABLE `client_accounts`
+  ADD PRIMARY KEY (`account_id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `client_id` (`client_id`);
+
+--
+-- Indexes for table `consultations`
+--
+ALTER TABLE `consultations`
+  ADD PRIMARY KEY (`consultation_id`),
+  ADD KEY `idx_pet_id` (`pet_id`),
+  ADD KEY `idx_client_id` (`client_id`);
+
+--
 -- Indexes for table `logs`
 --
 ALTER TABLE `logs`
@@ -659,14 +700,16 @@ ALTER TABLE `logs`
 --
 ALTER TABLE `medical_records`
   ADD PRIMARY KEY (`record_id`),
-  ADD KEY `pet_id` (`pet_id`);
+  ADD KEY `pet_id` (`pet_id`),
+  ADD KEY `fk_medical_consultation` (`consultation_id`);
 
 --
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`payment_id`),
-  ADD KEY `fk_method_id` (`method_id`);
+  ADD KEY `fk_method_id` (`method_id`),
+  ADD KEY `fk_payment_client` (`client_id`);
 
 --
 -- Indexes for table `payment_methods`
@@ -710,7 +753,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 
 --
 -- AUTO_INCREMENT for table `archive`
@@ -722,25 +765,37 @@ ALTER TABLE `archive`
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
-  MODIFY `client_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `client_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+
+--
+-- AUTO_INCREMENT for table `client_accounts`
+--
+ALTER TABLE `client_accounts`
+  MODIFY `account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `consultations`
+--
+ALTER TABLE `consultations`
+  MODIFY `consultation_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `Log_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=440;
+  MODIFY `Log_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=769;
 
 --
 -- AUTO_INCREMENT for table `medical_records`
 --
 ALTER TABLE `medical_records`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
@@ -752,29 +807,44 @@ ALTER TABLE `payment_methods`
 -- AUTO_INCREMENT for table `pet`
 --
 ALTER TABLE `pet`
-  MODIFY `pet_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `pet_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- AUTO_INCREMENT for table `veterinarian`
 --
 ALTER TABLE `veterinarian`
-  MODIFY `vet_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `vet_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `client_accounts`
+--
+ALTER TABLE `client_accounts`
+  ADD CONSTRAINT `fk_client_accounts_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `consultations`
+--
+ALTER TABLE `consultations`
+  ADD CONSTRAINT `fk_consultation_client` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_consultation_pet` FOREIGN KEY (`pet_id`) REFERENCES `pet` (`pet_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `medical_records`
 --
 ALTER TABLE `medical_records`
+  ADD CONSTRAINT `fk_medical_consultation` FOREIGN KEY (`consultation_id`) REFERENCES `consultations` (`consultation_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `medical_records_ibfk_1` FOREIGN KEY (`pet_id`) REFERENCES `pet` (`pet_id`);
 
 --
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
-  ADD CONSTRAINT `fk_method_id` FOREIGN KEY (`method_id`) REFERENCES `payment_methods` (`method_id`);
+  ADD CONSTRAINT `fk_method_id` FOREIGN KEY (`method_id`) REFERENCES `payment_methods` (`method_id`),
+  ADD CONSTRAINT `fk_payment_client` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pet`
